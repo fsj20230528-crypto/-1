@@ -1,0 +1,21 @@
+<h2>美食地图放在哪里更合适？</h2>
+<p class="subtitle">先选一个布局方向，后面再细化筛选项与路线生成流程</p>
+
+<div class="options">
+  <div class="option" data-choice="sidebar-mini" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>侧边栏为主</h3>
+      <p>在“美食地图”板块里完成：出发地 + 筛选 + 一键生成；结果以列表/小地图呈现</p>
+      <p class="subtitle">优点：改动小；缺点：地图空间偏挤，路线展示不够直观</p>
+    </div>
+  </div>
+  <div class="option" data-choice="main-map" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>主画布切换为高德地图</h3>
+      <p>点“美食地图”后，主区域显示高德地图与路线；侧边栏仅做输入/筛选与结果列表</p>
+      <p class="subtitle">优点：路线可视化最好；缺点：需要在现有 ECharts 地图与高德地图之间切换</p>
+    </div>
+  </div>
+</div>
