@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>浙江县域人格地图</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --ink-light: #4a4a4a;
+      --paper: #f5f0e6;
+      --cinnabar: #8b2500;
+      --cinnabar-hover: #a83200;
+      --border: rgba(26, 26, 26, 0.15);
+      --shadow: rgba(0, 0, 0, 0.12);
+      --map-fill: #ddd4c4;
+      --map-fill-demo: #c9a88a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; width: 100%; }
+    body {
+      font-family: "Noto Serif SC", "SimSun", "宋体", serif;
+      background: var(--paper);
+      color: var(--ink);
+      overflow: hidden;
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(180, 170, 150, 0.25), transparent),
+        radial-gradient(ellipse 60% 40% at 85% 80%, rgba(120, 110, 95, 0.2), transparent),
+        linear-gradient(180deg, #f8f4ec 0%, #ebe4d4 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    header {
+      position: relative;
+      z-index: 10;
+      flex-shrink: 0;
+      text-align: center;
+      padding: 0.85rem 1rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(to bottom, rgba(248, 244, 236, 0.95), transparent);
+    }
+    header h1 {
+      font-family: "Ma Shan Zheng", "KaiTi", "楷体", cursive;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 400;
+      letter-spacing: 0.25em;
+    }
+    header p {
+      font-size: 0.85rem;
+      color: var(--ink-light);
+      margin-top: 0.3rem;
+      letter-spacing: 0.12em;
+    }
+    .profile-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.85rem;
+      width: 2.25rem;
+      height: 2.25rem;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: rgba(250, 246, 238, 0.9);
+      color: var(--cinnabar);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      z-index: 11;
+    }
+    .profile-btn:hover {
+      background: #fff;
+      border-color: var(--cinnabar);
+      transform: scale(1.05);
+    }
+    .profile-btn svg {
+      width: 1.15rem;
+      height: 1.15rem;
+      fill: currentColor;
+    }
+    .profile-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(360px, 88vw);
+      height: 100vh;
+      height: 100dvh;
+      z-index: 1001;
+      background: linear-gradient(135deg, #faf6ee 0%, #efe8da 100%);
+      border-left: 2px solid var(--border);
+      box-shadow: -8px 0 24px var(--shadow);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .profile-drawer.open { transform: translateX(0); }
+    .profile-drawer-header {
+      flex-shrink: 0;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .profile-drawer-title {
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.2em;
+      color: var(--ink);
+    }
+    .profile-drawer-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 2rem;
+      height: 2rem;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      cursor: pointer;
+      font-size: 1.1rem;
+      border-radius: 50%;
+    }
+    .profile-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .map-wrap {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      background: radial-gradient(ellipse at center, #ebe4d4 0%, #d8cfc0 100%);
+    }
+    #mapChart {
+      width: 100%;
+      height: 100%;
+    }
+    .map-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.75rem;
+      background: rgba(245, 240, 230, 0.85);
+      z-index: 6;
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      letter-spacing: 0.15em;
+      color: var(--ink-light);
+      transition: opacity 0.4s;
+    }
+    .map-loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .map-loading .spinner {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--border);
+      border-top-color: var(--cinnabar);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .map-legend {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      z-index: 7;
+      max-width: min(420px, 90vw);
+      padding: 0.5rem 0.75rem;
+      background: rgba(250, 246, 238, 0.92);
+      border: 1px solid var(--border);
+      font-size: 0.72rem;
+      color: var(--ink-light);
+      line-height: 1.6;
+      pointer-events: none;
+    }
+    .legend-cities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.65rem;
+      margin-top: 0.4rem;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      white-space: nowrap;
+    }
+    .legend-item i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid;
+      border-radius: 1px;
+      font-style: normal;
+    }
+    .county-tagline.generating {
+      color: var(--ink-light);
+      font-style: italic;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(420px, 92vw);
+      height: 100vh;
+      height: 100dvh;
+      z-index: 1000;
+      background: linear-gradient(135deg, #faf6ee 0%, #efe8da 100%);
+      border-left: 2px solid var(--border);
+      box-shadow: -8px 0 24px var(--shadow);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-top {
+      flex-shrink: 0;
+      padding: 1rem 1rem 0;
+      position: relative;
+    }
+    .sidebar-main-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      padding-right: 2.25rem;
+    }
+    .nav-btn {
+      padding: 0.4rem 0.55rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.35);
+      font-family: inherit;
+      font-size: 0.78rem;
+      cursor: pointer;
+      color: var(--ink-light);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .nav-btn:hover { background: rgba(255, 255, 255, 0.6); color: var(--ink); }
+    .nav-btn.active {
+      color: var(--cinnabar);
+      border-color: var(--cinnabar);
+      background: rgba(255, 255, 255, 0.7);
+    }
+    .sidebar-section {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .sidebar-section.active { display: flex; }
+    .section-placeholder {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem;
+      color: var(--ink-light);
+    }
+    .section-placeholder .placeholder-seal {
+      font-family: "Ma Shan Zheng", cursive;
+      font-size: 3.5rem;
+      color: var(--cinnabar);
+      opacity: 0.3;
+      margin-bottom: 1rem;
+    }
+    .section-placeholder h3 {
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      font-size: 1.15rem;
+      color: var(--ink);
+      letter-spacing: 0.15em;
+      margin-bottom: 0.6rem;
+    }
+    .section-placeholder p {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      max-width: 260px;
+    }
+    .sidebar-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .sidebar-close {
+      position: absolute;
+      top: 0.85rem;
+      right: 0.85rem;
+      width: 2rem;
+      height: 2rem;
+      border: 1px solid var(--border);
+      background: var(--paper);
+      cursor: pointer;
+      font-size: 1.1rem;
+      border-radius: 50%;
+    }
+    .county-name {
+      font-family: "Ma Shan Zheng", "KaiTi", cursive;
+      font-size: 2rem;
+      letter-spacing: 0.2em;
+    }
+    .county-tagline {
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      font-size: 1.05rem;
+      color: var(--cinnabar);
+      margin-top: 0.5rem;
+      line-height: 1.6;
+    }
+    .county-bio {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: var(--ink-light);
+      text-align: justify;
+    }
+    .sidebar-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 0.75rem;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: var(--ink-light);
+      letter-spacing: 0.1em;
+    }
+    .tab-btn.active {
+      color: var(--cinnabar);
+      border-bottom: 2px solid var(--cinnabar);
+      background: rgba(255, 255, 255, 0.5);
+    }
+    .sidebar-body { flex: 1; overflow-y: auto; padding: 1rem 1.25rem 1.5rem; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .intro-seal {
+      text-align: center;
+      margin: 1rem 0;
+      font-family: "Ma Shan Zheng", cursive;
+      font-size: 3rem;
+      color: var(--cinnabar);
+      opacity: 0.35;
+    }
+    .btn-primary {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--cinnabar);
+      color: #faf6ee;
+      border: none;
+      font-family: inherit;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--cinnabar-hover); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .chat-messages {
+      min-height: 200px;
+      max-height: 280px;
+      overflow-y: auto;
+      margin-bottom: 0.75rem;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid var(--border);
+    }
+    .msg {
+      margin-bottom: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      max-width: 95%;
+    }
+    .msg.user {
+      margin-left: auto;
+      background: rgba(139, 37, 0, 0.12);
+      border-right: 3px solid var(--cinnabar);
+      text-align: right;
+    }
+    .msg.assistant {
+      background: rgba(255, 255, 255, 0.7);
+      border-left: 3px solid var(--ink-light);
+    }
+    .msg.system { font-size: 0.8rem; color: var(--ink-light); text-align: center; }
+    textarea, input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.6);
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+    }
+    textarea:focus, input:focus { outline: none; border-color: var(--cinnabar); }
+    .api-config {
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.35);
+      border: 1px dashed var(--border);
+      font-size: 0.8rem;
+    }
+    .api-config label { display: block; margin-bottom: 0.35rem; color: var(--ink-light); }
+    .hint { font-size: 0.75rem; color: var(--ink-light); margin-top: 0.5rem; line-height: 1.5; }
+    .poem-output {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--border);
+      white-space: pre-wrap;
+      line-height: 2;
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      font-size: 1.05rem;
+      text-align: center;
+      min-height: 120px;
+    }
+    .loading { animation: pulse 1.2s ease infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.25);
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .overlay.visible { opacity: 1; pointer-events: auto; }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="profile-btn" id="profileBtn" aria-label="个人中心" title="个人中心">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+      </svg>
+    </button>
+    <h1>浙江县域人格地图</h1>
+    <p>鼠标移过县域可浮起预览 · 点击任意县域，与当地人格对话</p>
+  </header>
+
+  <div class="map-wrap">
+    <div class="map-loading" id="mapLoading">
+      <div class="spinner"></div>
+      <span>正在绘就浙江全境矢量舆图……</span>
+    </div>
+    <div id="mapChart"></div>
+    <div class="map-legend" id="mapLegend">
+      <div>按地级市分色 · 悬停县域浮起 · 点击任意县对话</div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="sidebar" id="sidebar" aria-hidden="true">
+    <div class="sidebar-top">
+      <button class="sidebar-close" id="sidebarClose" aria-label="关闭">×</button>
+      <nav class="sidebar-main-nav" aria-label="功能导航">
+        <button class="nav-btn active" data-section="persona">人格对话</button>
+        <button class="nav-btn" data-section="food">美食地图</button>
+        <button class="nav-btn" data-section="checkin">打卡系统</button>
+        <button class="nav-btn" data-section="tools">实用辅助</button>
+      </nav>
+    </div>
+
+    <div class="sidebar-section active" id="section-persona">
+      <div class="sidebar-header">
+        <h2 class="county-name" id="countyName">—</h2>
+        <p class="county-tagline" id="countyTagline">—</p>
+        <p class="county-bio" id="countyBio">—</p>
+      </div>
+      <div class="sidebar-tabs">
+        <button class="tab-btn active" data-tab="intro">县域印象</button>
+        <button class="tab-btn" data-tab="chat">和TA聊天</button>
+        <button class="tab-btn" data-tab="poem">一起写诗</button>
+      </div>
+      <div class="sidebar-body">
+        <div class="panel active" id="panel-intro">
+          <div class="intro-seal" id="introSeal">印</div>
+          <p class="hint" id="introHint">每一座县城都有自己的声音，点击地图即可相遇。</p>
+          <button class="btn-primary" id="goChatBtn">和TA聊天</button>
+          <button class="btn-primary" id="goPoemBtn" style="margin-top:0.5rem;background:var(--ink)">一起写诗</button>
+        </div>
+        <div class="panel" id="panel-chat">
+          <div class="api-config">
+            <label for="apiKey">DeepSeek API Key（也可在代码顶部 DEEPSEEK_API_KEY 中预设）</label>
+            <input type="password" id="apiKey" placeholder="sk-13a14da4ecc74e0aaa0550e7fb3e105d" autocomplete="off" />
+            <label for="apiBase">API 地址</label>
+            <input type="text" id="apiBase" value="https://api.deepseek.com" />
+            <p class="hint">若遇 CORS 错误，请用本地服务器打开或配置代理。</p>
+          </div>
+          <div class="chat-messages" id="chatMessages"></div>
+          <textarea id="chatInput" rows="3" placeholder="向这座县城说点什么……"></textarea>
+          <button class="btn-primary" id="sendChatBtn">发送</button>
+        </div>
+        <div class="panel" id="panel-poem">
+          <p class="hint">写下起兴，县域人格将续成一首短诗。</p>
+          <textarea id="poemSeed" rows="4" placeholder="例如：钱江源头的晨雾，缓缓漫过蜂箱……"></textarea>
+          <button class="btn-primary" id="sendPoemBtn">续写成诗</button>
+          <div class="poem-output" id="poemOutput">诗稿将在此呈现</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section" id="section-food">
+      <div class="section-placeholder">
+        <div class="placeholder-seal">食</div>
+        <h3>美食地图</h3>
+        <p>浙里风味，待你绘就。此板块内容即将上线。</p>
+      </div>
+    </div>
+
+    <div class="sidebar-section" id="section-checkin">
+      <div class="section-placeholder">
+        <div class="placeholder-seal">印</div>
+        <h3>打卡系统</h3>
+        <p>行旅足迹，一印一程。此板块内容即将上线。</p>
+      </div>
+    </div>
+
+    <div class="sidebar-section" id="section-tools">
+      <div class="section-placeholder">
+        <div class="placeholder-seal">辅</div>
+        <h3>实用辅助</h3>
+        <p>旅途小帮手，待用之时。此板块内容即将上线。</p>
+      </div>
+    </div>
+
+  </aside>
+
+  <aside class="profile-drawer" id="profileDrawer" aria-hidden="true">
+    <div class="profile-drawer-header">
+      <button class="profile-drawer-close" id="profileClose" aria-label="关闭">×</button>
+      <h2 class="profile-drawer-title">个人中心</h2>
+    </div>
+    <div class="profile-drawer-body">
+      <div class="section-placeholder">
+        <div class="placeholder-seal">我</div>
+        <h3>个人中心</h3>
+        <p>你的浙游档案，尚待开启。此板块内容即将上线。</p>
+      </div>
+    </div>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+  <script>
+    // ========== 请在此处填写你的 DeepSeek API Key ==========
+    const DEEPSEEK_API_KEY = ""; // 例: "sk-xxxxxxxxxxxxxxxx"
+
+    const GEO_BASE = "https://geo.datav.aliyun.com/areas_v3/bound/";
+    const ZJ_CITY_CODES = [
+      330100, 330200, 330300, 330400, 330500,
+      330600, 330700, 330800, 330900, 331000, 331100
+    ];
+    const ZJ_CITY_NAMES = {
+      330100: "杭州",
+      330200: "宁波",
+      330300: "温州",
+      330400: "嘉兴",
+      330500: "湖州",
+      330600: "绍兴",
+      330700: "金华",
+      330800: "衢州",
+      330900: "舟山",
+      331000: "台州",
+      331100: "丽水"
+    };
+
+    /* 同一地级市下属县域使用相同浅色，便于看出城市区划 */
+    const CITY_COLORS = {
+      330100: { fill: "#d8e8d4", border: "#8aab82", label: "#2d4a28" },
+      330200: { fill: "#d4e2ef", border: "#7a9ab8", label: "#243d52" },
+      330300: { fill: "#e8ddd0", border: "#a89278", label: "#4a3d2e" },
+      330400: { fill: "#e4d4e8", border: "#9a82a8", label: "#3e2d48" },
+      330500: { fill: "#d0e6e4", border: "#78a8a2", label: "#1e403c" },
+      330600: { fill: "#ebe4d0", border: "#a8a078", label: "#454028" },
+      330700: { fill: "#e8d8d4", border: "#a88882", label: "#4a3028" },
+      330800: { fill: "#dce8dc", border: "#88a888", label: "#2c402c" },
+      330900: { fill: "#d8e0e8", border: "#8898a8", label: "#283848" },
+      331000: { fill: "#e0dce8", border: "#9890a8", label: "#383048" },
+      331100: { fill: "#e4e8d4", border: "#98a888", label: "#384028" }
+    };
+
+    const NAME_TO_DEMO = {
+      "开化县": "kaihua",
+      "嵊州市": "shengzhou",
+      "云和县": "yunhe"
+    };
+
+    const COUNTIES = {
+      kaihua: {
+        id: "kaihua",
+        geoName: "开化县",
+        name: "开化",
+        tagline: "钱江源头的养蜂人",
+        bio: "我是开化，钱江源头的养蜂人。山林清冽，蜂蜜甘甜，话语里总带着草木与溪水的气息。",
+        seal: "源",
+        systemPrompt: "你是浙江省开化县的人格化身「钱江源头的养蜂人」。温润质朴，常用山林、溪水、蜜蜂意象。用中文回答，保持角色，不要说明自己是AI。"
+      },
+      shengzhou: {
+        id: "shengzhou",
+        geoName: "嵊州市",
+        name: "嵊州",
+        tagline: "剡溪畔的说书人",
+        bio: "我是嵊州，剡溪畔的说书人。越剧咿呀，豆腐香软，人间故事折进一声板、一段腔。",
+        seal: "剡",
+        systemPrompt: "你是浙江省嵊州市的人格化身「剡溪畔的说书人」。爽朗诙谐，熟悉越剧与美食典故。用中文回答，保持角色，不要说明自己是AI。"
+      },
+      yunhe: {
+        id: "yunhe",
+        geoName: "云和县",
+        name: "云和",
+        tagline: "梯田上的木雕匠",
+        bio: "我是云和，梯田上的木雕匠。云绕山峦，刀刻木纹，光与影都收进作品里。",
+        seal: "云",
+        systemPrompt: "你是浙江省云和县的人格化身「梯田上的木雕匠」。沉静细腻，涉及木雕、云海、梯田意象。用中文回答，保持角色，不要说明自己是AI。"
+      }
+    };
+
+    let chart = null;
+    let currentCounty = null;
+    let chatHistory = [];
+    const personaCache = {};
+    const geoMeta = {};
+
+    async function loadZhejiangCountyGeo() {
+      const parts = await Promise.all(
+        ZJ_CITY_CODES.map((code) =>
+          fetch(GEO_BASE + code + "_full.json")
+            .then((r) => {
+              if (!r.ok) throw new Error("加载失败: " + code);
+              return r.json();
+            })
+        )
+      );
+      const features = parts.flatMap((p) => p.features);
+      features.forEach((f) => {
+        const name = f.properties.name;
+        const parentCode = f.properties.parent?.adcode;
+        geoMeta[name] = {
+          adcode: f.properties.adcode,
+          parentCode: parentCode,
+          parentName: ZJ_CITY_NAMES[parentCode] || "浙江"
+        };
+      });
+      return { type: "FeatureCollection", features };
+    }
+
+    function shortCountyName(geoName) {
+      return geoName.replace(/[市区县]$/, "");
+    }
+
+    function buildDefaultPersona(geoName) {
+      const short = shortCountyName(geoName);
+      const parent = geoMeta[geoName]?.parentName || "浙江";
+      return {
+        geoName,
+        name: short,
+        tagline: "浙里山水间的" + short,
+        bio: "我是" + short + "，隶属" + parent + "的一方水土。街巷、江潮与乡音，都是我话语里的纹路。欢迎与我聊聊这里的人情风物。",
+        seal: short.charAt(0) || "县",
+        systemPrompt:
+          "你是浙江省" + geoName + "的人格化身，代表这座县级行政区。\n" +
+          "你生活在" + parent + "所辖的" + short + "，说话用第一人称，温润隽永，略带古典韵味与江南意象。\n" +
+          "结合当地可想象的山水、产业、民俗与历史典故来回应，不要张冠李戴。\n" +
+          "用中文回答，保持人格一致，不要说明自己是AI。",
+        enriched: false,
+        isDemo: false
+      };
+    }
+
+    function getCountyPersona(geoName) {
+      const demoId = NAME_TO_DEMO[geoName];
+      if (demoId) {
+        return { ...COUNTIES[demoId], enriched: true, isDemo: true };
+      }
+      if (personaCache[geoName]) {
+        return personaCache[geoName];
+      }
+      const persona = buildDefaultPersona(geoName);
+      personaCache[geoName] = persona;
+      return persona;
+    }
+
+    async function enrichPersonaWithAI(geoName) {
+      const raw = await callDeepSeek({
+        apiKey: getApiKey(),
+        baseUrl: getApiBase(),
+        max_tokens: 320,
+        messages: [
+          {
+            role: "system",
+            content:
+              "你只输出一个 JSON 对象，不要 markdown，不要解释。字段：tagline（8-14字身份称谓）、bio（60字内第一人称简介）、personaStyle（40字内语气与意象说明）。"
+          },
+          {
+            role: "user",
+            content:
+              "为浙江省" + geoName + "（隶属" + (geoMeta[geoName]?.parentName || "浙江") + "）设计县域人格化形象，要有辨识度与文学感。"
+          }
+        ]
+      });
+      const jsonText = raw.replace(/^```json\s*|^```\s*|```\s*$/g, "").trim();
+      const parsed = JSON.parse(jsonText);
+      const tagline = parsed.tagline || buildDefaultPersona(geoName).tagline;
+      const bio = parsed.bio || buildDefaultPersona(geoName).bio;
+      const style = parsed.personaStyle || "语气温润，意象清雅。";
+      return {
+        tagline,
+        bio,
+        seal: shortCountyName(geoName).charAt(0) || "县",
+        systemPrompt:
+          "你是浙江省" + geoName + "的人格化身「" + tagline + "」。\n" +
+          style + "\n" + bio + "\n" +
+          "用中文第一人称回答，保持人格一致，不要说明自己是AI。",
+        enriched: true,
+        isDemo: false
+      };
+    }
+
+    function getCityColors(parentCode) {
+      return CITY_COLORS[parentCode] || { fill: "#ddd4c4", border: "#9a8f7f", label: "#1a1a1a" };
+    }
+
+    function buildMapData(geoJson) {
+      return geoJson.features.map((f) => {
+        const name = f.properties.name;
+        const parentCode = f.properties.parent?.adcode;
+        const colors = getCityColors(parentCode);
+        return {
+          name,
+          parentCode,
+          itemStyle: {
+            areaColor: colors.fill,
+            borderColor: colors.border,
+            borderWidth: 0.75
+          }
+        };
+      });
+    }
+
+    function buildLegendHtml() {
+      const items = ZJ_CITY_CODES.map((code) => {
+        const c = getCityColors(code);
+        const name = ZJ_CITY_NAMES[code];
+        return (
+          '<span class="legend-item">' +
+          '<i style="background:' + c.fill + ";border-color:" + c.border + '"></i>' +
+          name +
+          "</span>"
+        );
+      }).join("");
+      return (
+        '<div>按地级市分色 · 悬停县域浮起 · 点击任意县对话</div>' +
+        '<div class="legend-cities">' + items + "</div>"
+      );
+    }
+
+    const MAP_LAYOUT = {
+      layoutCenter: ["50%", "52%"],
+      layoutSize: "118%"
+    };
+
+    function getChartOption(mapData) {
+      return {
+        backgroundColor: "transparent",
+        tooltip: {
+          trigger: "item",
+          backgroundColor: "rgba(250, 246, 238, 0.95)",
+          borderColor: "#8b2500",
+          borderWidth: 1,
+          textStyle: {
+            color: "#1a1a1a",
+            fontFamily: '"Noto Serif SC", "SimSun", serif',
+            fontSize: 13
+          },
+          formatter: (params) => {
+            if (params.seriesName === "地级市标注") return "";
+            const n = params.name || "";
+            const short = shortCountyName(n);
+            const city = geoMeta[n]?.parentName || "";
+            const p = personaCache[n] || getCountyPersona(n);
+            return (
+              "<strong>" + short + "</strong>" +
+              (city ? " <span style='color:#666'>（" + city + "）</span>" : "") +
+              "<br/><span style='color:#8b2500'>" + p.tagline + "</span><br/>" +
+              "<em>点击进入对话</em>"
+            );
+          }
+        },
+        series: [
+          {
+            name: "浙江县域",
+            type: "map",
+            map: "zhejiang_counties",
+            roam: true,
+            scaleLimit: { min: 0.85, max: 4 },
+            ...MAP_LAYOUT,
+            data: mapData,
+            selectedMode: false,
+            label: { show: false },
+            z: 1,
+            emphasis: {
+              focus: "self",
+              blurScope: "coordinateSystem",
+              label: {
+                show: true,
+                color: "#1a1a1a",
+                fontFamily: '"Ma Shan Zheng", "KaiTi", cursive',
+                fontSize: 14
+              },
+              itemStyle: {
+                areaColor: "#f5ebe0",
+                borderColor: "#8b2500",
+                borderWidth: 2,
+                shadowBlur: 22,
+                shadowColor: "rgba(139, 37, 0, 0.45)",
+                shadowOffsetX: 0,
+                shadowOffsetY: 10
+              },
+              scale: true
+            },
+            blur: {
+              itemStyle: { opacity: 0.45 },
+              label: { show: false }
+            }
+          },
+          {
+            name: "地级市标注",
+            type: "map",
+            map: "zhejiang_cities",
+            roam: false,
+            ...MAP_LAYOUT,
+            silent: true,
+            z: 2,
+            label: {
+              show: true,
+              formatter: (p) => (p.name || "").replace(/市$/, ""),
+              fontFamily: '"Ma Shan Zheng", "KaiTi", cursive',
+              fontSize: 16,
+              color: "#2a2a2a",
+              textBorderColor: "rgba(250, 246, 238, 0.9)",
+              textBorderWidth: 2
+            },
+            itemStyle: {
+              areaColor: "rgba(0,0,0,0)",
+              borderColor: "rgba(0,0,0,0)",
+              borderWidth: 0
+            },
+            emphasis: { disabled: true },
+            tooltip: { show: false }
+          }
+        ]
+      };
+    }
+
+    async function initMap() {
+      const loadingEl = document.getElementById("mapLoading");
+      const dom = document.getElementById("mapChart");
+      chart = echarts.init(dom, null, { renderer: "canvas" });
+
+      try {
+        const [geoJson, cityGeo] = await Promise.all([
+          loadZhejiangCountyGeo(),
+          fetch(GEO_BASE + "330000_full.json").then((r) => {
+            if (!r.ok) throw new Error("地级市边界加载失败");
+            return r.json();
+          })
+        ]);
+        echarts.registerMap("zhejiang_counties", geoJson);
+        echarts.registerMap("zhejiang_cities", cityGeo);
+
+        const mapData = buildMapData(geoJson);
+        chart.setOption(getChartOption(mapData));
+
+        const legendEl = document.getElementById("mapLegend");
+        if (legendEl) legendEl.innerHTML = buildLegendHtml();
+
+        chart.on("click", (params) => {
+          if (params.seriesName !== "浙江县域" || !params.name) return;
+          openSidebarByGeoName(params.name);
+        });
+
+        let mapSyncing = false;
+        chart.on("georoam", () => {
+          if (mapSyncing) return;
+          const county = chart.getOption().series[0];
+          mapSyncing = true;
+          chart.setOption({
+            series: [
+              {},
+              {
+                center: county.center,
+                zoom: county.zoom,
+                layoutCenter: county.layoutCenter,
+                layoutSize: county.layoutSize
+              }
+            ]
+          });
+          mapSyncing = false;
+        });
+
+        loadingEl.classList.add("hidden");
+        requestAnimationFrame(() => chart.resize());
+        setTimeout(() => chart.resize(), 200);
+      } catch (err) {
+        loadingEl.querySelector("span").textContent =
+          "地图加载失败：" + (err.message || "请检查网络后刷新");
+        console.error(err);
+      }
+
+      window.addEventListener("resize", () => chart && chart.resize());
+    }
+
+    async function callDeepSeek({
+      apiKey,
+      baseUrl = "https://api.deepseek.com",
+      messages,
+      model = "deepseek-chat",
+      max_tokens = 1024
+    }) {
+      if (!apiKey?.trim()) throw new Error("请先填写 DeepSeek API Key");
+      const url = baseUrl.replace(/\/$/, "") + "/chat/completions";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + apiKey.trim()
+        },
+        body: JSON.stringify({ model, messages, temperature: 0.85, max_tokens, stream: false })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error("API 失败 (" + response.status + "): " + (data.error?.message || response.statusText));
+      const content = data.choices?.[0]?.message?.content;
+      if (!content) throw new Error("未找到回复内容");
+      return content.trim();
+    }
+
+    function getApiKey() {
+      return document.getElementById("apiKey").value.trim() || DEEPSEEK_API_KEY;
+    }
+    function getApiBase() {
+      return document.getElementById("apiBase").value.trim() || "https://api.deepseek.com";
+    }
+
+    const sidebar = document.getElementById("sidebar");
+    const profileDrawer = document.getElementById("profileDrawer");
+    const overlay = document.getElementById("overlay");
+
+    function updateSidebarPersonaUI() {
+      if (!currentCounty) return;
+      document.getElementById("countyName").textContent = currentCounty.name;
+      document.getElementById("countyTagline").textContent = currentCounty.tagline;
+      document.getElementById("countyBio").textContent = currentCounty.bio;
+      document.getElementById("introSeal").textContent = currentCounty.seal;
+      const hint = document.getElementById("introHint");
+      if (hint) {
+        hint.textContent = currentCounty.isDemo
+          ? "示范县域，人格已深度定制。可聊天、可赋诗。"
+          : "点击「和TA聊天」或「一起写诗」，与" + currentCounty.name + "对谈。";
+      }
+    }
+
+    async function openSidebarByGeoName(geoName) {
+      currentCounty = getCountyPersona(geoName);
+      updateSidebarPersonaUI();
+      chatHistory = [];
+      renderChatWelcome();
+      document.getElementById("poemOutput").textContent = "诗稿将在此呈现";
+      document.getElementById("poemSeed").value = "";
+      closeProfileDrawer();
+      switchSection("persona");
+      switchTab("intro");
+      sidebar.classList.add("open");
+      sidebar.setAttribute("aria-hidden", "false");
+      overlay.classList.add("visible");
+      setTimeout(() => chart && chart.resize(), 400);
+
+      if (!currentCounty.enriched && getApiKey()) {
+        const taglineEl = document.getElementById("countyTagline");
+        const bioEl = document.getElementById("countyBio");
+        taglineEl.classList.add("generating");
+        bioEl.classList.add("generating");
+        const prevTag = taglineEl.textContent;
+        const prevBio = bioEl.textContent;
+        taglineEl.textContent = "正在凝练县域人格……";
+        bioEl.textContent = "请稍候，" + currentCounty.name + "的自述即将呈现。";
+        try {
+          const enriched = await enrichPersonaWithAI(geoName);
+          Object.assign(currentCounty, enriched);
+          personaCache[geoName] = currentCounty;
+          if (sidebar.classList.contains("open") && currentCounty.geoName === geoName) {
+            updateSidebarPersonaUI();
+            renderChatWelcome();
+          }
+        } catch (e) {
+          if (currentCounty.geoName === geoName) {
+            taglineEl.textContent = prevTag;
+            bioEl.textContent = prevBio;
+          }
+        } finally {
+          taglineEl.classList.remove("generating");
+          bioEl.classList.remove("generating");
+        }
+      }
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      sidebar.setAttribute("aria-hidden", "true");
+      updateOverlay();
+      setTimeout(() => chart && chart.resize(), 400);
+    }
+
+    function openProfileDrawer() {
+      closeSidebar();
+      profileDrawer.classList.add("open");
+      profileDrawer.setAttribute("aria-hidden", "false");
+      overlay.classList.add("visible");
+      setTimeout(() => chart && chart.resize(), 400);
+    }
+
+    function closeProfileDrawer() {
+      profileDrawer.classList.remove("open");
+      profileDrawer.setAttribute("aria-hidden", "true");
+      updateOverlay();
+      setTimeout(() => chart && chart.resize(), 400);
+    }
+
+    function updateOverlay() {
+      const anyOpen = sidebar.classList.contains("open") || profileDrawer.classList.contains("open");
+      overlay.classList.toggle("visible", anyOpen);
+    }
+
+    function closeAllPanels() {
+      closeSidebar();
+      closeProfileDrawer();
+    }
+
+    function switchSection(sectionId) {
+      document.querySelectorAll(".nav-btn").forEach((b) => {
+        b.classList.toggle("active", b.dataset.section === sectionId);
+      });
+      document.querySelectorAll(".sidebar-section").forEach((s) => s.classList.remove("active"));
+      document.getElementById("section-" + sectionId)?.classList.add("active");
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach((b) => {
+        b.classList.toggle("active", b.dataset.tab === tabId);
+      });
+      document.querySelectorAll("#section-persona .panel").forEach((p) => p.classList.remove("active"));
+      document.getElementById("panel-" + tabId)?.classList.add("active");
+    }
+
+    function renderChatWelcome() {
+      document.getElementById("chatMessages").innerHTML = "";
+      appendMessage("system", "你已遇见「" + currentCounty.name + "」——" + currentCounty.tagline);
+    }
+
+    function appendMessage(role, text) {
+      const box = document.getElementById("chatMessages");
+      const div = document.createElement("div");
+      div.className = "msg " + role;
+      div.textContent = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function sendChat() {
+      const text = document.getElementById("chatInput").value.trim();
+      if (!text || !currentCounty) return;
+      const btn = document.getElementById("sendChatBtn");
+      btn.disabled = true;
+      appendMessage("user", text);
+      document.getElementById("chatInput").value = "";
+      chatHistory.push({ role: "user", content: text });
+      const lid = "ld-" + Date.now();
+      const loading = document.createElement("div");
+      loading.className = "msg assistant loading";
+      loading.id = lid;
+      loading.textContent = "思量中……";
+      document.getElementById("chatMessages").appendChild(loading);
+      try {
+        const reply = await callDeepSeek({
+          apiKey: getApiKey(),
+          baseUrl: getApiBase(),
+          messages: [{ role: "system", content: currentCounty.systemPrompt }, ...chatHistory]
+        });
+        document.getElementById(lid)?.remove();
+        appendMessage("assistant", reply);
+        chatHistory.push({ role: "assistant", content: reply });
+      } catch (e) {
+        document.getElementById(lid)?.remove();
+        appendMessage("system", "出错：" + e.message);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function sendPoem() {
+      const seed = document.getElementById("poemSeed").value.trim();
+      if (!seed || !currentCounty) {
+        alert("请先写下一两句起兴");
+        return;
+      }
+      const btn = document.getElementById("sendPoemBtn");
+      const out = document.getElementById("poemOutput");
+      btn.disabled = true;
+      out.innerHTML = '<span class="loading">续写中……</span>';
+      const poemPrompt = currentCounty.systemPrompt + "\n用户写了起兴，请续写一首五言或七言短诗，4至8句，每句一行，无标点无标题。";
+      try {
+        out.textContent = await callDeepSeek({
+          apiKey: getApiKey(),
+          baseUrl: getApiBase(),
+          messages: [
+            { role: "system", content: poemPrompt },
+            { role: "user", content: "起兴：\n" + seed }
+          ]
+        });
+      } catch (e) {
+        out.textContent = "续写失败：" + e.message;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById("sidebarClose").onclick = closeSidebar;
+    document.getElementById("profileBtn").onclick = openProfileDrawer;
+    document.getElementById("profileClose").onclick = closeProfileDrawer;
+    overlay.onclick = closeAllPanels;
+    document.querySelectorAll(".nav-btn").forEach((b) => {
+      b.onclick = () => switchSection(b.dataset.section);
+    });
+    document.querySelectorAll(".tab-btn").forEach((b) => {
+      b.onclick = () => switchTab(b.dataset.tab);
+    });
+    document.getElementById("goChatBtn").onclick = () => switchTab("chat");
+    document.getElementById("goPoemBtn").onclick = () => switchTab("poem");
+    document.getElementById("sendChatBtn").onclick = sendChat;
+    document.getElementById("chatInput").onkeydown = (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendChat();
+      }
+    };
+    document.getElementById("sendPoemBtn").onclick = sendPoem;
+
+    if (DEEPSEEK_API_KEY) {
+      document.getElementById("apiKey").value = DEEPSEEK_API_KEY;
+    }
+
+    initMap();
+  </script>
+</body>
+</html>
