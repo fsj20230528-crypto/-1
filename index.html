@@ -1774,8 +1774,11 @@
           return;
         }
         foodGeocoder.getLocation(text, (status, result) => {
+          const info = result?.info || "";
+          const infocode = result?.infocode ? String(result.infocode) : "";
           if (status !== "complete" || !result?.geocodes?.length) {
-            reject(new Error("出发地解析失败，请换个更具体的地点"));
+            const tail = info ? "：" + info + (infocode ? "（" + infocode + "）" : "") : "";
+            reject(new Error("出发地解析失败" + tail + "，请换个更具体的地点"));
             return;
           }
           const loc = result.geocodes[0].location;
@@ -1814,8 +1817,15 @@
         const c = new AMap.LngLat(center.lng, center.lat);
         foodPlaceSearch.searchNearBy(keyword, c, radiusMeters, (status, result) => {
           const pois = result?.poiList?.pois || [];
-          if (status !== "complete" || !pois.length) {
-            reject(new Error("未搜索到合适的餐饮点位，请调整关键词或扩大距离上限"));
+          const info = result?.info || "";
+          const infocode = result?.infocode ? String(result.infocode) : "";
+          if (status !== "complete") {
+            const tail = info ? "：" + info + (infocode ? "（" + infocode + "）" : "") : "";
+            reject(new Error("POI 搜索失败" + tail));
+            return;
+          }
+          if (!pois.length) {
+            reject(new Error("未搜索到餐饮点位（范围 " + (radiusMeters / 1000).toFixed(1) + "km）"));
             return;
           }
           resolve(
@@ -1924,7 +1934,16 @@
         const keyword = buildFoodKeyword(tastes, cooks, funcs);
         const crowdPref = getSingleChipValue("crowdChips");
 
-        const rawPois = await searchFoodPois(AMap, start, keyword, radiusMeters);
+        let rawPois;
+        try {
+          rawPois = await searchFoodPois(AMap, start, keyword, radiusMeters);
+        } catch (e) {
+          if (String(e?.message || "").includes("未搜索到餐饮点位") && radiusMeters < 15000) {
+            rawPois = await searchFoodPois(AMap, start, keyword, 15000);
+          } else {
+            throw e;
+          }
+        }
 
         const minRating = Number(document.getElementById("minRating")?.value || "");
         const priceRange = parsePriceRange(document.getElementById("priceRange")?.value || "");
