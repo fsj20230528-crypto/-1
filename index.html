@@ -438,6 +438,93 @@
       text-align: center;
       min-height: 120px;
     }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem 0.75rem;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+    .field label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--ink-light);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+    .chip {
+      padding: 0.35rem 0.6rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.35);
+      font-family: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: var(--ink-light);
+      letter-spacing: 0.08em;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      border-radius: 999px;
+      user-select: none;
+    }
+    .chip.active {
+      color: var(--cinnabar);
+      border-color: var(--cinnabar);
+      background: rgba(255, 255, 255, 0.75);
+    }
+    .food-map {
+      width: 100%;
+      height: 220px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.35);
+      margin-top: 0.9rem;
+    }
+    .food-summary {
+      margin-top: 0.9rem;
+      padding: 0.75rem 0.85rem;
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid var(--border);
+      font-size: 0.86rem;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+    .food-stops {
+      margin-top: 0.85rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+    .food-stop {
+      padding: 0.75rem 0.85rem;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--border);
+      line-height: 1.65;
+    }
+    .food-stop-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .food-stop-title strong {
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      letter-spacing: 0.08em;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+    .food-stop-meta {
+      font-size: 0.78rem;
+      color: var(--ink-light);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+    .food-stop a {
+      color: var(--cinnabar);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(139, 37, 0, 0.5);
+    }
+    .food-stop a:hover { border-bottom-color: rgba(139, 37, 0, 0.9); }
     .loading { animation: pulse 1.2s ease infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     .overlay {
@@ -527,10 +614,86 @@
     </div>
 
     <div class="sidebar-section" id="section-food">
-      <div class="section-placeholder">
-        <div class="placeholder-seal">食</div>
-        <h3>美食地图</h3>
-        <p>浙里风味，待你绘就。此板块内容即将上线。</p>
+      <div class="sidebar-header">
+        <h2 class="county-name">美食路线</h2>
+        <p class="county-tagline">按口味与类型筛选 · 一键生成路线</p>
+      </div>
+      <div class="sidebar-body">
+        <div class="api-config">
+          <label for="amapKey">高德 Web JS Key（本地保存）</label>
+          <input type="password" id="amapKey" placeholder="填写你的高德 Key" autocomplete="off" />
+          <p class="hint">首次填写后会保存在浏览器本地。若接口不可用，请检查 Key 权限是否包含 Web JS API。</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="field full">
+            <label for="foodStart">出发地</label>
+            <input type="text" id="foodStart" placeholder="输入城市 / 景点 / 地址" autocomplete="off" />
+            <p class="hint" id="foodStartHint">建议从联想下拉中选择，定位更准。</p>
+          </div>
+
+          <div class="field">
+            <label for="foodDuration">总时长（小时）</label>
+            <input type="text" id="foodDuration" value="3" />
+          </div>
+          <div class="field">
+            <label for="foodSort">排序</label>
+            <input type="text" id="foodSort" value="距离优先" />
+          </div>
+
+          <div class="field full">
+            <label>口味（多选）</label>
+            <div class="chips" id="tasteChips">
+              <span class="chip" data-value="辣">辣</span>
+              <span class="chip" data-value="鲜">鲜</span>
+              <span class="chip" data-value="甜">甜</span>
+              <span class="chip" data-value="咸">咸</span>
+              <span class="chip" data-value="糯">糯</span>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label>类型（多选）</label>
+            <div class="chips" id="typeChips">
+              <span class="chip" data-value="菜">菜</span>
+              <span class="chip" data-value="面">面</span>
+              <span class="chip" data-value="点心">点心</span>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label>拥挤偏好</label>
+            <div class="chips" id="crowdChips">
+              <span class="chip active" data-value="不介意排队">不介意排队</span>
+              <span class="chip" data-value="一般">一般</span>
+              <span class="chip" data-value="尽量不挤">尽量不挤</span>
+            </div>
+            <p class="hint">MVP 先用“评价量/距离”做近似避挤；后续可接入营业高峰与热度策略。</p>
+          </div>
+
+          <div class="field">
+            <label for="maxDistanceKm">距离上限（km）</label>
+            <input type="text" id="maxDistanceKm" value="5" />
+          </div>
+          <div class="field">
+            <label for="minRating">评分下限（可空）</label>
+            <input type="text" id="minRating" placeholder="例如 4.2" />
+          </div>
+
+          <div class="field">
+            <label for="maxPrice">人均上限（可空）</label>
+            <input type="text" id="maxPrice" placeholder="例如 80" />
+          </div>
+          <div class="field">
+            <label for="stopCountHint">站点数</label>
+            <input type="text" id="stopCountHint" value="按时长自动" disabled />
+          </div>
+        </div>
+
+        <button class="btn-primary" id="generateFoodRouteBtn">一键生成美食路线</button>
+        <div class="food-map" id="foodMap"></div>
+        <div class="food-summary" id="foodSummary">填写出发地与偏好后，点击生成路线。</div>
+        <div class="food-stops" id="foodStops"></div>
       </div>
     </div>
 
@@ -570,6 +733,7 @@
   <script>
     // ========== 请在此处填写你的 DeepSeek API Key ==========
     const DEEPSEEK_API_KEY = ""; // 例: "sk-xxxxxxxxxxxxxxxx"
+    const AMAP_WEB_KEY = "";
 
     const GEO_BASE = "https://geo.datav.aliyun.com/areas_v3/bound/";
     const ZJ_CITY_CODES = [
@@ -646,6 +810,15 @@
     let chatHistory = [];
     const personaCache = {};
     const geoMeta = {};
+    let foodInited = false;
+    let foodMap = null;
+    let foodAmapReady = null;
+    let foodAutocomplete = null;
+    let foodPlaceSearch = null;
+    let foodGeocoder = null;
+    let foodWalking = null;
+    let foodStartTip = null;
+    let foodOverlays = [];
 
     async function loadZhejiangCountyGeo() {
       const parts = await Promise.all(
@@ -1067,6 +1240,7 @@
       });
       document.querySelectorAll(".sidebar-section").forEach((s) => s.classList.remove("active"));
       document.getElementById("section-" + sectionId)?.classList.add("active");
+      if (sectionId === "food") initFoodSection();
     }
 
     function switchTab(tabId) {
@@ -1172,6 +1346,424 @@
 
     if (DEEPSEEK_API_KEY) {
       document.getElementById("apiKey").value = DEEPSEEK_API_KEY;
+    }
+
+    function setChipsActive(containerId, singleSelect) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      el.addEventListener("click", (e) => {
+        const chip = e.target.closest(".chip");
+        if (!chip) return;
+        if (singleSelect) {
+          el.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+          chip.classList.add("active");
+        } else {
+          chip.classList.toggle("active");
+        }
+      });
+    }
+
+    function getActiveChipValues(containerId) {
+      return Array.from(document.querySelectorAll("#" + containerId + " .chip.active")).map((c) => c.dataset.value);
+    }
+
+    function getSingleChipValue(containerId) {
+      return document.querySelector("#" + containerId + " .chip.active")?.dataset.value || "";
+    }
+
+    function getAmapKey() {
+      const input = document.getElementById("amapKey");
+      const fromInput = input?.value?.trim();
+      const fromLocal = localStorage.getItem("amap_web_key") || "";
+      return fromInput || fromLocal || AMAP_WEB_KEY;
+    }
+
+    function persistAmapKey() {
+      const key = document.getElementById("amapKey")?.value?.trim() || "";
+      if (key) localStorage.setItem("amap_web_key", key);
+    }
+
+    function loadAmapSdk(key) {
+      if (foodAmapReady) return foodAmapReady;
+      foodAmapReady = new Promise((resolve, reject) => {
+        if (!key) {
+          reject(new Error("请先填写高德 Web JS Key"));
+          return;
+        }
+        if (window.AMap) {
+          resolve(window.AMap);
+          return;
+        }
+        const script = document.createElement("script");
+        const plugins = [
+          "AMap.Autocomplete",
+          "AMap.PlaceSearch",
+          "AMap.Geocoder",
+          "AMap.Walking"
+        ].join(",");
+        script.src =
+          "https://webapi.amap.com/maps?v=2.0&key=" +
+          encodeURIComponent(key) +
+          "&plugin=" +
+          encodeURIComponent(plugins);
+        script.async = true;
+        script.onload = () => resolve(window.AMap);
+        script.onerror = () => reject(new Error("高德 SDK 加载失败，请检查 Key 与网络"));
+        document.head.appendChild(script);
+      });
+      return foodAmapReady;
+    }
+
+    async function ensureFoodAmap() {
+      const key = getAmapKey();
+      persistAmapKey();
+      const AMap = await loadAmapSdk(key);
+      if (!foodMap) {
+        foodMap = new AMap.Map("foodMap", {
+          zoom: 13,
+          center: [120.15515, 30.274084],
+          viewMode: "2D"
+        });
+      }
+      if (!foodAutocomplete) {
+        foodAutocomplete = new AMap.Autocomplete({ input: "foodStart" });
+        foodAutocomplete.on("select", (e) => {
+          foodStartTip = e?.poi || null;
+          const hint = document.getElementById("foodStartHint");
+          if (hint) hint.textContent = foodStartTip ? "已选择：" + (foodStartTip.name || "") : "建议从联想下拉中选择，定位更准。";
+        });
+      }
+      if (!foodPlaceSearch) {
+        foodPlaceSearch = new AMap.PlaceSearch({ pageSize: 50, extensions: "all" });
+      }
+      if (!foodGeocoder) {
+        foodGeocoder = new AMap.Geocoder({ radius: 1000 });
+      }
+      if (!foodWalking) {
+        foodWalking = new AMap.Walking({ map: foodMap, hideMarkers: true });
+      }
+      return AMap;
+    }
+
+    function clearFoodOverlays() {
+      if (!foodMap) return;
+      foodOverlays.forEach((o) => {
+        try { foodMap.remove(o); } catch (e) {}
+      });
+      foodOverlays = [];
+      try { foodMap.clearMap(); } catch (e) {}
+    }
+
+    function decideStopCount(totalMinutes) {
+      if (totalMinutes <= 120) return 2;
+      if (totalMinutes <= 240) return 3;
+      if (totalMinutes <= 360) return 4;
+      return 5;
+    }
+
+    function haversineMeters(a, b) {
+      const toRad = (x) => (x * Math.PI) / 180;
+      const R = 6371000;
+      const lat1 = toRad(a.lat);
+      const lat2 = toRad(b.lat);
+      const dLat = lat2 - lat1;
+      const dLng = toRad(b.lng - a.lng);
+      const s =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      return 2 * R * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
+    }
+
+    function orderStopsGreedy(start, stops) {
+      const left = stops.slice();
+      const ordered = [];
+      let cur = start;
+      while (left.length) {
+        let bestIdx = 0;
+        let bestDist = Infinity;
+        for (let i = 0; i < left.length; i++) {
+          const d = haversineMeters(cur, left[i].loc);
+          if (d < bestDist) {
+            bestDist = d;
+            bestIdx = i;
+          }
+        }
+        const next = left.splice(bestIdx, 1)[0];
+        ordered.push(next);
+        cur = next.loc;
+      }
+      return ordered;
+    }
+
+    function buildFoodKeyword(tastes, types) {
+      const mapType = {
+        "菜": "餐厅 家常菜",
+        "面": "面馆",
+        "点心": "小吃 点心 糕点"
+      };
+      const parts = [];
+      tastes.forEach((t) => parts.push(t));
+      types.forEach((t) => parts.push(mapType[t] || t));
+      return parts.length ? parts.join(" ") : "美食 餐厅";
+    }
+
+    async function geocodeStart(AMap, text) {
+      return await new Promise((resolve, reject) => {
+        if (!text) {
+          reject(new Error("请先填写出发地"));
+          return;
+        }
+        foodGeocoder.getLocation(text, (status, result) => {
+          if (status !== "complete" || !result?.geocodes?.length) {
+            reject(new Error("出发地解析失败，请换个更具体的地点"));
+            return;
+          }
+          const loc = result.geocodes[0].location;
+          resolve({ lng: loc.lng, lat: loc.lat, name: result.geocodes[0].formattedAddress || text });
+        });
+      });
+    }
+
+    async function resolveStart(AMap) {
+      const text = document.getElementById("foodStart")?.value?.trim() || "";
+      const poi = foodStartTip;
+      if (poi?.location) {
+        const loc = poi.location;
+        return { lng: loc.lng, lat: loc.lat, name: poi.name || text || "出发地" };
+      }
+      if (poi?.id) {
+        const detail = await new Promise((resolve) => {
+          foodPlaceSearch.getDetails(poi.id, (status, res) => {
+            if (status === "complete" && res?.poiList?.pois?.length) resolve(res.poiList.pois[0]);
+            else resolve(null);
+          });
+        });
+        if (detail?.location) {
+          const loc = detail.location;
+          return { lng: loc.lng, lat: loc.lat, name: detail.name || text || "出发地" };
+        }
+      }
+      return await geocodeStart(AMap, text);
+    }
+
+    async function searchFoodPois(AMap, center, keyword, radiusMeters) {
+      return await new Promise((resolve, reject) => {
+        const c = new AMap.LngLat(center.lng, center.lat);
+        foodPlaceSearch.searchNearBy(keyword, c, radiusMeters, (status, result) => {
+          const pois = result?.poiList?.pois || [];
+          if (status !== "complete" || !pois.length) {
+            reject(new Error("未搜索到合适的餐饮点位，请调整关键词或扩大距离上限"));
+            return;
+          }
+          resolve(
+            pois
+              .filter((p) => p?.location)
+              .map((p) => {
+                const loc = p.location;
+                const rating = Number(p.biz_ext?.rating || "");
+                const cost = Number(p.biz_ext?.cost || "");
+                return {
+                  id: p.id,
+                  name: p.name,
+                  address: p.address || "",
+                  type: (p.type || "").split(";")[0] || "",
+                  distance: Number(p.distance || ""),
+                  rating: Number.isFinite(rating) ? rating : null,
+                  cost: Number.isFinite(cost) ? cost : null,
+                  loc: { lng: loc.lng, lat: loc.lat }
+                };
+              })
+          );
+        });
+      });
+    }
+
+    async function walkingLeg(AMap, a, b) {
+      return await new Promise((resolve) => {
+        const origin = new AMap.LngLat(a.lng, a.lat);
+        const dest = new AMap.LngLat(b.lng, b.lat);
+        foodWalking.search(origin, dest, (status, result) => {
+          if (status !== "complete" || !result?.routes?.length) {
+            resolve({ distance: haversineMeters(a, b), time: 0, path: [origin, dest] });
+            return;
+          }
+          const route = result.routes[0];
+          const path = [];
+          (route.steps || []).forEach((s) => (s.path || []).forEach((pt) => path.push(pt)));
+          resolve({ distance: Number(route.distance || 0), time: Number(route.time || 0), path: path.length ? path : [origin, dest] });
+        });
+      });
+    }
+
+    function renderFoodStops(start, stops, totalDistance, totalTime) {
+      const summary = document.getElementById("foodSummary");
+      const list = document.getElementById("foodStops");
+      const km = (totalDistance / 1000).toFixed(1);
+      const min = totalTime ? Math.round(totalTime / 60) : null;
+      summary.innerHTML =
+        "起点：" +
+        start.name +
+        "<br>站点数：" +
+        stops.length +
+        "<br>总距离：" +
+        km +
+        " km" +
+        (min ? "<br>步行时间：" + min + " 分钟" : "");
+      list.innerHTML = "";
+      stops.forEach((s, idx) => {
+        const div = document.createElement("div");
+        div.className = "food-stop";
+        const metaParts = [];
+        if (Number.isFinite(s.distance)) metaParts.push(Math.round(s.distance) + "m");
+        if (s.rating) metaParts.push("评分 " + s.rating);
+        if (s.cost) metaParts.push("人均 " + s.cost);
+        const uri =
+          "https://uri.amap.com/marker?position=" +
+          encodeURIComponent(s.loc.lng + "," + s.loc.lat) +
+          "&name=" +
+          encodeURIComponent(s.name);
+        div.innerHTML =
+          '<div class="food-stop-title"><strong>' +
+          (idx + 1) +
+          ". " +
+          s.name +
+          '</strong><span class="food-stop-meta">' +
+          metaParts.join(" · ") +
+          "</span></div>" +
+          (s.type ? '<div class="hint">' + s.type + "</div>" : "") +
+          (s.address ? '<div class="hint">' + s.address + "</div>" : "") +
+          '<div class="hint"><a href="' +
+          uri +
+          '" target="_blank" rel="noreferrer">在高德打开</a></div>';
+        list.appendChild(div);
+      });
+    }
+
+    async function generateFoodRoute() {
+      const btn = document.getElementById("generateFoodRouteBtn");
+      const summary = document.getElementById("foodSummary");
+      btn.disabled = true;
+      summary.innerHTML = '<span class="loading">正在生成路线……</span>';
+      try {
+        const AMap = await ensureFoodAmap();
+        clearFoodOverlays();
+
+        const start = await resolveStart(AMap);
+        foodMap.setZoomAndCenter(13, [start.lng, start.lat]);
+
+        const durationHours = Number(document.getElementById("foodDuration")?.value || 3) || 3;
+        const totalMinutes = Math.max(60, Math.round(durationHours * 60));
+        const stopCount = decideStopCount(totalMinutes);
+        const maxDistanceKm = Number(document.getElementById("maxDistanceKm")?.value || 5) || 5;
+        const radiusMeters = Math.max(800, Math.min(15000, Math.round(maxDistanceKm * 1000)));
+
+        const tastes = getActiveChipValues("tasteChips");
+        const types = getActiveChipValues("typeChips");
+        const keyword = buildFoodKeyword(tastes, types);
+        const crowdPref = getSingleChipValue("crowdChips");
+
+        const rawPois = await searchFoodPois(AMap, start, keyword, radiusMeters);
+
+        const minRating = Number(document.getElementById("minRating")?.value || "");
+        const maxPrice = Number(document.getElementById("maxPrice")?.value || "");
+
+        const pois = rawPois
+          .filter((p) => !Number.isFinite(minRating) || !p.rating || p.rating >= minRating)
+          .filter((p) => !Number.isFinite(maxPrice) || !p.cost || p.cost <= maxPrice)
+          .filter((p) => !Number.isFinite(p.distance) || p.distance <= radiusMeters)
+          .map((p) => {
+            const dist = Number.isFinite(p.distance) ? p.distance : haversineMeters(start, p.loc);
+            const ratingScore = p.rating ? p.rating * 120 : 0;
+            const distScore = -dist * 0.06;
+            const crowdScore = crowdPref === "尽量不挤" ? -Math.max(0, ratingScore) * 0.2 : 0;
+            return { ...p, distance: dist, score: ratingScore + distScore + crowdScore };
+          })
+          .sort((a, b) => b.score - a.score);
+
+        const picked = [];
+        const seen = new Set();
+        for (const p of pois) {
+          const key = (p.name || "") + "|" + Math.round(p.loc.lng * 10000) + "|" + Math.round(p.loc.lat * 10000);
+          if (seen.has(key)) continue;
+          seen.add(key);
+          picked.push(p);
+          if (picked.length >= stopCount) break;
+        }
+        if (!picked.length) throw new Error("筛选后没有结果，请放宽条件再试");
+
+        const ordered = orderStopsGreedy(start, picked);
+
+        const startMarker = new AMap.Marker({ position: [start.lng, start.lat], title: start.name });
+        foodMap.add(startMarker);
+        foodOverlays.push(startMarker);
+
+        ordered.forEach((s, i) => {
+          const marker = new AMap.Marker({
+            position: [s.loc.lng, s.loc.lat],
+            title: s.name,
+            label: { content: String(i + 1), offset: new AMap.Pixel(2, 0) }
+          });
+          foodMap.add(marker);
+          foodOverlays.push(marker);
+        });
+
+        let totalDistance = 0;
+        let totalTime = 0;
+        const fullPath = [];
+        let prev = start;
+        for (const stop of ordered) {
+          const leg = await walkingLeg(AMap, prev, stop.loc);
+          totalDistance += leg.distance || 0;
+          totalTime += leg.time || 0;
+          leg.path.forEach((pt) => fullPath.push(pt));
+          prev = stop.loc;
+        }
+
+        if (fullPath.length >= 2) {
+          const polyline = new AMap.Polyline({
+            path: fullPath,
+            strokeColor: "#8b2500",
+            strokeWeight: 5,
+            strokeOpacity: 0.85
+          });
+          foodMap.add(polyline);
+          foodOverlays.push(polyline);
+          foodMap.setFitView(foodOverlays);
+        }
+
+        renderFoodStops(start, ordered, totalDistance, totalTime);
+      } catch (e) {
+        document.getElementById("foodSummary").textContent = "生成失败：" + (e.message || "未知错误");
+        document.getElementById("foodStops").innerHTML = "";
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function initFoodSection() {
+      if (foodInited) return;
+      foodInited = true;
+      const stored = localStorage.getItem("amap_web_key") || "";
+      if (stored && !document.getElementById("amapKey").value) {
+        document.getElementById("amapKey").value = stored;
+      }
+      document.getElementById("amapKey").addEventListener("change", () => {
+        foodAmapReady = null;
+        persistAmapKey();
+      });
+      document.getElementById("amapKey").addEventListener("blur", persistAmapKey);
+      document.getElementById("generateFoodRouteBtn").onclick = generateFoodRoute;
+      setChipsActive("tasteChips", false);
+      setChipsActive("typeChips", false);
+      setChipsActive("crowdChips", true);
+      document.getElementById("foodStart").addEventListener("input", () => {
+        foodStartTip = null;
+        const hint = document.getElementById("foodStartHint");
+        if (hint) hint.textContent = "建议从联想下拉中选择，定位更准。";
+      });
+      document.getElementById("foodStart").addEventListener("focus", async () => {
+        try { await ensureFoodAmap(); } catch (e) {}
+      });
     }
 
     initMap();
