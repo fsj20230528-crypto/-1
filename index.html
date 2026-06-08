@@ -1769,7 +1769,7 @@
 
     async function geocodeStart(AMap, text) {
       return await new Promise((resolve, reject) => {
-        if (!text) {
+        if (!String(text || "").trim()) {
           reject(new Error("请先填写出发地"));
           return;
         }
@@ -1788,11 +1788,11 @@
     }
 
     async function resolveStart(AMap) {
-      if ((foodStartMode === "geo" || foodStartMode === "zhejiang") && foodStartFixed) {
-        return foodStartFixed;
-      }
       const text = document.getElementById("foodStart")?.value?.trim() || "";
       const poi = foodStartTip;
+      if (foodStartMode === "geo" || foodStartMode === "zhejiang") {
+        if (foodStartFixed) return foodStartFixed;
+      }
       if (poi?.location) {
         const loc = poi.location;
         return { lng: loc.lng, lat: loc.lat, name: poi.name || text || "出发地" };
@@ -1809,6 +1809,15 @@
           return { lng: loc.lng, lat: loc.lat, name: detail.name || text || "出发地" };
         }
       }
+      if (foodStartMode === "geo" && !foodStartFixed && !text) {
+        throw new Error("当前位置定位失败，请切换到“浙江省定位/手动输入”，或点击“刷新定位”重试。");
+      }
+      if (foodStartMode === "zhejiang" && !foodStartFixed && !text) {
+        throw new Error("请先在“浙江省定位”里选择市和区县作为出发地。");
+      }
+      if (foodStartMode === "manual" && !text) {
+        throw new Error("请先在“手动输入”里填写出发地（城市/景点/地址），建议从联想下拉中选择。");
+      }
       return await geocodeStart(AMap, text);
     }
 
@@ -1817,15 +1826,34 @@
         const c = new AMap.LngLat(center.lng, center.lat);
         foodPlaceSearch.searchNearBy(keyword, c, radiusMeters, (status, result) => {
           const pois = result?.poiList?.pois || [];
-          const info = result?.info || "";
+          const info = result?.info || result?.message || "";
           const infocode = result?.infocode ? String(result.infocode) : "";
           if (status !== "complete") {
-            const tail = info ? "：" + info + (infocode ? "（" + infocode + "）" : "") : "";
-            reject(new Error("POI 搜索失败" + tail));
+            const parts = [];
+            if (status) parts.push("status=" + status);
+            if (info) parts.push("info=" + info);
+            if (infocode) parts.push("infocode=" + infocode);
+            if (keyword) parts.push("keyword=" + keyword);
+            if (radiusMeters) parts.push("radiusKm=" + (radiusMeters / 1000).toFixed(1));
+            parts.push(
+              "center=" +
+                Number(center.lng).toFixed(6) +
+                "," +
+                Number(center.lat).toFixed(6)
+            );
+            reject(new Error("POI 搜索失败：" + parts.join("，")));
             return;
           }
           if (!pois.length) {
-            reject(new Error("未搜索到餐饮点位（范围 " + (radiusMeters / 1000).toFixed(1) + "km）"));
+            reject(
+              new Error(
+                "未搜索到餐饮点位（关键词 " +
+                  keyword +
+                  "，范围 " +
+                  (radiusMeters / 1000).toFixed(1) +
+                  "km）"
+              )
+            );
             return;
           }
           resolve(
