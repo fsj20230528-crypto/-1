@@ -1289,7 +1289,7 @@
   <script>
     // ========== 请在此处填写你的 DeepSeek API Key ==========
     const DEEPSEEK_API_KEY = ""; // 例: "sk-xxxxxxxxxxxxxxxx"
-    const AMAP_WEB_KEY = "1686fc912c24581e4ac70ea99d11bb1b";
+    const AMAP_WEB_KEY = "";
 
     const GEO_BASE = "https://geo.datav.aliyun.com/areas_v3/bound/";
     const ZJ_CITY_CODES = [
@@ -1935,7 +1935,7 @@
     }
 
     function loadAmapSdk(key) {
-      window._AMapSecurityConfig = { securityJsCode: "468592f3fb3ecd22fece945cc5a91af7" };
+      window._AMapSecurityConfig = { securityJsCode: "" };
       if (foodAmapReady) return foodAmapReady;
       foodAmapReady = new Promise((resolve, reject) => {
         if (!key) {
