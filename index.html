@@ -688,32 +688,35 @@
             </div>
           </div>
 
-          <div class="field">
-            <label for="foodDuration">总时长（小时）</label>
-            <input type="text" id="foodDuration" value="3" />
-          </div>
-          <div class="field">
-            <label for="foodSort">排序</label>
-            <input type="text" id="foodSort" value="距离优先" />
-          </div>
-
           <div class="field full">
             <label>口味（多选）</label>
             <div class="chips" id="tasteChips">
-              <span class="chip" data-value="辣">辣</span>
-              <span class="chip" data-value="鲜">鲜</span>
+              <span class="chip" data-value="酸">酸</span>
               <span class="chip" data-value="甜">甜</span>
+              <span class="chip" data-value="辣">辣</span>
               <span class="chip" data-value="咸">咸</span>
-              <span class="chip" data-value="糯">糯</span>
+              <span class="chip" data-value="鲜">鲜</span>
             </div>
           </div>
 
           <div class="field full">
-            <label>类型（多选）</label>
-            <div class="chips" id="typeChips">
-              <span class="chip" data-value="菜">菜</span>
-              <span class="chip" data-value="面">面</span>
-              <span class="chip" data-value="点心">点心</span>
+            <label>烹饪方式（多选）</label>
+            <div class="chips" id="cookChips">
+              <span class="chip" data-value="炒菜类">炒菜类</span>
+              <span class="chip" data-value="炖菜类">炖菜类</span>
+              <span class="chip" data-value="烧烤类">烧烤类</span>
+              <span class="chip" data-value="清蒸类">清蒸类</span>
+              <span class="chip" data-value="油炸类">油炸类</span>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label>功能（多选）</label>
+            <div class="chips" id="funcChips">
+              <span class="chip" data-value="主食类">主食类</span>
+              <span class="chip" data-value="小吃类">小吃类</span>
+              <span class="chip" data-value="甜品">甜品</span>
+              <span class="chip" data-value="汤羹类">汤羹类</span>
             </div>
           </div>
 
@@ -728,6 +731,15 @@
           </div>
 
           <div class="field">
+            <label for="stopCount">站点数</label>
+            <select id="stopCount" aria-label="站点数">
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div class="field">
             <label for="maxDistanceKm">距离上限（km）</label>
             <input type="text" id="maxDistanceKm" value="5" />
           </div>
@@ -737,12 +749,8 @@
           </div>
 
           <div class="field">
-            <label for="maxPrice">人均上限（可空）</label>
-            <input type="text" id="maxPrice" placeholder="例如 80" />
-          </div>
-          <div class="field">
-            <label for="stopCountHint">站点数</label>
-            <input type="text" id="stopCountHint" value="按时长自动" disabled />
+            <label for="priceRange">人均消费（可空）</label>
+            <input type="text" id="priceRange" placeholder="示例：20-60元" />
           </div>
         </div>
 
@@ -1723,16 +1731,40 @@
       return ordered;
     }
 
-    function buildFoodKeyword(tastes, types) {
-      const mapType = {
-        "菜": "餐厅 家常菜",
-        "面": "面馆",
-        "点心": "小吃 点心 糕点"
+    function buildFoodKeyword(tastes, cooks, funcs) {
+      const mapCook = {
+        "炒菜类": "炒",
+        "炖菜类": "炖",
+        "烧烤类": "烧烤",
+        "清蒸类": "清蒸",
+        "油炸类": "油炸"
+      };
+      const mapFunc = {
+        "主食类": "主食 饭",
+        "小吃类": "小吃",
+        "甜品": "甜品 甜点",
+        "汤羹类": "汤 羹"
       };
       const parts = [];
       tastes.forEach((t) => parts.push(t));
-      types.forEach((t) => parts.push(mapType[t] || t));
+      cooks.forEach((c) => parts.push(mapCook[c] || c));
+      funcs.forEach((f) => parts.push(mapFunc[f] || f));
       return parts.length ? parts.join(" ") : "美食 餐厅";
+    }
+
+    function parsePriceRange(raw) {
+      const text = String(raw || "").trim();
+      if (!text) return null;
+      const cleaned = text.replace(/[元人民币¥￥\s]/g, "");
+      const m = cleaned.match(/^(\d+)(?:[-~～](\d+))?$/);
+      if (!m) return null;
+      const a = Number(m[1]);
+      const b = m[2] ? Number(m[2]) : null;
+      if (!Number.isFinite(a)) return null;
+      if (b !== null && !Number.isFinite(b)) return null;
+      const min = b === null ? a : Math.min(a, b);
+      const max = b === null ? a : Math.max(a, b);
+      return { min, max };
     }
 
     async function geocodeStart(AMap, text) {
@@ -1882,25 +1914,30 @@
         const start = await resolveStart(AMap);
         foodMap.setZoomAndCenter(13, [start.lng, start.lat]);
 
-        const durationHours = Number(document.getElementById("foodDuration")?.value || 3) || 3;
-        const totalMinutes = Math.max(60, Math.round(durationHours * 60));
-        const stopCount = decideStopCount(totalMinutes);
+        const stopCount = Number(document.getElementById("stopCount")?.value || 3) || 3;
         const maxDistanceKm = Number(document.getElementById("maxDistanceKm")?.value || 5) || 5;
         const radiusMeters = Math.max(800, Math.min(15000, Math.round(maxDistanceKm * 1000)));
 
         const tastes = getActiveChipValues("tasteChips");
-        const types = getActiveChipValues("typeChips");
-        const keyword = buildFoodKeyword(tastes, types);
+        const cooks = getActiveChipValues("cookChips");
+        const funcs = getActiveChipValues("funcChips");
+        const keyword = buildFoodKeyword(tastes, cooks, funcs);
         const crowdPref = getSingleChipValue("crowdChips");
 
         const rawPois = await searchFoodPois(AMap, start, keyword, radiusMeters);
 
         const minRating = Number(document.getElementById("minRating")?.value || "");
-        const maxPrice = Number(document.getElementById("maxPrice")?.value || "");
+        const priceRange = parsePriceRange(document.getElementById("priceRange")?.value || "");
 
         const pois = rawPois
           .filter((p) => !Number.isFinite(minRating) || !p.rating || p.rating >= minRating)
-          .filter((p) => !Number.isFinite(maxPrice) || !p.cost || p.cost <= maxPrice)
+          .filter((p) => {
+            if (!priceRange) return true;
+            if (!p.cost) return true;
+            if (Number.isFinite(priceRange.min) && p.cost < priceRange.min) return false;
+            if (Number.isFinite(priceRange.max) && p.cost > priceRange.max) return false;
+            return true;
+          })
           .filter((p) => !Number.isFinite(p.distance) || p.distance <= radiusMeters)
           .map((p) => {
             const dist = Number.isFinite(p.distance) ? p.distance : haversineMeters(start, p.loc);
@@ -1985,7 +2022,8 @@
       document.getElementById("amapKey").addEventListener("blur", persistAmapKey);
       document.getElementById("generateFoodRouteBtn").onclick = generateFoodRoute;
       setChipsActive("tasteChips", false);
-      setChipsActive("typeChips", false);
+      setChipsActive("cookChips", false);
+      setChipsActive("funcChips", false);
       setChipsActive("crowdChips", true);
 
       const modeSel = document.getElementById("foodStartMode");
