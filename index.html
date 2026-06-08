@@ -1452,6 +1452,8 @@
     }
 
     function getAmapKey() {
+  return AMAP_WEB_KEY;
+}
       const input = document.getElementById("amapKey");
       const fromInput = input?.value?.trim();
       const fromLocal = localStorage.getItem("amap_web_key") || "";
@@ -1464,6 +1466,7 @@
     }
 
     function loadAmapSdk(key) {
+      window._AMapSecurityConfig = { securityJsCode: "468592f3fb3ecd22fece945cc5a91af7" };
       if (foodAmapReady) return foodAmapReady;
       foodAmapReady = new Promise((resolve, reject) => {
         if (!key) {
