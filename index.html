@@ -1452,12 +1452,10 @@
     }
 
     function getAmapKey() {
-  return AMAP_WEB_KEY;
-}
       const input = document.getElementById("amapKey");
       const fromInput = input?.value?.trim();
       const fromLocal = localStorage.getItem("amap_web_key") || "";
-      return fromInput || fromLocal || AMAP_WEB_KEY;
+      return AMAP_WEB_KEY || fromInput || fromLocal;
     }
 
     function persistAmapKey() {
