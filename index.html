@@ -426,18 +426,6 @@
     }
     .api-config label { display: block; margin-bottom: 0.35rem; color: var(--ink-light); }
     .hint { font-size: 0.75rem; color: var(--ink-light); margin-top: 0.5rem; line-height: 1.5; }
-    .poem-output {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid var(--border);
-      white-space: pre-wrap;
-      line-height: 2;
-      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
-      font-size: 1.05rem;
-      text-align: center;
-      min-height: 120px;
-    }
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -615,7 +603,7 @@
     <div class="sidebar-top">
       <button class="sidebar-close" id="sidebarClose" aria-label="关闭">×</button>
       <nav class="sidebar-main-nav" aria-label="功能导航">
-        <button class="nav-btn active" data-section="persona">人格对话</button>
+        <button class="nav-btn active" data-section="persona">城市印象</button>
         <button class="nav-btn" data-section="food">美食地图</button>
         <button class="nav-btn" data-section="checkin">打卡系统</button>
         <button class="nav-btn" data-section="tools">实用辅助</button>
@@ -629,16 +617,14 @@
         <p class="county-bio" id="countyBio">—</p>
       </div>
       <div class="sidebar-tabs">
-        <button class="tab-btn active" data-tab="intro">县域印象</button>
+        <button class="tab-btn active" data-tab="intro">城市记忆</button>
         <button class="tab-btn" data-tab="chat">和TA聊天</button>
-        <button class="tab-btn" data-tab="poem">一起写诗</button>
       </div>
       <div class="sidebar-body">
         <div class="panel active" id="panel-intro">
           <div class="intro-seal" id="introSeal">印</div>
           <p class="hint" id="introHint">每一座县城都有自己的声音，点击地图即可相遇。</p>
           <button class="btn-primary" id="goChatBtn">和TA聊天</button>
-          <button class="btn-primary" id="goPoemBtn" style="margin-top:0.5rem;background:var(--ink)">一起写诗</button>
         </div>
         <div class="panel" id="panel-chat">
           <div class="api-config">
@@ -651,12 +637,6 @@
           <div class="chat-messages" id="chatMessages"></div>
           <textarea id="chatInput" rows="3" placeholder="向这座县城说点什么……"></textarea>
           <button class="btn-primary" id="sendChatBtn">发送</button>
-        </div>
-        <div class="panel" id="panel-poem">
-          <p class="hint">写下起兴，县域人格将续成一首短诗。</p>
-          <textarea id="poemSeed" rows="4" placeholder="例如：钱江源头的晨雾，缓缓漫过蜂箱……"></textarea>
-          <button class="btn-primary" id="sendPoemBtn">续写成诗</button>
-          <div class="poem-output" id="poemOutput">诗稿将在此呈现</div>
         </div>
       </div>
     </div>
@@ -1233,8 +1213,8 @@
       const hint = document.getElementById("introHint");
       if (hint) {
         hint.textContent = currentCounty.isDemo
-          ? "示范县域，人格已深度定制。可聊天、可赋诗。"
-          : "点击「和TA聊天」或「一起写诗」，与" + currentCounty.name + "对谈。";
+          ? "示范县域，人格已深度定制。可聊天。"
+          : "点击「和TA聊天」，与" + currentCounty.name + "对谈。";
       }
     }
 
@@ -1243,8 +1223,6 @@
       updateSidebarPersonaUI();
       chatHistory = [];
       renderChatWelcome();
-      document.getElementById("poemOutput").textContent = "诗稿将在此呈现";
-      document.getElementById("poemSeed").value = "";
       closeProfileDrawer();
       switchSection("persona");
       switchTab("intro");
@@ -1376,33 +1354,6 @@
       }
     }
 
-    async function sendPoem() {
-      const seed = document.getElementById("poemSeed").value.trim();
-      if (!seed || !currentCounty) {
-        alert("请先写下一两句起兴");
-        return;
-      }
-      const btn = document.getElementById("sendPoemBtn");
-      const out = document.getElementById("poemOutput");
-      btn.disabled = true;
-      out.innerHTML = '<span class="loading">续写中……</span>';
-      const poemPrompt = currentCounty.systemPrompt + "\n用户写了起兴，请续写一首五言或七言短诗，4至8句，每句一行，无标点无标题。";
-      try {
-        out.textContent = await callDeepSeek({
-          apiKey: getApiKey(),
-          baseUrl: getApiBase(),
-          messages: [
-            { role: "system", content: poemPrompt },
-            { role: "user", content: "起兴：\n" + seed }
-          ]
-        });
-      } catch (e) {
-        out.textContent = "续写失败：" + e.message;
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
     document.getElementById("sidebarClose").onclick = closeSidebar;
     document.getElementById("profileBtn").onclick = openProfileDrawer;
     document.getElementById("profileClose").onclick = closeProfileDrawer;
@@ -1414,7 +1365,6 @@
       b.onclick = () => switchTab(b.dataset.tab);
     });
     document.getElementById("goChatBtn").onclick = () => switchTab("chat");
-    document.getElementById("goPoemBtn").onclick = () => switchTab("poem");
     document.getElementById("sendChatBtn").onclick = sendChat;
     document.getElementById("chatInput").onkeydown = (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -1422,7 +1372,6 @@
         sendChat();
       }
     };
-    document.getElementById("sendPoemBtn").onclick = sendPoem;
 
     if (DEEPSEEK_API_KEY) {
       document.getElementById("apiKey").value = DEEPSEEK_API_KEY;
@@ -1452,8 +1401,6 @@
     }
 
     function getAmapKey() {
-  return AMAP_WEB_KEY;
-}
       const input = document.getElementById("amapKey");
       const fromInput = input?.value?.trim();
       const fromLocal = localStorage.getItem("amap_web_key") || "";
