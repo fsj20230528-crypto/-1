@@ -525,6 +525,54 @@
       border-bottom: 1px dashed rgba(139, 37, 0, 0.5);
     }
     .food-stop a:hover { border-bottom-color: rgba(139, 37, 0, 0.9); }
+    .start-mode-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .start-mode-row select {
+      flex: 1;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.6);
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+    .inline-btn {
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.55);
+      font-family: inherit;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      color: var(--ink-light);
+    }
+    .inline-btn:hover { background: rgba(255, 255, 255, 0.8); color: var(--ink); }
+    .food-start-box {
+      padding: 0.7rem 0.75rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.45);
+      line-height: 1.6;
+    }
+    .food-start-box strong {
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      letter-spacing: 0.08em;
+      font-weight: 400;
+    }
+    .food-start-subgrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+    .food-start-subgrid select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.6);
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
     .loading { animation: pulse 1.2s ease infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     .overlay {
@@ -627,9 +675,37 @@
 
         <div class="form-grid">
           <div class="field full">
-            <label for="foodStart">出发地</label>
-            <input type="text" id="foodStart" placeholder="输入城市 / 景点 / 地址" autocomplete="off" />
-            <p class="hint" id="foodStartHint">建议从联想下拉中选择，定位更准。</p>
+            <label>出发地</label>
+            <div class="start-mode-row">
+              <select id="foodStartMode" aria-label="出发地模式">
+                <option value="geo">当前位置（默认）</option>
+                <option value="zhejiang">浙江省定位（选市/县）</option>
+                <option value="manual">手动输入</option>
+              </select>
+              <button class="inline-btn" id="foodGeoRefreshBtn" type="button">刷新定位</button>
+            </div>
+
+            <div id="foodStartGeoBox" class="food-start-box" style="margin-top:0.6rem">
+              <strong id="foodGeoText">定位中…</strong>
+              <div class="hint" id="foodGeoHint">若浏览器询问定位权限，请选择允许。</div>
+            </div>
+
+            <div id="foodStartZJBox" style="margin-top:0.6rem;display:none">
+              <div class="food-start-subgrid">
+                <select id="foodZJCity" aria-label="选择市">
+                  <option value="">选择市</option>
+                </select>
+                <select id="foodZJCounty" aria-label="选择区县" disabled>
+                  <option value="">选择区县</option>
+                </select>
+              </div>
+              <div class="hint" id="foodZJHint">先选地级市，再选区/县/县级市作为出发点。</div>
+            </div>
+
+            <div id="foodStartManualBox" style="margin-top:0.6rem;display:none">
+              <input type="text" id="foodStart" placeholder="输入城市 / 景点 / 地址" autocomplete="off" />
+              <p class="hint" id="foodStartHint">建议从联想下拉中选择，定位更准。</p>
+            </div>
           </div>
 
           <div class="field">
@@ -819,6 +895,10 @@
     let foodWalking = null;
     let foodStartTip = null;
     let foodOverlays = [];
+    let foodStartMode = "geo";
+    let foodStartFixed = null;
+    let foodZJCityCache = [];
+    let foodZJCountyCache = [];
 
     async function loadZhejiangCountyGeo() {
       const parts = await Promise.all(
@@ -1399,7 +1479,9 @@
           "AMap.Autocomplete",
           "AMap.PlaceSearch",
           "AMap.Geocoder",
-          "AMap.Walking"
+          "AMap.Walking",
+          "AMap.Geolocation",
+          "AMap.DistrictSearch"
         ].join(",");
         script.src =
           "https://webapi.amap.com/maps?v=2.0&key=" +
@@ -1443,6 +1525,104 @@
         foodWalking = new AMap.Walking({ map: foodMap, hideMarkers: true });
       }
       return AMap;
+    }
+
+    function setFoodStartMode(mode) {
+      foodStartMode = mode;
+      const geoBox = document.getElementById("foodStartGeoBox");
+      const zjBox = document.getElementById("foodStartZJBox");
+      const manualBox = document.getElementById("foodStartManualBox");
+      const refreshBtn = document.getElementById("foodGeoRefreshBtn");
+      geoBox.style.display = mode === "geo" ? "" : "none";
+      zjBox.style.display = mode === "zhejiang" ? "" : "none";
+      manualBox.style.display = mode === "manual" ? "" : "none";
+      refreshBtn.style.display = mode === "geo" ? "" : "none";
+    }
+
+    function updateFoodGeoUI(text, hint) {
+      const t = document.getElementById("foodGeoText");
+      const h = document.getElementById("foodGeoHint");
+      if (t) t.textContent = text;
+      if (h) h.textContent = hint || "";
+    }
+
+    async function reverseGeocode(AMap, lnglat) {
+      return await new Promise((resolve) => {
+        foodGeocoder.getAddress([lnglat.lng, lnglat.lat], (status, result) => {
+          if (status !== "complete") {
+            resolve("");
+            return;
+          }
+          resolve(result?.regeocode?.formattedAddress || "");
+        });
+      });
+    }
+
+    async function locateUser(AMap) {
+      updateFoodGeoUI("定位中…", "若浏览器询问定位权限，请选择允许。");
+      return await new Promise((resolve, reject) => {
+        const geo = new AMap.Geolocation({
+          enableHighAccuracy: true,
+          timeout: 8000,
+          convert: true
+        });
+        geo.getCurrentPosition(async (status, result) => {
+          if (status !== "complete" || !result?.position) {
+            reject(new Error(result?.message || "定位失败"));
+            return;
+          }
+          const loc = result.position;
+          const addr = result.formattedAddress || (await reverseGeocode(AMap, { lng: loc.lng, lat: loc.lat })) || "当前位置";
+          resolve({ lng: loc.lng, lat: loc.lat, name: addr });
+        });
+      });
+    }
+
+    function fillSelectOptions(selectEl, items, placeholder) {
+      selectEl.innerHTML = "";
+      const ph = document.createElement("option");
+      ph.value = "";
+      ph.textContent = placeholder;
+      selectEl.appendChild(ph);
+      items.forEach((it) => {
+        const opt = document.createElement("option");
+        opt.value = String(it.adcode || it.name);
+        opt.textContent = it.name;
+        selectEl.appendChild(opt);
+      });
+    }
+
+    async function districtSearchOnce(AMap, keyword, level, subdistrict) {
+      return await new Promise((resolve, reject) => {
+        const ds = new AMap.DistrictSearch({
+          level,
+          subdistrict,
+          extensions: "base"
+        });
+        ds.search(keyword, (status, result) => {
+          const list = result?.districtList || [];
+          if (status !== "complete" || !list.length) {
+            reject(new Error("行政区划加载失败"));
+            return;
+          }
+          resolve(list[0]);
+        });
+      });
+    }
+
+    async function ensureZhejiangCityList(AMap) {
+      if (foodZJCityCache.length) return foodZJCityCache;
+      const province = await districtSearchOnce(AMap, "浙江省", "province", 1);
+      const cities = (province.districtList || []).filter((d) => d.level === "city");
+      foodZJCityCache = cities.map((d) => ({ name: d.name, adcode: d.adcode, center: d.center }));
+      return foodZJCityCache;
+    }
+
+    async function loadCountiesByCity(AMap, cityAdcodeOrName) {
+      const city = await districtSearchOnce(AMap, cityAdcodeOrName, "city", 1);
+      const counties = (city.districtList || []).filter((d) => d.level === "district");
+      foodZJCountyCache = counties.map((d) => ({ name: d.name, adcode: d.adcode, center: d.center }));
+      return foodZJCountyCache;
     }
 
     function clearFoodOverlays() {
@@ -1525,6 +1705,9 @@
     }
 
     async function resolveStart(AMap) {
+      if ((foodStartMode === "geo" || foodStartMode === "zhejiang") && foodStartFixed) {
+        return foodStartFixed;
+      }
       const text = document.getElementById("foodStart")?.value?.trim() || "";
       const poi = foodStartTip;
       if (poi?.location) {
@@ -1756,6 +1939,87 @@
       setChipsActive("tasteChips", false);
       setChipsActive("typeChips", false);
       setChipsActive("crowdChips", true);
+
+      const modeSel = document.getElementById("foodStartMode");
+      const citySel = document.getElementById("foodZJCity");
+      const countySel = document.getElementById("foodZJCounty");
+      const refreshBtn = document.getElementById("foodGeoRefreshBtn");
+
+      modeSel.value = "geo";
+      setFoodStartMode("geo");
+
+      modeSel.addEventListener("change", async () => {
+        const v = modeSel.value;
+        setFoodStartMode(v);
+        if (v === "geo") {
+          try {
+            const AMap = await ensureFoodAmap();
+            foodStartFixed = await locateUser(AMap);
+            updateFoodGeoUI(foodStartFixed.name, "已使用当前位置作为出发点。");
+            if (foodMap) foodMap.setZoomAndCenter(13, [foodStartFixed.lng, foodStartFixed.lat]);
+          } catch (e) {
+            updateFoodGeoUI("定位失败", "可改用“浙江省定位”或“手动输入”。");
+            foodStartFixed = null;
+          }
+        } else if (v === "zhejiang") {
+          try {
+            const AMap = await ensureFoodAmap();
+            const cities = await ensureZhejiangCityList(AMap);
+            fillSelectOptions(citySel, cities, "选择市");
+            countySel.disabled = true;
+            fillSelectOptions(countySel, [], "选择区县");
+            foodStartFixed = null;
+          } catch (e) {
+            document.getElementById("foodZJHint").textContent = "行政区划加载失败，请检查 Key 权限或网络。";
+          }
+        } else {
+          foodStartFixed = null;
+        }
+      });
+
+      refreshBtn.addEventListener("click", async () => {
+        if (foodStartMode !== "geo") return;
+        try {
+          const AMap = await ensureFoodAmap();
+          foodStartFixed = await locateUser(AMap);
+          updateFoodGeoUI(foodStartFixed.name, "已刷新定位。");
+          if (foodMap) foodMap.setZoomAndCenter(13, [foodStartFixed.lng, foodStartFixed.lat]);
+        } catch (e) {
+          updateFoodGeoUI("定位失败", "可改用“浙江省定位”或“手动输入”。");
+        }
+      });
+
+      citySel.addEventListener("change", async () => {
+        const v = citySel.value;
+        countySel.disabled = true;
+        fillSelectOptions(countySel, [], "选择区县");
+        foodStartFixed = null;
+        if (!v) return;
+        try {
+          const AMap = await ensureFoodAmap();
+          const counties = await loadCountiesByCity(AMap, v);
+          fillSelectOptions(countySel, counties, "选择区县");
+          countySel.disabled = false;
+        } catch (e) {
+          document.getElementById("foodZJHint").textContent = "区县加载失败，请稍后重试。";
+        }
+      });
+
+      countySel.addEventListener("change", () => {
+        const v = countySel.value;
+        if (!v) {
+          foodStartFixed = null;
+          return;
+        }
+        const found = foodZJCountyCache.find((c) => String(c.adcode) === String(v));
+        if (!found?.center) return;
+        const center = found.center;
+        const lng = Array.isArray(center) ? center[0] : center.lng;
+        const lat = Array.isArray(center) ? center[1] : center.lat;
+        foodStartFixed = { lng, lat, name: found.name };
+        if (foodMap) foodMap.setZoomAndCenter(12, [lng, lat]);
+      });
+
       document.getElementById("foodStart").addEventListener("input", () => {
         foodStartTip = null;
         const hint = document.getElementById("foodStartHint");
@@ -1764,6 +2028,19 @@
       document.getElementById("foodStart").addEventListener("focus", async () => {
         try { await ensureFoodAmap(); } catch (e) {}
       });
+
+      (async () => {
+        try {
+          const AMap = await ensureFoodAmap();
+          foodStartFixed = await locateUser(AMap);
+          updateFoodGeoUI(foodStartFixed.name, "已使用当前位置作为出发点。");
+          if (foodMap) foodMap.setZoomAndCenter(13, [foodStartFixed.lng, foodStartFixed.lat]);
+        } catch (e) {
+          updateFoodGeoUI("未获取到定位", "可改用“浙江省定位”或“手动输入”。");
+          modeSel.value = "manual";
+          setFoodStartMode("manual");
+        }
+      })();
     }
 
     initMap();
