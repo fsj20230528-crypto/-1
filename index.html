@@ -896,8 +896,8 @@
             <textarea id="communityPostText" rows="3" placeholder="分享你的旅途作品…"></textarea>
           </div>
           <div class="community-compose-actions">
-            <label class="community-file-btn" for="communityImageInput">上传图片</label>
-            <label class="community-file-btn" for="communityVideoInput">上传视频</label>
+            <button class="community-file-btn" id="communityImageBtn" type="button">上传图片</button>
+            <button class="community-file-btn" id="communityVideoBtn" type="button">上传视频</button>
             <button class="btn-primary" id="communityPublishBtn" type="button">发布</button>
           </div>
           <input type="file" id="communityImageInput" accept="image/*" multiple style="display:none" />
@@ -2380,6 +2380,13 @@
       ];
 
       seed.forEach((p) => communityPosts.push(normalizePost(p)));
+
+      document.getElementById("communityImageBtn").addEventListener("click", () => {
+        document.getElementById("communityImageInput")?.click();
+      });
+      document.getElementById("communityVideoBtn").addEventListener("click", () => {
+        document.getElementById("communityVideoInput")?.click();
+      });
 
       document.getElementById("communityImageInput").addEventListener("change", (e) => {
         const files = Array.from(e.target.files || []);
