@@ -1508,24 +1508,91 @@
       });
     }
 
+    function normalizeAmapGeoFail(result) {
+      const info = result?.info || result?.message || "";
+      const infocode = result?.infocode ? String(result.infocode) : "";
+      const joined = (info || "定位失败") + (infocode ? "（" + infocode + "）" : "");
+      if (String(info).includes("PERMISSION_DENIED")) {
+        return { title: "定位权限被拒绝", detail: joined, tip: "请在浏览器地址栏/系统设置中允许定位后重试。" };
+      }
+      if (String(info).includes("TIMEOUT")) {
+        return { title: "定位超时", detail: joined, tip: "请检查网络或切换到“浙江省定位”。" };
+      }
+      if (String(info).includes("INVALID_USER_KEY") || String(info).includes("INVALID_USER_SCODE")) {
+        return { title: "高德鉴权失败", detail: joined, tip: "请检查 Key、安全密钥与 Referer 白名单是否正确。" };
+      }
+      if (String(info).includes("SERVICE_NOT_AVAILABLE")) {
+        return { title: "定位服务不可用", detail: joined, tip: "请换浏览器或改用“浙江省定位/手动输入”。" };
+      }
+      return { title: "定位失败", detail: joined, tip: "可改用“浙江省定位/手动输入”，或点击“刷新定位”重试。" };
+    }
+
+    function normalizeBrowserGeoFail(err) {
+      const code = typeof err?.code === "number" ? err.code : null;
+      const msg = err?.message || "定位失败";
+      if (code === 1) return { title: "定位权限被拒绝", detail: msg, tip: "请在浏览器/系统设置里允许定位后重试。" };
+      if (code === 2) return { title: "无法获取位置", detail: msg, tip: "请检查网络/GPS，或改用“浙江省定位”。" };
+      if (code === 3) return { title: "定位超时", detail: msg, tip: "请重试或改用“浙江省定位”。" };
+      return { title: "定位失败", detail: msg, tip: "可改用“浙江省定位/手动输入”。" };
+    }
+
+    async function locateUserViaBrowser(AMap) {
+      if (!navigator.geolocation?.getCurrentPosition) {
+        throw new Error("浏览器不支持定位");
+      }
+      const pos = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (p) => resolve(p),
+          (e) => reject(e),
+          { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+        );
+      });
+      const lng = pos.coords.longitude;
+      const lat = pos.coords.latitude;
+      const addr = (await reverseGeocode(AMap, { lng, lat })) || "当前位置";
+      return { lng, lat, name: addr };
+    }
+
     async function locateUser(AMap) {
       updateFoodGeoUI("定位中…", "若浏览器询问定位权限，请选择允许。");
-      return await new Promise((resolve, reject) => {
+      const amapAttempt = await new Promise((resolve) => {
         const geo = new AMap.Geolocation({
           enableHighAccuracy: true,
           timeout: 8000,
-          convert: true
+          convert: true,
+          showButton: false,
+          showMarker: false,
+          showCircle: false
         });
-        geo.getCurrentPosition(async (status, result) => {
-          if (status !== "complete" || !result?.position) {
-            reject(new Error(result?.message || "定位失败"));
-            return;
-          }
-          const loc = result.position;
-          const addr = result.formattedAddress || (await reverseGeocode(AMap, { lng: loc.lng, lat: loc.lat })) || "当前位置";
-          resolve({ lng: loc.lng, lat: loc.lat, name: addr });
-        });
+        try { foodMap?.addControl?.(geo); } catch (e) {}
+        geo.getCurrentPosition((status, result) => resolve({ status, result }));
       });
+      if (amapAttempt.status === "complete" && amapAttempt.result?.position) {
+        const loc = amapAttempt.result.position;
+        const addr =
+          amapAttempt.result.formattedAddress ||
+          (await reverseGeocode(AMap, { lng: loc.lng, lat: loc.lat })) ||
+          "当前位置";
+        return { lng: loc.lng, lat: loc.lat, name: addr };
+      }
+
+      try {
+        return await locateUserViaBrowser(AMap);
+      } catch (browserErr) {
+        const amapFail = normalizeAmapGeoFail(amapAttempt.result);
+        const browserFail = normalizeBrowserGeoFail(browserErr);
+        throw new Error(
+          amapFail.title +
+            "：" +
+            amapFail.detail +
+            "；" +
+            browserFail.title +
+            "：" +
+            browserFail.detail +
+            "。建议：" +
+            (amapFail.tip || browserFail.tip)
+        );
+      }
     }
 
     function fillSelectOptions(selectEl, items, placeholder) {
@@ -1908,7 +1975,7 @@
             updateFoodGeoUI(foodStartFixed.name, "已使用当前位置作为出发点。");
             if (foodMap) foodMap.setZoomAndCenter(13, [foodStartFixed.lng, foodStartFixed.lat]);
           } catch (e) {
-            updateFoodGeoUI("定位失败", "可改用“浙江省定位”或“手动输入”。");
+            updateFoodGeoUI("定位失败", String(e?.message || "定位失败"));
             foodStartFixed = null;
           }
         } else if (v === "zhejiang") {
@@ -1935,7 +2002,7 @@
           updateFoodGeoUI(foodStartFixed.name, "已刷新定位。");
           if (foodMap) foodMap.setZoomAndCenter(13, [foodStartFixed.lng, foodStartFixed.lat]);
         } catch (e) {
-          updateFoodGeoUI("定位失败", "可改用“浙江省定位”或“手动输入”。");
+          updateFoodGeoUI("定位失败", String(e?.message || "定位失败"));
         }
       });
 
@@ -1986,9 +2053,8 @@
           updateFoodGeoUI(foodStartFixed.name, "已使用当前位置作为出发点。");
           if (foodMap) foodMap.setZoomAndCenter(13, [foodStartFixed.lng, foodStartFixed.lat]);
         } catch (e) {
-          updateFoodGeoUI("未获取到定位", "可改用“浙江省定位”或“手动输入”。");
-          modeSel.value = "manual";
-          setFoodStartMode("manual");
+          updateFoodGeoUI("未获取到定位", String(e?.message || "可改用“浙江省定位/手动输入”。"));
+          foodStartFixed = null;
         }
       })();
     }
