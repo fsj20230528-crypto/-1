@@ -90,6 +90,29 @@
       height: 1.15rem;
       fill: currentColor;
     }
+    .community-open-btn {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.85rem;
+      width: 2.25rem;
+      height: 2.25rem;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: rgba(250, 246, 238, 0.9);
+      color: var(--cinnabar);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      z-index: 11;
+    }
+    .community-open-btn:hover {
+      background: #fff;
+      border-color: var(--cinnabar);
+      transform: scale(1.05);
+    }
+    .community-open-btn svg { width: 1.15rem; height: 1.15rem; fill: currentColor; }
     .profile-drawer {
       position: fixed;
       top: 0;
@@ -298,6 +321,93 @@
       line-height: 1.8;
       max-width: 260px;
     }
+    .community-body { display: flex; flex-direction: column; gap: 1rem; }
+    .community-compose {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.55);
+      padding: 0.9rem 0.9rem 0.8rem;
+    }
+    .community-compose-top { display: grid; grid-template-columns: 42px 1fr; gap: 0.75rem; align-items: start; }
+    .community-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-family: "Ma Shan Zheng", "KaiTi", cursive;
+      color: var(--cinnabar);
+      background: rgba(250, 246, 238, 0.95);
+    }
+    .community-compose textarea { margin: 0; min-height: 78px; }
+    .community-compose-actions { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 0.5rem; margin-top: 0.65rem; }
+    .community-file-btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      color: var(--ink-light);
+      user-select: none;
+    }
+    .community-file-btn:hover { background: rgba(255, 255, 255, 0.6); color: var(--ink); }
+    .community-compose-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.75rem; }
+    .community-compose-preview img, .community-compose-preview video { width: 100%; height: 92px; object-fit: cover; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.25); }
+    .community-feed-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .community-feed-tab {
+      padding: 0.7rem 0.5rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.92rem;
+      letter-spacing: 0.12em;
+      color: var(--ink-light);
+    }
+    .community-feed-tab.active { color: var(--cinnabar); background: rgba(255, 255, 255, 0.55); }
+    .community-feed { display: flex; flex-direction: column; gap: 0.8rem; }
+    .post-card { border: 1px solid var(--border); background: rgba(255, 255, 255, 0.55); padding: 0.9rem; }
+    .post-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.55rem; }
+    .post-author { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
+    .post-meta { min-width: 0; }
+    .post-name { font-size: 0.95rem; color: var(--ink); letter-spacing: 0.06em; }
+    .post-time { font-size: 0.78rem; color: var(--ink-light); margin-top: 0.2rem; }
+    .post-text { font-size: 0.92rem; line-height: 1.8; color: var(--ink-light); white-space: pre-wrap; }
+    .post-media { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.65rem; }
+    .post-media img, .post-media video { width: 100%; height: 104px; object-fit: cover; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.25); }
+    .post-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 0.75rem; }
+    .post-action-btn {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+      padding: 0.55rem 0.6rem;
+      font-family: inherit;
+      font-size: 0.86rem;
+      color: var(--ink-light);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      letter-spacing: 0.06em;
+    }
+    .post-action-btn.active { border-color: var(--cinnabar); color: var(--cinnabar); background: rgba(255, 255, 255, 0.65); }
+    .post-comments { margin-top: 0.75rem; border-top: 1px dashed var(--border); padding-top: 0.75rem; display: none; }
+    .post-comments.open { display: block; }
+    .comment-item { font-size: 0.86rem; color: var(--ink-light); line-height: 1.75; padding: 0.35rem 0; }
+    .comment-item strong { color: var(--ink); font-weight: 600; }
+    .comment-form { display: grid; grid-template-columns: 1fr 86px; gap: 0.5rem; margin-top: 0.5rem; }
+    .comment-form input[type="text"] { padding: 0.55rem 0.65rem; font-size: 0.9rem; }
+    .comment-form button { width: 100%; margin: 0; padding: 0.55rem 0.5rem; font-size: 0.9rem; letter-spacing: 0.12em; }
     .sidebar-header {
       padding: 1.25rem 1.5rem;
       border-bottom: 1px solid var(--border);
@@ -577,6 +687,11 @@
 </head>
 <body>
   <header>
+    <button class="community-open-btn" id="communityBtn" aria-label="打开社区" title="用户社区">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V21h14v-4.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V21h6v-4.5c0-2.33-4.67-3.5-7-3.5z"/>
+      </svg>
+    </button>
     <button class="profile-btn" id="profileBtn" aria-label="个人中心" title="个人中心">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -606,7 +721,7 @@
         <button class="nav-btn active" data-section="persona">城市印象</button>
         <button class="nav-btn" data-section="food">美食地图</button>
         <button class="nav-btn" data-section="checkin">打卡系统</button>
-        <button class="nav-btn" data-section="tools">实用辅助</button>
+        <button class="nav-btn" data-section="tools">用户社区</button>
       </nav>
     </div>
 
@@ -770,10 +885,33 @@
     </div>
 
     <div class="sidebar-section" id="section-tools">
-      <div class="section-placeholder">
-        <div class="placeholder-seal">辅</div>
-        <h3>实用辅助</h3>
-        <p>旅途小帮手，待用之时。此板块内容即将上线。</p>
+      <div class="sidebar-header">
+        <h2 class="county-name">用户社区</h2>
+        <p class="county-tagline">实时分享图文/视频 · 点赞收藏评论</p>
+      </div>
+      <div class="sidebar-body community-body">
+        <div class="community-compose">
+          <div class="community-compose-top">
+            <div class="community-avatar">游</div>
+            <textarea id="communityPostText" rows="3" placeholder="分享你的旅途作品…"></textarea>
+          </div>
+          <div class="community-compose-actions">
+            <label class="community-file-btn" for="communityImageInput">上传图片</label>
+            <label class="community-file-btn" for="communityVideoInput">上传视频</label>
+            <button class="btn-primary" id="communityPublishBtn" type="button">发布</button>
+          </div>
+          <input type="file" id="communityImageInput" accept="image/*" multiple style="display:none" />
+          <input type="file" id="communityVideoInput" accept="video/*" style="display:none" />
+          <div class="community-compose-preview" id="communityMediaPreview" style="display:none"></div>
+        </div>
+
+        <div class="community-feed-tabs" role="tablist" aria-label="社区信息流">
+          <button class="community-feed-tab active" data-feed="recommend" type="button">推荐</button>
+          <button class="community-feed-tab" data-feed="following" type="button">关注</button>
+          <button class="community-feed-tab" data-feed="nearby" type="button">附近</button>
+        </div>
+
+        <div class="community-feed" id="communityFeed" aria-live="polite"></div>
       </div>
     </div>
 
@@ -1289,6 +1427,15 @@
       setTimeout(() => chart && chart.resize(), 400);
     }
 
+    function openCommunity() {
+      closeProfileDrawer();
+      switchSection("tools");
+      sidebar.classList.add("open");
+      sidebar.setAttribute("aria-hidden", "false");
+      overlay.classList.add("visible");
+      setTimeout(() => chart && chart.resize(), 400);
+    }
+
     function closeProfileDrawer() {
       profileDrawer.classList.remove("open");
       profileDrawer.setAttribute("aria-hidden", "true");
@@ -1313,6 +1460,7 @@
       document.querySelectorAll(".sidebar-section").forEach((s) => s.classList.remove("active"));
       document.getElementById("section-" + sectionId)?.classList.add("active");
       if (sectionId === "food") initFoodSection();
+      if (sectionId === "tools") initCommunitySection();
     }
 
     function switchTab(tabId) {
@@ -1369,6 +1517,7 @@
     }
 
     document.getElementById("sidebarClose").onclick = closeSidebar;
+    document.getElementById("communityBtn").onclick = openCommunity;
     document.getElementById("profileBtn").onclick = openProfileDrawer;
     document.getElementById("profileClose").onclick = closeProfileDrawer;
     overlay.onclick = closeAllPanels;
@@ -2191,6 +2340,296 @@
           foodStartFixed = null;
         }
       })();
+    }
+
+    let communityInited = false;
+    let communityDraftMedia = [];
+    let communityFeedMode = "recommend";
+    const communityPosts = [];
+
+    function initCommunitySection() {
+      if (communityInited) return;
+      communityInited = true;
+
+      const seed = [
+        {
+          id: "p1",
+          author: "沿海慢行者",
+          avatar: "海",
+          time: "刚刚",
+          text: "舟山的风把海盐味写进了傍晚，码头边的面馆比想象中更温柔。",
+          media: [{ type: "image", url: "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=realistic%20travel%20photo%2C%20Zhoushan%20islands%20coastline%20at%20dusk%2C%20pier%20and%20calm%20sea%2C%20warm%20cinematic%20light%2C%20high%20detail%2C%20natural%20colors&image_size=landscape_4_3" }],
+          likes: 128,
+          collects: 42,
+          comments: [{ id: "c1", author: "路过的云", text: "这张海太治愈了", time: "1分钟前" }]
+        },
+        {
+          id: "p2",
+          author: "山里拾光",
+          avatar: "山",
+          time: "12分钟前",
+          text: "开化的溪谷一路都在闪，像把清凉藏在石头缝里。建议清晨去，光线最干净。",
+          media: [
+            { type: "image", url: "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=realistic%20travel%20photo%2C%20lush%20mountain%20valley%20stream%20in%20Zhejiang%2C%20clear%20water%2C%20mossy%20rocks%2C%20morning%20light%2C%20high%20detail%2C%20natural%20colors&image_size=landscape_4_3" },
+            { type: "image", url: "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=realistic%20travel%20photo%2C%20close%20view%20of%20forest%20creek%20with%20sunlight%20sparkling%20on%20water%2C%20Zhejiang%20China%2C%20high%20detail%2C%20natural%20colors&image_size=landscape_4_3" }
+          ],
+          likes: 76,
+          collects: 29,
+          comments: []
+        }
+      ];
+
+      seed.forEach((p) => communityPosts.push(normalizePost(p)));
+
+      document.getElementById("communityImageInput").addEventListener("change", (e) => {
+        const files = Array.from(e.target.files || []);
+        const urls = files.slice(0, 9).map((f) => ({ type: "image", url: URL.createObjectURL(f) }));
+        communityDraftMedia = urls;
+        renderDraftPreview();
+      });
+      document.getElementById("communityVideoInput").addEventListener("change", (e) => {
+        const file = (e.target.files || [])[0];
+        communityDraftMedia = file ? [{ type: "video", url: URL.createObjectURL(file) }] : [];
+        renderDraftPreview();
+      });
+
+      document.getElementById("communityPublishBtn").addEventListener("click", () => {
+        const text = document.getElementById("communityPostText").value.trim();
+        if (!text && !communityDraftMedia.length) return;
+        const post = normalizePost({
+          id: "p-" + Date.now(),
+          author: "我",
+          avatar: "我",
+          time: "刚刚",
+          text,
+          media: communityDraftMedia,
+          likes: 0,
+          collects: 0,
+          comments: []
+        });
+        communityPosts.unshift(post);
+        document.getElementById("communityPostText").value = "";
+        communityDraftMedia = [];
+        document.getElementById("communityImageInput").value = "";
+        document.getElementById("communityVideoInput").value = "";
+        renderDraftPreview();
+        renderCommunityFeed();
+      });
+
+      document.querySelectorAll("#section-tools .community-feed-tab").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll("#section-tools .community-feed-tab").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          communityFeedMode = btn.dataset.feed || "recommend";
+          renderCommunityFeed();
+        });
+      });
+
+      document.getElementById("communityFeed").addEventListener("click", (e) => {
+        const actionBtn = e.target.closest("[data-action]");
+        if (!actionBtn) return;
+        const card = e.target.closest("[data-post-id]");
+        if (!card) return;
+        const id = card.dataset.postId;
+        const post = communityPosts.find((p) => p.id === id);
+        if (!post) return;
+
+        const action = actionBtn.dataset.action;
+        if (action === "like") {
+          post.liked = !post.liked;
+          post.likes += post.liked ? 1 : -1;
+          renderCommunityFeed();
+          return;
+        }
+        if (action === "collect") {
+          post.collected = !post.collected;
+          post.collects += post.collected ? 1 : -1;
+          renderCommunityFeed();
+          return;
+        }
+        if (action === "toggleComments") {
+          const box = card.querySelector(".post-comments");
+          box?.classList.toggle("open");
+          return;
+        }
+        if (action === "submitComment") {
+          const input = card.querySelector('input[data-role="commentInput"]');
+          const text = String(input?.value || "").trim();
+          if (!text) return;
+          post.comments.push({ id: "c-" + Date.now(), author: "我", text, time: "刚刚" });
+          if (input) input.value = "";
+          renderCommunityFeed();
+        }
+      });
+
+      renderDraftPreview();
+      renderCommunityFeed();
+    }
+
+    function normalizePost(p) {
+      return {
+        id: String(p.id || "p-" + Math.random()),
+        author: String(p.author || "匿名旅人"),
+        avatar: String(p.avatar || "游").slice(0, 1),
+        time: String(p.time || ""),
+        text: String(p.text || ""),
+        media: Array.isArray(p.media) ? p.media : [],
+        likes: Number(p.likes || 0),
+        collects: Number(p.collects || 0),
+        comments: Array.isArray(p.comments) ? p.comments : [],
+        liked: Boolean(p.liked),
+        collected: Boolean(p.collected)
+      };
+    }
+
+    function renderDraftPreview() {
+      const box = document.getElementById("communityMediaPreview");
+      if (!box) return;
+      box.innerHTML = "";
+      box.style.display = communityDraftMedia.length ? "grid" : "none";
+      communityDraftMedia.forEach((m) => {
+        if (m.type === "video") {
+          const v = document.createElement("video");
+          v.src = m.url;
+          v.controls = true;
+          box.appendChild(v);
+          return;
+        }
+        const img = document.createElement("img");
+        img.src = m.url;
+        img.alt = "预览图片";
+        box.appendChild(img);
+      });
+    }
+
+    function renderCommunityFeed() {
+      const root = document.getElementById("communityFeed");
+      if (!root) return;
+      root.innerHTML = "";
+
+      const items = communityPosts.slice(0, 12);
+      if (!items.length) {
+        const empty = document.createElement("div");
+        empty.className = "section-placeholder";
+        empty.innerHTML = '<div class="placeholder-seal">社</div><h3>还没有作品</h3><p>发布第一条图文/视频作品，让旅途被看见。</p>';
+        root.appendChild(empty);
+        return;
+      }
+
+      items.forEach((post) => {
+        const card = document.createElement("div");
+        card.className = "post-card";
+        card.dataset.postId = post.id;
+
+        const head = document.createElement("div");
+        head.className = "post-head";
+
+        const author = document.createElement("div");
+        author.className = "post-author";
+
+        const avatar = document.createElement("div");
+        avatar.className = "community-avatar";
+        avatar.textContent = post.avatar;
+
+        const meta = document.createElement("div");
+        meta.className = "post-meta";
+
+        const name = document.createElement("div");
+        name.className = "post-name";
+        name.textContent = post.author;
+
+        const time = document.createElement("div");
+        time.className = "post-time";
+        time.textContent = post.time || (communityFeedMode === "nearby" ? "附近 · 刚刚" : "刚刚");
+
+        meta.appendChild(name);
+        meta.appendChild(time);
+        author.appendChild(avatar);
+        author.appendChild(meta);
+
+        head.appendChild(author);
+        card.appendChild(head);
+
+        const text = document.createElement("div");
+        text.className = "post-text";
+        text.textContent = post.text;
+        card.appendChild(text);
+
+        if (post.media?.length) {
+          const media = document.createElement("div");
+          media.className = "post-media";
+          post.media.slice(0, 9).forEach((m) => {
+            if (m.type === "video") {
+              const v = document.createElement("video");
+              v.src = m.url;
+              v.controls = true;
+              media.appendChild(v);
+              return;
+            }
+            const img = document.createElement("img");
+            img.src = m.url;
+            img.alt = "作品图片";
+            media.appendChild(img);
+          });
+          card.appendChild(media);
+        }
+
+        const actions = document.createElement("div");
+        actions.className = "post-actions";
+        actions.appendChild(buildActionBtn("like", "点赞", post.likes, post.liked));
+        actions.appendChild(buildActionBtn("collect", "收藏", post.collects, post.collected));
+        actions.appendChild(buildActionBtn("toggleComments", "评论", post.comments.length, false));
+        card.appendChild(actions);
+
+        const comments = document.createElement("div");
+        comments.className = "post-comments";
+
+        if (post.comments.length) {
+          post.comments.slice(-3).forEach((c) => {
+            const item = document.createElement("div");
+            item.className = "comment-item";
+            const who = document.createElement("strong");
+            who.textContent = c.author + "：";
+            const t = document.createElement("span");
+            t.textContent = " " + c.text;
+            item.appendChild(who);
+            item.appendChild(t);
+            comments.appendChild(item);
+          });
+        }
+
+        const form = document.createElement("div");
+        form.className = "comment-form";
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "写评论…";
+        input.dataset.role = "commentInput";
+        const submit = document.createElement("button");
+        submit.className = "btn-primary";
+        submit.type = "button";
+        submit.dataset.action = "submitComment";
+        submit.textContent = "发送";
+        form.appendChild(input);
+        form.appendChild(submit);
+        comments.appendChild(form);
+
+        card.appendChild(comments);
+        root.appendChild(card);
+      });
+    }
+
+    function buildActionBtn(action, label, count, active) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "post-action-btn" + (active ? " active" : "");
+      btn.dataset.action = action;
+      const text = document.createElement("span");
+      text.textContent = label;
+      const num = document.createElement("span");
+      num.textContent = String(count || 0);
+      btn.appendChild(text);
+      btn.appendChild(num);
+      return btn;
     }
 
     initMap();
