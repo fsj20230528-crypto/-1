@@ -866,6 +866,10 @@
     let chatHistory = [];
     const personaCache = {};
     const geoMeta = {};
+    let geoMetaReadyResolve = null;
+    const geoMetaReady = new Promise((resolve) => {
+      geoMetaReadyResolve = resolve;
+    });
     let foodInited = false;
     let foodMap = null;
     let foodAmapReady = null;
@@ -1160,10 +1164,12 @@
         loadingEl.classList.add("hidden");
         requestAnimationFrame(() => chart.resize());
         setTimeout(() => chart.resize(), 200);
+        geoMetaReadyResolve?.();
       } catch (err) {
         loadingEl.querySelector("span").textContent =
           "地图加载失败：" + (err.message || "请检查网络后刷新");
         console.error(err);
+        geoMetaReadyResolve?.();
       }
 
       window.addEventListener("resize", () => chart && chart.resize());
@@ -1495,8 +1501,7 @@
         "AMap.PlaceSearch",
         "AMap.Geocoder",
         "AMap.Walking",
-        "AMap.Geolocation",
-        "AMap.DistrictSearch"
+        "AMap.Geolocation"
       ]);
       if (!foodMap) {
         foodMap = new AMap.Map("foodMap", {
@@ -1646,43 +1651,26 @@
       selectEl.appendChild(ph);
       items.forEach((it) => {
         const opt = document.createElement("option");
-        opt.value = String(it.adcode || it.name);
+        opt.value = String(it.adcode || it.id || it.name);
         opt.textContent = it.name;
         selectEl.appendChild(opt);
       });
     }
 
-    async function districtSearchOnce(AMap, keyword, level, subdistrict) {
-      return await new Promise((resolve, reject) => {
-        const ds = new AMap.DistrictSearch({
-          level,
-          subdistrict,
-          extensions: "base"
-        });
-        ds.search(keyword, (status, result) => {
-          const list = result?.districtList || [];
-          if (status !== "complete" || !list.length) {
-            reject(new Error("行政区划加载失败"));
-            return;
-          }
-          resolve(list[0]);
-        });
-      });
+    function buildZhejiangCitiesFromMapMeta() {
+      return ZJ_CITY_CODES.map((code) => ({ name: ZJ_CITY_NAMES[code], adcode: code }));
     }
 
-    async function ensureZhejiangCityList(AMap) {
-      if (foodZJCityCache.length) return foodZJCityCache;
-      const province = await districtSearchOnce(AMap, "浙江省", "province", 1);
-      const cities = (province.districtList || []).filter((d) => d.level === "city");
-      foodZJCityCache = cities.map((d) => ({ name: d.name, adcode: d.adcode, center: d.center }));
-      return foodZJCityCache;
-    }
-
-    async function loadCountiesByCity(AMap, cityAdcodeOrName) {
-      const city = await districtSearchOnce(AMap, cityAdcodeOrName, "city", 1);
-      const counties = (city.districtList || []).filter((d) => d.level === "district");
-      foodZJCountyCache = counties.map((d) => ({ name: d.name, adcode: d.adcode, center: d.center }));
-      return foodZJCountyCache;
+    function buildZhejiangCountiesFromMapMeta(cityCode) {
+      const items = Object.entries(geoMeta)
+        .filter(([, meta]) => String(meta?.parentCode || "") === String(cityCode))
+        .map(([geoName, meta]) => ({
+          name: shortCountyName(geoName),
+          geoName,
+          adcode: meta.adcode
+        }));
+      items.sort((a, b) => a.name.localeCompare(b.name, "zh"));
+      return items;
     }
 
     function clearFoodOverlays() {
@@ -2024,13 +2012,13 @@
         } else if (v === "zhejiang") {
           try {
             const AMap = await ensureFoodAmap();
-            const cities = await ensureZhejiangCityList(AMap);
-            fillSelectOptions(citySel, cities, "选择市");
+            await geoMetaReady;
+            fillSelectOptions(citySel, buildZhejiangCitiesFromMapMeta(), "选择市");
             countySel.disabled = true;
             fillSelectOptions(countySel, [], "选择区县");
             foodStartFixed = null;
           } catch (e) {
-            document.getElementById("foodZJHint").textContent = "行政区划加载失败，请检查 Key 权限或网络。";
+            document.getElementById("foodZJHint").textContent = String(e?.message || "市县数据未就绪，请稍后重试。");
           }
         } else {
           try {
@@ -2064,27 +2052,32 @@
         if (!v) return;
         try {
           const AMap = await ensureFoodAmap();
-          const counties = await loadCountiesByCity(AMap, v);
-          fillSelectOptions(countySel, counties, "选择区县");
+          await geoMetaReady;
+          foodZJCountyCache = buildZhejiangCountiesFromMapMeta(v);
+          fillSelectOptions(countySel, foodZJCountyCache, "选择区县");
           countySel.disabled = false;
         } catch (e) {
-          document.getElementById("foodZJHint").textContent = "区县加载失败，请稍后重试。";
+          document.getElementById("foodZJHint").textContent = String(e?.message || "区县加载失败，请稍后重试。");
         }
       });
 
-      countySel.addEventListener("change", () => {
+      countySel.addEventListener("change", async () => {
         const v = countySel.value;
         if (!v) {
           foodStartFixed = null;
           return;
         }
-        const found = foodZJCountyCache.find((c) => String(c.adcode) === String(v));
-        if (!found?.center) return;
-        const center = found.center;
-        const lng = Array.isArray(center) ? center[0] : center.lng;
-        const lat = Array.isArray(center) ? center[1] : center.lat;
-        foodStartFixed = { lng, lat, name: found.name };
-        if (foodMap) foodMap.setZoomAndCenter(12, [lng, lat]);
+        try {
+          const found = foodZJCountyCache.find((c) => String(c.adcode) === String(v));
+          if (!found) return;
+          const AMap = await ensureFoodAmap();
+          const cityName = ZJ_CITY_NAMES[Number(citySel.value)] || "";
+          const start = await geocodeStart(AMap, (cityName || "") + (found.geoName || found.name));
+          foodStartFixed = { lng: start.lng, lat: start.lat, name: (cityName ? cityName + "·" : "") + found.name };
+          if (foodMap) foodMap.setZoomAndCenter(12, [foodStartFixed.lng, foodStartFixed.lat]);
+        } catch (e) {
+          document.getElementById("foodZJHint").textContent = String(e?.message || "区县定位失败，请换个区县或用手动输入。");
+        }
       });
 
       document.getElementById("foodStart").addEventListener("input", () => {
