@@ -683,6 +683,341 @@
       transition: opacity 0.3s;
     }
     .overlay.visible { opacity: 1; pointer-events: auto; }
+
+    .checkin-body { padding: 0.8rem 1.1rem 1.5rem; }
+    .checkin-city-strip {
+      display: flex;
+      gap: 0.45rem;
+      overflow-x: auto;
+      padding-bottom: 0.65rem;
+      margin-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      -webkit-overflow-scrolling: touch;
+    }
+    .checkin-city-btn {
+      padding: 0.35rem 0.55rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.35);
+      color: var(--ink-light);
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      font-size: 0.82rem;
+      border-radius: 999px;
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .checkin-city-btn.active {
+      color: var(--cinnabar);
+      border-color: rgba(139, 37, 0, 0.45);
+      background: rgba(255, 255, 255, 0.75);
+    }
+    .checkin-city-btn:hover { background: rgba(255, 255, 255, 0.7); color: var(--ink); }
+
+    .checkin-passport {
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      border-radius: 14px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 110% 80% at 20% 10%, rgba(120, 110, 95, 0.22), transparent 55%),
+        radial-gradient(ellipse 90% 70% at 85% 60%, rgba(70, 90, 105, 0.16), transparent 60%),
+        linear-gradient(180deg, #fbf7ee 0%, #efe6d4 100%);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+    }
+    .checkin-head {
+      position: relative;
+      padding: 1.1rem 1.15rem 1rem;
+      min-height: 210px;
+      border-bottom: 1px solid rgba(26, 26, 26, 0.14);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.78), rgba(255,255,255,0.18)),
+        radial-gradient(ellipse 120% 90% at 25% 20%, rgba(0,0,0,0.10), transparent 62%),
+        radial-gradient(ellipse 120% 90% at 85% 85%, rgba(0,0,0,0.06), transparent 62%);
+    }
+    .checkin-cityline {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.85rem;
+    }
+    .checkin-city-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 650;
+      letter-spacing: 0.12em;
+      color: rgba(20,20,20,0.85);
+    }
+    .checkin-city-badge .code {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      background: rgba(139, 37, 0, 0.08);
+      border: 1px solid rgba(139, 37, 0, 0.22);
+      color: rgba(139, 37, 0, 0.9);
+      flex-shrink: 0;
+    }
+    .checkin-city-badge .name {
+      font-family: "Ma Shan Zheng", "KaiTi", cursive;
+      font-size: 1.35rem;
+      letter-spacing: 0.16em;
+    }
+    .checkin-page-meta {
+      font-size: 0.78rem;
+      color: rgba(40,40,40,0.55);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+    .checkin-seal {
+      position: absolute;
+      right: 1.05rem;
+      bottom: 0.95rem;
+      width: 142px;
+      height: 142px;
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0)),
+        radial-gradient(60% 60% at 35% 30%, rgba(255,255,255,0.24), transparent 60%),
+        linear-gradient(135deg, rgba(139,37,0,0.90), rgba(110,18,0,0.90));
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0.9rem;
+      color: rgba(255,255,255,0.92);
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      line-height: 1.1;
+    }
+    .checkin-seal small {
+      display: block;
+      margin-top: 0.55rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      opacity: 0.92;
+      font-weight: 700;
+    }
+    .checkin-inkwash {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.55;
+      mix-blend-mode: multiply;
+      background:
+        radial-gradient(ellipse 120% 90% at 20% 20%, rgba(0,0,0,0.08), transparent 65%),
+        radial-gradient(ellipse 90% 70% at 85% 40%, rgba(0,0,0,0.06), transparent 70%),
+        radial-gradient(ellipse 80% 70% at 35% 85%, rgba(0,0,0,0.04), transparent 72%);
+    }
+    .checkin-body-inner { padding: 1.05rem 1.1rem 1.2rem; }
+    .checkin-stamp-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .checkin-stamp-title strong {
+      font-size: 0.92rem;
+      letter-spacing: 0.12em;
+      color: rgba(30, 30, 30, 0.82);
+    }
+    .checkin-stamp-title span {
+      font-size: 0.78rem;
+      color: rgba(40, 40, 40, 0.55);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .checkin-stamp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.7rem;
+    }
+    @media (max-width: 520px) { .checkin-stamp-grid { grid-template-columns: repeat(2, 1fr); } }
+    .checkin-stamp {
+      border-radius: 12px;
+      border: 1px dashed rgba(0, 0, 0, 0.20);
+      background: rgba(255, 255, 255, 0.32);
+      padding: 0.75rem 0.7rem;
+      min-height: 98px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+    .checkin-stamp:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.10);
+      border-color: rgba(139, 37, 0, 0.30);
+    }
+    .checkin-stamp.locked { filter: grayscale(1); opacity: 0.45; }
+    .checkin-stamp.unlocked {
+      border-style: solid;
+      border-color: rgba(139, 37, 0, 0.28);
+      box-shadow: 0 8px 16px rgba(139, 37, 0, 0.10);
+    }
+    .checkin-stamp-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem; }
+    .checkin-stamp-name {
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      color: rgba(25,25,25,0.86);
+      line-height: 1.15;
+      font-size: 0.9rem;
+    }
+    .checkin-stamp-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background:
+        radial-gradient(60% 60% at 40% 35%, rgba(255,255,255,0.45), transparent 60%),
+        linear-gradient(135deg, rgba(70,120,130,0.48), rgba(139,37,0,0.50));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.92);
+    }
+    .checkin-stamp-icon svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: 0.95; }
+    .checkin-stamp-hint { font-size: 0.72rem; color: rgba(40,40,40,0.56); letter-spacing: 0.04em; }
+
+    .food-card-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.35);
+      z-index: 1200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .food-card-backdrop.visible { opacity: 1; pointer-events: auto; }
+    .food-card-modal {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.98);
+      width: min(720px, 92vw);
+      max-height: min(82vh, 760px);
+      z-index: 1201;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    .food-card-modal.visible { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+    .food-card-paper {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.14);
+      background: linear-gradient(180deg, #fffaf0 0%, #f2e7d1 100%);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      max-height: inherit;
+    }
+    .food-card-head {
+      padding: 1.05rem 1.15rem 0.95rem;
+      border-bottom: 1px solid rgba(0,0,0,0.10);
+      background:
+        radial-gradient(120% 90% at 20% 20%, rgba(139,37,0,0.12), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,0.68), rgba(255,255,255,0.14));
+      position: relative;
+    }
+    .food-card-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .food-card-title strong {
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      color: rgba(25,25,25,0.88);
+    }
+    .food-card-title span {
+      font-size: 0.78rem;
+      color: rgba(40,40,40,0.56);
+      letter-spacing: 0.12em;
+    }
+    .food-card-close {
+      position: absolute;
+      right: 0.85rem;
+      top: 0.85rem;
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.65);
+      cursor: pointer;
+      font-size: 1.15rem;
+      color: rgba(25,25,25,0.78);
+    }
+    .food-card-tear {
+      height: 14px;
+      background:
+        radial-gradient(circle at 10px 7px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 30px 6px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 52px 8px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 76px 7px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 98px 6px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        linear-gradient(180deg, rgba(0,0,0,0.06), transparent);
+      opacity: 0.25;
+    }
+    .food-card-body {
+      padding: 1.05rem 1.15rem 1.1rem;
+      overflow: auto;
+      display: grid;
+      gap: 0.75rem;
+    }
+    .food-card-line { display: grid; grid-template-columns: 6.6rem 1fr; gap: 0.75rem; align-items: start; }
+    .food-card-line b {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      color: rgba(139,37,0,0.92);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .food-card-line p { font-size: 0.88rem; color: rgba(25,25,25,0.78); line-height: 1.7; }
+    .food-card-tags { display: flex; flex-wrap: wrap; gap: 0.45rem 0.65rem; }
+    .food-card-tag {
+      font-size: 0.78rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(139,37,0,0.25);
+      background: rgba(139,37,0,0.08);
+      color: rgba(55,25,15,0.85);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .food-card-actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.25rem;
+    }
+    .food-card-actions button {
+      flex: 1;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid rgba(139,37,0,0.28);
+      background: rgba(139,37,0,0.10);
+      color: rgba(139,37,0,0.95);
+      font-family: inherit;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+    }
+    .food-card-actions button.primary {
+      border: none;
+      background: var(--cinnabar);
+      color: #faf6ee;
+    }
   </style>
 </head>
 <body>
@@ -877,10 +1212,14 @@
     </div>
 
     <div class="sidebar-section" id="section-checkin">
-      <div class="section-placeholder">
-        <div class="placeholder-seal">印</div>
-        <h3>打卡系统</h3>
-        <p>行旅足迹，一印一程。此板块内容即将上线。</p>
+      <div class="sidebar-header">
+        <h2 class="county-name">通关文牒</h2>
+        <p class="county-tagline">每城一页 · 一地一大印 · 一食一小印</p>
+        <p class="county-bio">解锁美食印章，翻阅浙江十一城的味觉版图。点击任意美食章，会弹出仿古信笺卡片，读它的前世今生与城中记忆。</p>
+      </div>
+      <div class="sidebar-body checkin-body">
+        <div class="checkin-city-strip" id="checkinCityStrip" aria-label="城市分页"></div>
+        <div id="checkinPage"></div>
       </div>
     </div>
 
@@ -930,6 +1269,21 @@
       </div>
     </div>
   </aside>
+
+  <div class="food-card-backdrop" id="foodCardBackdrop" aria-hidden="true"></div>
+  <div class="food-card-modal" id="foodCardModal" aria-hidden="true">
+    <div class="food-card-paper">
+      <div class="food-card-head">
+        <button class="food-card-close" id="foodCardClose" aria-label="关闭">×</button>
+        <div class="food-card-title">
+          <strong id="foodCardTitle">—</strong>
+          <span id="foodCardSub">仿古信笺</span>
+        </div>
+      </div>
+      <div class="food-card-tear"></div>
+      <div class="food-card-body" id="foodCardBody"></div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
   <script>
@@ -1029,6 +1383,10 @@
     let foodStartFixed = null;
     let foodZJCityCache = [];
     let foodZJCountyCache = [];
+    let checkinInited = false;
+    let checkinCityIndex = 0;
+    let checkinCurrentFoodId = "";
+    let checkinCurrentCityPlate = "";
 
     async function loadZhejiangCountyGeo() {
       const parts = await Promise.all(
@@ -1460,6 +1818,7 @@
       document.querySelectorAll(".sidebar-section").forEach((s) => s.classList.remove("active"));
       document.getElementById("section-" + sectionId)?.classList.add("active");
       if (sectionId === "food") initFoodSection();
+      if (sectionId === "checkin") initCheckinSection();
       if (sectionId === "tools") initCommunitySection();
     }
 
@@ -2637,6 +2996,367 @@
       btn.appendChild(text);
       btn.appendChild(num);
       return btn;
+    }
+
+    const CHECKIN_CITIES = [
+      {
+        plate: "浙A",
+        name: "杭州",
+        sealSub: "西湖 · 断桥烟雨",
+        stampTitle: "杭帮风味 · 集章区",
+        foods: [
+          {
+            id: "hz_xhcy",
+            name: "西湖醋鱼",
+            icon: "fish",
+            card: {
+              title: "西湖醋鱼 · 杭帮菜头牌",
+              subtitle: "江湖地位：杭帮菜之首，千年西湖的味觉名片",
+              best: ["楼外楼", "知味观·味庄", "杭州酒家"],
+              history:
+                "西湖醋鱼的前身是南宋名菜“宋嫂鱼羹”，相传为西湖边渔家女宋五嫂所创。清代厨师在其基础上改良，将整鱼汆熟后浇上糖醋汁，形成今日之貌。",
+              flavor:
+                "鱼肉细嫩滑润，酸甜平衡；讲究草鱼饿养去泥与火候控制，成品会有淡淡蟹鲜回甘。",
+              craft:
+                "选活草鱼饿养去泥；不挂糊不油炸，整鱼汆熟保清鲜；糖醋汁勾芡明亮，趁热浇淋成章。",
+              meaning:
+                "它承载杭州饮食文脉与文人书写，是“清淡本真”的味觉宣言。",
+              memory:
+                "被调侃的往往是省略工序的“游客醋鱼”。正宗版本更像西湖烟雨的清淡婉约，争议与骄傲同在。"
+            }
+          },
+          {
+            id: "hz_ljxr",
+            name: "龙井虾仁",
+            icon: "shrimp",
+            card: {
+              title: "龙井虾仁 · 茶香入馔",
+              subtitle: "江湖地位：一盏春茶与一口江鲜的相逢",
+              best: ["知味观", "楼外楼"],
+              history: "以西湖龙井的清香入菜，是杭帮菜“清鲜雅致”的代表作之一。",
+              flavor: "茶香清扬，虾仁嫩滑，回口带着春意的微甘。",
+              craft: "龙井温泡取香；虾仁滑炒火候轻柔；以茶汤收味，忌重油重盐。",
+              meaning: "把西湖的风与茶带进盘中，吃的是一城的节气。",
+              memory: "杭州人把它当作“待客体面菜”，雅而不艳，最见分寸。"
+            }
+          },
+          {
+            id: "hz_dpr",
+            name: "东坡肉",
+            icon: "pork",
+            card: {
+              title: "东坡肉 · 慢火成诗",
+              subtitle: "江湖地位：肥而不腻的江南功夫肉",
+              best: ["杭州酒家", "楼外楼"],
+              history: "相传与苏东坡典故相关，江南多以慢炖与酒香塑其神韵。",
+              flavor: "酱香厚而不重，入口即化，甜咸收敛。",
+              craft: "选肥瘦相间五花；煎定皮面；酒酱文火久焖，火候胜过调味。",
+              meaning: "慢功夫里藏着江南的耐心与体面。",
+              memory: "每逢团圆饭桌，东坡肉常被放在最中间，像一枚稳重的主印。"
+            }
+          },
+          {
+            id: "hz_pec",
+            name: "片儿川",
+            icon: "noodle",
+            card: {
+              title: "片儿川 · 杭州面魂",
+              subtitle: "江湖地位：街巷里最踏实的一碗",
+              best: ["知味观", "方老大面馆"],
+              history: "以雪菜、笋片、肉片为三绝，源于市井家常，却成杭城共同记忆。",
+              flavor: "咸鲜带脆，笋香透亮，热气一上来就把人拉回旧街。",
+              craft: "笋片要脆，雪菜要香；汤底清而不寡，肉片滑而不散。",
+              meaning: "它是杭州的“日常”，不华丽，却最耐久。",
+              memory: "清晨一碗片儿川，像给一天盖了个轻轻的章。"
+            }
+          },
+          {
+            id: "hz_dsg",
+            name: "定胜糕",
+            icon: "cake",
+            card: {
+              title: "定胜糕 · 甜糯好彩头",
+              subtitle: "江湖地位：节庆与喜事里常见的甜印",
+              best: ["河坊街老字号", "知味观"],
+              history: "多见于江南传统糕点谱系，以“定胜”寓意寄托祝愿。",
+              flavor: "米香细糯，甜而不腻，口感温柔。",
+              craft: "粉蒸成型，火候要匀；糖馅要润；出笼要快，保持松软。",
+              meaning: "好吃之外，更是一句愿望：事事定胜。",
+              memory: "杭州人把它当作“带回家的西湖甜”，不喧哗却很贴心。"
+            }
+          },
+          {
+            id: "hz_cbk",
+            name: "葱包桧",
+            icon: "snack",
+            card: {
+              title: "葱包桧 · 烟火一口",
+              subtitle: "江湖地位：路边摊的爽快与痛快",
+              best: ["河坊街小摊", "胜利河美食街"],
+              history: "传说由民间情绪与故事而起，演化成市井小吃的代表符号。",
+              flavor: "外脆内软，葱香热烈，趁热咬下最过瘾。",
+              craft: "油条要脆，薄饼要韧；葱与酱要足；卷合要快，不拖泥带水。",
+              meaning: "把街巷情绪卷进一口里，才是杭州的真实。",
+              memory: "它不像名菜那样端庄，但最能记住热闹的人间。"
+            }
+          }
+        ]
+      },
+      { plate: "浙B", name: "宁波", sealSub: "海曙 · 三江口", stampTitle: "甬味海鲜 · 集章区", foods: [
+        { id: "nb_tangyuan", name: "宁波汤圆", icon: "ball", card: { title: "宁波汤圆 · 糯香成团", subtitle: "江湖地位：一碗甜糯的团圆签", best: ["缸鸭狗", "老宁波点心铺"], history: "宁波点心以糯著称，汤圆尤为代表，常与节令和团圆相连。", flavor: "皮糯而不粘，馅香而不腻，甜意温和。", craft: "糯粉和水掌分寸；馅要细润；下锅以滚不破为要。", meaning: "入口是甜，落肚是安。", memory: "外地人记住的是味道，宁波人记住的是“回家”。" } },
+        { id: "nb_honggao", name: "红膏炝蟹", icon: "crab", card: { title: "红膏炝蟹 · 海风作料", subtitle: "江湖地位：鲜辣咸香的硬核海味", best: ["本地海鲜排档", "菜场熟食档"], history: "沿海人以盐与时间保存鲜味，炝蟹便是其中极具性格的一种。", flavor: "膏红肉甜，咸鲜带辛，后劲十足。", craft: "蟹要鲜活；盐度与腌制时间定成败；入口前多配姜醋解腥提香。", meaning: "把海的锋利收进盘里。", memory: "宁波人敢吃，也敢讲究，鲜与狠都要到位。" } },
+        { id: "nb_xiangyou", name: "香油麻糍", icon: "cake", card: { title: "香油麻糍 · 软糯一方", subtitle: "江湖地位：路边甜点的温柔章", best: ["老街点心摊"], history: "糯米制品在宁波常见，麻糍是最朴素也最耐吃的一种。", flavor: "糯香绵长，芝麻与香油相合，甜里带润。", craft: "捶打出筋；芝麻要炒香；趁温裹粉，口感最顺。", meaning: "甜不是炫耀，是照顾。", memory: "很多人离开宁波后最想念的，是这种“软”。" } },
+        { id: "nb_yancai", name: "雪菜大黄鱼", icon: "fish", card: { title: "雪菜大黄鱼 · 咸鲜照面", subtitle: "江湖地位：甬菜的家常代表", best: ["海鲜酒楼", "家常馆"], history: "咸菜与海鱼相配，是沿海厨房对“鲜”最熟练的表达。", flavor: "鱼肉细嫩，雪菜提鲜，咸香清爽不腻。", craft: "鱼要鲜，火要稳；雪菜先煸出香；汤汁收至清亮。", meaning: "朴素却精准，是宁波的做事方式。", memory: "一口下去，仿佛就听见潮声从灶台边响起。" } }
+      ] },
+      { plate: "浙C", name: "温州", sealSub: "瓯江 · 江心屿", stampTitle: "瓯味小吃 · 集章区", foods: [
+        { id: "wz_yuandan", name: "温州鱼丸", icon: "ball", card: { title: "温州鱼丸 · 弹而不躁", subtitle: "江湖地位：瓯味小吃的招牌", best: ["五马街老店", "街边鱼丸铺"], history: "沿海渔业催生鱼糜技艺，鱼丸在温州街巷里自成体系。", flavor: "外弹内嫩，汤清味鲜。", craft: "鱼糜打到起胶；火候要稳；下丸不翻花。", meaning: "把海的鲜做成随手可得的日常。", memory: "温州人的脚步快，但这一口总要停一下。" } },
+        { id: "wz_qiaozhen", name: "敲虾", icon: "shrimp", card: { title: "敲虾 · 一碗见刀功", subtitle: "江湖地位：温州精细小吃代表", best: ["本地小吃馆"], history: "以虾糜入汤，讲究手工敲打成细滑口感。", flavor: "鲜而清，滑而不腻。", craft: "虾要新鲜；敲打出胶；汤底清简，突出本味。", meaning: "温州人对“鲜”从不含糊。", memory: "瓯越的细致，往往藏在这样一碗清汤里。" } },
+        { id: "wz_dachang", name: "糯米饭", icon: "rice", card: { title: "温州糯米饭 · 早晨的底气", subtitle: "江湖地位：赶路人的能量章", best: ["街头早餐摊"], history: "以糯米为底，配料随季节变化，是温州早餐文化的核心之一。", flavor: "糯香饱满，咸甜可调。", craft: "糯米蒸得松而不散；配料要热；拌合要快。", meaning: "一口下去，今天就稳了。", memory: "温州人的早晨，从糯米饭的热气开始。" } },
+        { id: "wz_jiangxiex", name: "姜汁炖蛋", icon: "egg", card: { title: "姜汁炖蛋 · 辛甜回暖", subtitle: "江湖地位：温州甜品里的“暖手炉”", best: ["甜品小铺"], history: "姜与蛋的组合，在温州是传统的滋补型甜品。", flavor: "姜辣先行，蛋香随后，甜收尾。", craft: "姜汁要鲜；蛋液要细；慢炖成凝而不老。", meaning: "像一封给身体的安慰信。", memory: "雨天来一盅，温州的潮湿就被驱走一半。" } }
+      ] },
+      { plate: "浙F", name: "嘉兴", sealSub: "南湖 · 红船", stampTitle: "江南糯香 · 集章区", foods: [
+        { id: "jx_zongzi", name: "嘉兴粽子", icon: "leaf", card: { title: "嘉兴粽子 · 一叶裹江南", subtitle: "江湖地位：端午名物，四季皆可", best: ["五芳斋", "南湖老店"], history: "嘉兴以粽闻名，工艺与口味在江南粽系里极具代表性。", flavor: "糯而不烂，馅咸香油润。", craft: "糯米浸透；火候要足；咸蛋黄与五花比例要稳。", meaning: "把节气装进一只粽里。", memory: "嘉兴人的江南味，常从拆开粽叶那一刻开始。" } },
+        { id: "jx_xunyu", name: "南湖熏鱼", icon: "fish", card: { title: "南湖熏鱼 · 甜酱一抹", subtitle: "江湖地位：冷盘里最会讲究的那一口", best: ["本帮菜馆"], history: "江南冷菜讲究色香味形，熏鱼常被视作压轴。", flavor: "外紧内酥，甜酱带香。", craft: "先炸定型；再卤入味；收汁要亮。", meaning: "把“精致”写在冷菜里。", memory: "很多嘉兴宴席，最后的回味来自这一口甜香。" } },
+        { id: "jx_meicai", name: "梅菜扣肉", icon: "pork", card: { title: "梅菜扣肉 · 咸香厚重", subtitle: "江湖地位：下饭硬菜，稳稳当当", best: ["家常馆"], history: "腌菜与五花相配，是江南对“肥”的驯化。", flavor: "肉烂菜香，咸中带甜。", craft: "梅菜要洗净回甜；肉要蒸透；扣出来要整齐。", meaning: "家常却有排场。", memory: "一锅热气，往往就是最可靠的团聚。" } },
+        { id: "jx_baicai", name: "油爆虾", icon: "shrimp", card: { title: "油爆虾 · 虾壳也香", subtitle: "江湖地位：江南快火的爽利代表", best: ["本帮菜馆"], history: "江南有快炒，也有讲究的快炒，油爆虾是其中典型。", flavor: "鲜香脆爽，酱香一收即止。", craft: "火要旺；下锅要快；收汁要亮。", meaning: "利落，是江南另一种性格。", memory: "咔嚓一口，像听见老街的热闹声。" } }
+      ] },
+      { plate: "浙E", name: "湖州", sealSub: "太湖 · 莫干", stampTitle: "湖鲜与清润 · 集章区", foods: [
+        { id: "hz2_yangrou", name: "湖羊肉", icon: "pork", card: { title: "湖羊肉 · 冬日热章", subtitle: "江湖地位：湖州冬天的底气", best: ["本地羊肉馆"], history: "湖羊肉在江南羊肉里有名，冬季尤盛。", flavor: "汤清肉酥，香而不膻。", craft: "选料要好；慢煨去膻；汤底以清取胜。", meaning: "一锅热汤把寒意挡在门外。", memory: "湖州人的冬天，常是从一碗羊肉汤开始热起来的。" } },
+        { id: "hz2_qingtuan", name: "青团", icon: "ball", card: { title: "湖州青团 · 春草入馔", subtitle: "江湖地位：清明时令的甜章", best: ["老字号点心铺"], history: "艾草或青汁入糯，是江南对春天的固定写法。", flavor: "糯而清香，甜馅细润。", craft: "青汁要鲜；蒸制要匀；馅要润不流。", meaning: "把春天包进掌心。", memory: "咬开时的那点草香，最像江南的风。" } },
+        { id: "hz2_jiangmi", name: "诸老大粽子", icon: "leaf", card: { title: "湖州粽 · 软糯有度", subtitle: "江湖地位：与嘉兴并列的江南粽系", best: ["诸老大"], history: "湖州粽子在江南颇有名气，口味讲究、糯而不滥。", flavor: "米香扎实，馅咸香。", craft: "浸米控水；包扎紧实；火候到位。", meaning: "一只粽也是一份家谱。", memory: "许多湖州人对粽子的标准，从小就被定住了。" } },
+        { id: "hz2_yusiyu", name: "银鱼羹", icon: "fish", card: { title: "银鱼羹 · 太湖清鲜", subtitle: "江湖地位：湖鲜的清雅表达", best: ["太湖边餐馆"], history: "银鱼细嫩，常以羹汤呈其清鲜。", flavor: "鲜而不腥，口感滑润。", craft: "火候轻；勾芡要薄；调味要克制。", meaning: "越是清淡，越考验真材。", memory: "像太湖的雾气一样，轻轻落在舌尖。" } }
+      ] },
+      { plate: "浙D", name: "绍兴", sealSub: "鉴湖 · 绍兴酒", stampTitle: "越地酒香 · 集章区", foods: [
+        { id: "sx_meigan", name: "梅干菜扣肉", icon: "pork", card: { title: "绍兴梅干菜扣肉 · 酒香入肉", subtitle: "江湖地位：越菜里最稳的硬菜", best: ["绍兴菜馆"], history: "绍兴酒与腌菜文化深厚，梅干菜扣肉常见于宴席与家常。", flavor: "咸香回甜，肉烂菜香。", craft: "梅干菜回蒸出香；五花蒸透收汁；扣碗要整。", meaning: "越地人讲究“实”，这道菜最能服众。", memory: "一桌席面，只要它在，就像主印盖稳了。"} },
+        { id: "sx_zuiha", name: "醉虾", icon: "shrimp", card: { title: "醉虾 · 酒里见鲜", subtitle: "江湖地位：绍兴酒的鲜味搭档", best: ["本地酒楼"], history: "以酒入馔是绍兴标志，醉物一类最能体现酒香。", flavor: "鲜甜带酒香，入口清冽。", craft: "食材要鲜；酒香要正；时间要准，过则失鲜。", meaning: "把酒的风骨落进嘴里。", memory: "绍兴人说“会吃”，往往指懂得这口酒香。"} },
+        { id: "sx_youbao", name: "油炸臭豆腐", icon: "tofu", card: { title: "臭豆腐 · 香从“逆”来", subtitle: "江湖地位：越地夜市王者", best: ["鲁迅故里周边小摊"], history: "发酵让味道有了锋芒，绍兴的臭豆腐更讲究外脆内嫩。", flavor: "外脆内软，酱汁一浇就香。", craft: "豆腐发酵到位；油温要准；出锅要快。", meaning: "江南也有大胆的一面。", memory: "游客记得它的“臭”，绍兴人记得它的“香”。"} },
+        { id: "sx_huangjiu", name: "黄酒奶茶", icon: "cup", card: { title: "黄酒调饮 · 旧味新章", subtitle: "江湖地位：年轻人给老酒的再写", best: ["本地小店"], history: "黄酒文化古老，近年以调饮方式被重新打开。", flavor: "酒香温润，甜度克制，尾韵回甘。", craft: "酒要正；甜要收；冷与热都要保香。", meaning: "传统不是博物馆，是可以继续生长的东西。", memory: "一口下去，像把老城的酒香带进当下。"} }
+      ] },
+      { plate: "浙G", name: "金华", sealSub: "婺州 · 火腿香", stampTitle: "婺味咸鲜 · 集章区", foods: [
+        { id: "jh_huotu", name: "金华火腿", icon: "pork", card: { title: "金华火腿 · 咸香名片", subtitle: "江湖地位：江南火腿之冠", best: ["本地老字号", "菜场熟食档"], history: "腌制与风干让时间成为调味，金华火腿因此闻名。", flavor: "咸香醇厚，越煮越出味。", craft: "选腿、盐渍、风干、陈化，每一步都在跟时间对话。", meaning: "它不是一道菜，而是一种底味。", memory: "很多婺州人家的汤里，总有火腿的影子。"} },
+        { id: "jh_suoyou", name: "酥饼", icon: "cake", card: { title: "金华酥饼 · 一咬掉渣", subtitle: "江湖地位：路上最想带走的那一口", best: ["老字号酥饼店"], history: "以酥与香取胜，是金华最易识别的点心符号。", flavor: "外酥内香，甜咸皆宜。", craft: "起酥要足；火候要匀；出炉要脆。", meaning: "小小一饼，带走一城。", memory: "出差带回几盒酥饼，是金华人的体面。"} },
+        { id: "jh_yutang", name: "浦江麦饼", icon: "snack", card: { title: "麦饼 · 朴素的香", subtitle: "江湖地位：婺州街头的饱腹章", best: ["县城小吃摊"], history: "麦面饼类在浙中常见，麦香与馅料的组合是民间智慧。", flavor: "麦香扎实，馅料热辣或咸香。", craft: "面要有筋；馅要热；烙到表皮微焦最香。", meaning: "不讲排场，只讲实在。", memory: "很多人对金华的记忆，从这口麦香开始。"} },
+        { id: "jh_tangmian", name: "鸡子馃", icon: "egg", card: { title: "鸡子馃 · 婺州早点", subtitle: "江湖地位：早晨的“热手”小吃", best: ["本地早点铺"], history: "浙中早餐常见面饼裹蛋，鸡子馃便是其中经典。", flavor: "蛋香与面香叠加，趁热最好。", craft: "饼要薄；蛋要嫩；火候要快。", meaning: "把一天的精神先点亮。", memory: "出门前咬一口，才算真正开始。"} }
+      ] },
+      { plate: "浙H", name: "衢州", sealSub: "三衢 · 山辣", stampTitle: "衢味辛香 · 集章区", foods: [
+        { id: "qz_yatou", name: "三头一掌", icon: "pork", card: { title: "三头一掌 · 衢州硬菜", subtitle: "江湖地位：重口味的代表章", best: ["衢州菜馆"], history: "衢州口味偏辣偏重，三头一掌以“过瘾”著称。", flavor: "酱辣浓郁，胶质丰厚。", craft: "卤煮入味；火候要透；辣与香要层次分明。", meaning: "山城的性格，直来直去。", memory: "吃完这口，才算真正到过衢州。"} },
+        { id: "qz_tudou", name: "衢州烤饼", icon: "cake", card: { title: "衢州烤饼 · 外脆内香", subtitle: "江湖地位：街头最会“顶嘴”的香", best: ["老街烤饼摊"], history: "烤炉与面香，是衢州街巷里最具辨识度的气味。", flavor: "皮脆馅香，热气裹着椒香。", craft: "面要醒透；烤温要稳；出炉要快。", meaning: "一口是烟火，一口是江湖。", memory: "很多人记得衢州，不是风景，是烤饼香。"} },
+        { id: "qz_miantiao", name: "衢州粉干", icon: "noodle", card: { title: "粉干 · 辣里见鲜", subtitle: "江湖地位：衢州人的日常主食", best: ["家常馆"], history: "米制粉干常见于浙西，配以辣与卤，形成衢州味型。", flavor: "筋道滑爽，辣香开胃。", craft: "粉干煮到刚好；汤头要香；配料要实。", meaning: "不怕辣，才算接上衢州的脉。", memory: "一碗粉干，常是衢州人对外地朋友的第一句招呼。"} },
+        { id: "qz_jiangya", name: "姜汁炖鸭", icon: "pot", card: { title: "姜汁炖鸭 · 辛香暖身", subtitle: "江湖地位：山里人的“驱寒章”", best: ["本地土菜馆"], history: "姜与炖煮，是浙西山区对寒湿气候的回应。", flavor: "姜辣透骨，鸭肉酥烂。", craft: "姜要足；火要慢；去腥要净。", meaning: "吃的是暖，也是底气。", memory: "雨季一来，衢州人就靠这锅汤把潮气压下去。"} }
+      ] },
+      { plate: "浙L", name: "舟山", sealSub: "东海 · 渔火", stampTitle: "海岛鲜味 · 集章区", foods: [
+        { id: "zs_haiqian", name: "海鲜面", icon: "noodle", card: { title: "舟山海鲜面 · 一碗东海", subtitle: "江湖地位：海岛人的日常主食", best: ["海边面馆", "码头小店"], history: "舟山以海为厨房，面条与海鲜相遇便是自然。", flavor: "汤清鲜足，海味层层叠起。", craft: "海鲜要新鲜；汤底要清；下面要快。", meaning: "海的味道，最适合做成一碗热汤。", memory: "渔火归来时，一碗面就是最安稳的落脚。"} },
+        { id: "zs_huangyu", name: "清蒸黄鱼", icon: "fish", card: { title: "清蒸黄鱼 · 鲜到克制", subtitle: "江湖地位：舟山海味的“素面朝天”", best: ["海鲜酒楼"], history: "舟山盛产黄鱼，清蒸是对鲜味最克制的表达。", flavor: "肉细甜润，葱姜点到为止。", craft: "火候要准；去腥要净；调味要少。", meaning: "越是鲜，越不需要遮掩。", memory: "舟山人说“这条鱼够了”，就是最高评价。"} },
+        { id: "zs_daixie", name: "梭子蟹", icon: "crab", card: { title: "梭子蟹 · 海岛的豪爽", subtitle: "江湖地位：季节一到，满桌皆蟹", best: ["本地排档"], history: "东海蟹季是舟山人的节令，吃蟹像过节。", flavor: "肉甜膏香，清蒸最见真章。", craft: "蒸制要看火候；蘸料要清爽；吃法要利落。", meaning: "把海的丰饶摆上桌。", memory: "舟山的秋天，常是从第一口蟹黄开始的。"} },
+        { id: "zs_yugan", name: "风鳗鲞", icon: "fish", card: { title: "风鳗鲞 · 海风的腌制", subtitle: "江湖地位：舟山“时间美食”代表", best: ["海岛集市"], history: "晒、风、盐，是海岛保存与增香的传统方法。", flavor: "咸香浓郁，越嚼越出味。", craft: "鳗要鲜；风干要通；盐度要准。", meaning: "把海风也吃进肚子里。", memory: "晒鳗的季节，舟山的街道都有味道。"} }
+      ] },
+      { plate: "浙J", name: "台州", sealSub: "椒江 · 山海", stampTitle: "台味鲜辣 · 集章区", foods: [
+        { id: "tz_shiqi", name: "食饼筒", icon: "roll", card: { title: "食饼筒 · 一卷包山海", subtitle: "江湖地位：台州人手上的“随身章”", best: ["临海老街", "本地小吃馆"], history: "以薄饼卷菜，随手可食，是台州小吃的灵活代表。", flavor: "香脆与软糯并存，馅料丰富。", craft: "饼要薄韧；馅要热香；卷要紧实。", meaning: "把一餐卷成轻便的生活。", memory: "台州人的热闹，常从这一卷开始。"} },
+        { id: "tz_jiangmian", name: "姜汤面", icon: "noodle", card: { title: "姜汤面 · 辛香开胃", subtitle: "江湖地位：湿冷天气的救命汤", best: ["早市面摊"], history: "姜在台州饮食里常见，既为味也为暖。", flavor: "姜香直冲，面条筋道。", craft: "姜要鲜；汤要热；下面要快。", meaning: "一碗下去，整个人都醒了。", memory: "台州的风大，姜汤面就像随身披风。"} },
+        { id: "tz_qingshu", name: "清汤羊肉", icon: "pork", card: { title: "清汤羊肉 · 清而有劲", subtitle: "江湖地位：台州的清爽硬菜", best: ["本地羊肉馆"], history: "台州人爱鲜，羊肉也讲究清汤取胜。", flavor: "汤清肉香，不厚不腻。", craft: "去膻要净；火候要稳；香料要克制。", meaning: "鲜辣之外，还有清爽。", memory: "喝完一碗，台州的山海气就顺了。"} },
+        { id: "tz_haiqiao", name: "海苔饼", icon: "cake", card: { title: "海苔饼 · 咸香小点", subtitle: "江湖地位：台州伴手礼常客", best: ["本地糕点铺"], history: "沿海海苔丰富，入饼便成独特咸香。", flavor: "海苔咸香，饼体酥软。", craft: "海苔要香；甜咸要平衡；烤温要稳。", meaning: "把海的咸香做成一份礼。", memory: "带一盒回去，像把台州的海风也带走。"} }
+      ] },
+      { plate: "浙K", name: "丽水", sealSub: "瓯江源 · 青山", stampTitle: "山味清香 · 集章区", foods: [
+        { id: "ls_xianrou", name: "缙云烧饼", icon: "cake", card: { title: "缙云烧饼 · 炉火与葱香", subtitle: "江湖地位：丽水最出圈的小吃之一", best: ["缙云老街", "本地烧饼铺"], history: "炭火炉烤出焦香，成为浙西南的强记忆点。", flavor: "外脆内韧，葱香与肉香交织。", craft: "炉温要稳；饼要贴炉；出炉要快。", meaning: "山城的热度，来自炉火。", memory: "很多人记得丽水，是从这口烧饼开始的。"} },
+        { id: "ls_junzi", name: "遂昌长粽", icon: "leaf", card: { title: "遂昌长粽 · 山里糯香", subtitle: "江湖地位：节令里的长情之物", best: ["本地作坊"], history: "山区饮食更重储存与饱腹，长粽因此常见。", flavor: "糯香扎实，馅料朴素但耐吃。", craft: "米要浸透；包扎要紧；火候要足。", meaning: "一只粽子是一段长路。", memory: "山里人把它当作“出远门的干粮章”。"} },
+        { id: "ls_zhutong", name: "竹筒饭", icon: "bamboo", card: { title: "竹筒饭 · 林里清香", subtitle: "江湖地位：山林气息的代表作", best: ["山野餐馆"], history: "竹资源丰富，竹筒饭把“山”做成了一种味道。", flavor: "米香带竹香，清爽自然。", craft: "竹筒要新；火候要匀；米水比例要准。", meaning: "把山林的气息留在胃里。", memory: "吃完后，连呼吸都像更清。"} },
+        { id: "ls_ninggeng", name: "乌米饭", icon: "rice", card: { title: "乌米饭 · 草木染色", subtitle: "江湖地位：浙西南的节令风物", best: ["本地民俗村", "家常馆"], history: "草木染色的乌米饭与节俗相连，是山里人的传统。", flavor: "米香清甜，口感软糯。", craft: "染汁要正；蒸制要匀；趁热更香。", meaning: "把草木的祝愿染进饭里。", memory: "黑亮的一碗，像山夜里的星光被端上桌。"} }
+      ] }
+    ];
+
+    function checkinLoadUnlocked() {
+      try {
+        const raw = localStorage.getItem("zj_checkin_unlocked_v1") || "{}";
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function checkinSaveUnlocked(map) {
+      localStorage.setItem("zj_checkin_unlocked_v1", JSON.stringify(map || {}));
+    }
+
+    function checkinLoadCityIndex() {
+      const v = Number(localStorage.getItem("zj_checkin_city_idx_v1") || 0);
+      if (!Number.isFinite(v) || v < 0 || v >= CHECKIN_CITIES.length) return 0;
+      return v;
+    }
+
+    function checkinSaveCityIndex(idx) {
+      localStorage.setItem("zj_checkin_city_idx_v1", String(idx));
+    }
+
+    function stampIconSvg(kind) {
+      if (kind === "fish") return '<svg viewBox="0 0 24 24"><path d="M20 12c-2.2-3.6-6.4-6-11-6-1.7 0-3.3.3-4.7.9l3.2 3.1-3.2 3.1c1.4.6 3 .9 4.7.9 4.6 0 8.8-2.4 11-6z"/><path d="M9 12h.01"/><path d="M3.3 9.1c-1 .6-1.8 1.7-2.3 2.9.5 1.2 1.3 2.3 2.3 2.9"/></svg>';
+      if (kind === "shrimp") return '<svg viewBox="0 0 24 24"><path d="M8 6c2-1.2 6-1.2 8 1"/><path d="M16 7c2 2 2 6 0 8-2 2-6 2-8 0-2-2-2-6 0-8"/><path d="M8 15c-1.6 1.4-2.7 2.8-3 4"/><path d="M16 15c1.6 1.4 2.7 2.8 3 4"/><path d="M9 10h.01"/><path d="M15 10h.01"/></svg>';
+      if (kind === "pork") return '<svg viewBox="0 0 24 24"><path d="M6 10c1-2 3-3 6-3s5 1 6 3"/><path d="M5 12c0 4 3 7 7 7s7-3 7-7"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M10 16c.8.6 3.2.6 4 0"/></svg>';
+      if (kind === "noodle") return '<svg viewBox="0 0 24 24"><path d="M4 8h16"/><path d="M6 8c0 6 2 10 6 10s6-4 6-10"/><path d="M7 18h10"/><path d="M9 6h6"/></svg>';
+      if (kind === "cake") return '<svg viewBox="0 0 24 24"><path d="M5 11h14"/><path d="M6 11v7h12v-7"/><path d="M7 11c1-2 3-3 5-3s4 1 5 3"/><path d="M9 14h.01"/><path d="M12 14h.01"/><path d="M15 14h.01"/></svg>';
+      if (kind === "snack") return '<svg viewBox="0 0 24 24"><path d="M7 7h10"/><path d="M6 7l2 14h8l2-14"/><path d="M9 11h6"/><path d="M10 15h4"/></svg>';
+      if (kind === "crab") return '<svg viewBox="0 0 24 24"><path d="M9 12c-1-3 1-6 3-6s4 3 3 6"/><path d="M8 12c-1 0-3-1-4-3"/><path d="M16 12c1 0 3-1 4-3"/><path d="M7 14c0 2 2 4 5 4s5-2 5-4"/><path d="M10 10h.01"/><path d="M14 10h.01"/></svg>';
+      if (kind === "ball") return '<svg viewBox="0 0 24 24"><path d="M12 4c5 0 8 3 8 8s-3 8-8 8-8-3-8-8 3-8 8-8z"/><path d="M8 12c1.2 1.5 2.5 2.2 4 2.2s2.8-.7 4-2.2"/></svg>';
+      if (kind === "leaf") return '<svg viewBox="0 0 24 24"><path d="M19 5c-7 0-12 5-12 12 7 0 12-5 12-12z"/><path d="M7 17c2-4 6-8 12-12"/></svg>';
+      if (kind === "rice") return '<svg viewBox="0 0 24 24"><path d="M7 9c0 6 2 10 5 10s5-4 5-10"/><path d="M6 9h12"/><path d="M8 6h.01"/><path d="M12 6h.01"/><path d="M16 6h.01"/></svg>';
+      if (kind === "egg") return '<svg viewBox="0 0 24 24"><path d="M12 3c3.5 0 6 5 6 9s-2.5 9-6 9-6-5-6-9 2.5-9 6-9z"/><path d="M10 12h.01"/><path d="M14 12h.01"/></svg>';
+      if (kind === "tofu") return '<svg viewBox="0 0 24 24"><path d="M6 8h12v12H6z"/><path d="M6 12h12"/><path d="M10 8v12"/></svg>';
+      if (kind === "cup") return '<svg viewBox="0 0 24 24"><path d="M6 8h10v8a5 5 0 0 1-10 0V8z"/><path d="M16 10h1a2 2 0 0 1 0 4h-1"/><path d="M8 4h6"/></svg>';
+      if (kind === "pot") return '<svg viewBox="0 0 24 24"><path d="M5 10h14"/><path d="M6 10v7h12v-7"/><path d="M8 17c.8 1 2.2 2 4 2s3.2-1 4-2"/><path d="M9 7h6"/></svg>';
+      if (kind === "roll") return '<svg viewBox="0 0 24 24"><path d="M6 8c0-2 2-4 6-4s6 2 6 4-2 4-6 4-6-2-6-4z"/><path d="M6 8v8c0 2 2 4 6 4s6-2 6-4V8"/></svg>';
+      if (kind === "bamboo") return '<svg viewBox="0 0 24 24"><path d="M8 3v18"/><path d="M16 3v18"/><path d="M8 7h8"/><path d="M8 13h8"/><path d="M8 19h8"/></svg>';
+      return '<svg viewBox="0 0 24 24"><path d="M6 12h12"/><path d="M12 6v12"/></svg>';
+    }
+
+    function openFoodCard(city, food) {
+      const unlocked = checkinLoadUnlocked();
+      const isUnlocked = !!unlocked[food.id];
+      checkinCurrentFoodId = food.id;
+      checkinCurrentCityPlate = city.plate;
+      document.getElementById("foodCardTitle").textContent = food.card?.title || (food.name || "美食卡");
+      document.getElementById("foodCardSub").textContent = city.plate + " · " + city.name;
+      const body = document.getElementById("foodCardBody");
+      body.innerHTML = "";
+
+      function addLine(label, nodeOrText) {
+        const row = document.createElement("div");
+        row.className = "food-card-line";
+        const b = document.createElement("b");
+        b.textContent = label;
+        row.appendChild(b);
+        if (nodeOrText instanceof Node) row.appendChild(nodeOrText);
+        else {
+          const p = document.createElement("p");
+          p.textContent = String(nodeOrText || "");
+          row.appendChild(p);
+        }
+        body.appendChild(row);
+      }
+
+      if (food.card?.subtitle) addLine("江湖地位", food.card.subtitle);
+      if (food.card?.best?.length) {
+        const box = document.createElement("div");
+        box.className = "food-card-tags";
+        food.card.best.forEach((t) => {
+          const s = document.createElement("span");
+          s.className = "food-card-tag";
+          s.textContent = t;
+          box.appendChild(s);
+        });
+        addLine("最佳品尝地", box);
+      }
+      if (food.card?.history) addLine("历史渊源", food.card.history);
+      if (food.card?.flavor) addLine("风味特色", food.card.flavor);
+      if (food.card?.craft) addLine("制作精髓", food.card.craft);
+      if (food.card?.meaning) addLine("意义", food.card.meaning);
+      if (food.card?.memory) addLine("城市记忆", food.card.memory);
+
+      const actionWrap = document.createElement("div");
+      actionWrap.className = "food-card-actions";
+      const toggleBtn = document.createElement("button");
+      toggleBtn.className = "primary";
+      toggleBtn.textContent = isUnlocked ? "取消点亮" : "点亮此印";
+      toggleBtn.onclick = () => {
+        const map = checkinLoadUnlocked();
+        const next = !map[food.id];
+        if (next) map[food.id] = true;
+        else delete map[food.id];
+        checkinSaveUnlocked(map);
+        closeFoodCard();
+        renderCheckin();
+      };
+      const closeBtn = document.createElement("button");
+      closeBtn.textContent = "收起";
+      closeBtn.onclick = closeFoodCard;
+      actionWrap.appendChild(toggleBtn);
+      actionWrap.appendChild(closeBtn);
+      body.appendChild(actionWrap);
+
+      document.getElementById("foodCardBackdrop").classList.add("visible");
+      document.getElementById("foodCardModal").classList.add("visible");
+      document.getElementById("foodCardBackdrop").setAttribute("aria-hidden", "false");
+      document.getElementById("foodCardModal").setAttribute("aria-hidden", "false");
+    }
+
+    function closeFoodCard() {
+      document.getElementById("foodCardBackdrop").classList.remove("visible");
+      document.getElementById("foodCardModal").classList.remove("visible");
+      document.getElementById("foodCardBackdrop").setAttribute("aria-hidden", "true");
+      document.getElementById("foodCardModal").setAttribute("aria-hidden", "true");
+    }
+
+    function renderCheckin() {
+      const cityStrip = document.getElementById("checkinCityStrip");
+      const page = document.getElementById("checkinPage");
+      if (!cityStrip || !page) return;
+      const unlocked = checkinLoadUnlocked();
+      checkinCityIndex = Math.max(0, Math.min(CHECKIN_CITIES.length - 1, checkinCityIndex));
+      checkinSaveCityIndex(checkinCityIndex);
+      const city = CHECKIN_CITIES[checkinCityIndex];
+
+      cityStrip.innerHTML = "";
+      CHECKIN_CITIES.forEach((c, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "checkin-city-btn" + (idx === checkinCityIndex ? " active" : "");
+        btn.textContent = c.plate + "·" + c.name;
+        btn.onclick = () => {
+          checkinCityIndex = idx;
+          renderCheckin();
+        };
+        cityStrip.appendChild(btn);
+      });
+
+      const unlockedCount = city.foods.reduce((n, f) => n + (unlocked[f.id] ? 1 : 0), 0);
+      const headHtml =
+        '<div class="checkin-passport">' +
+        '<div class="checkin-head">' +
+        '<div class="checkin-cityline">' +
+        '<div class="checkin-city-badge"><span class="code">' + city.plate + '</span><span class="name">' + city.name + '</span></div>' +
+        '<div class="checkin-page-meta">通关文牒 · 第 ' + (checkinCityIndex + 1) + " 页 / 11</div>" +
+        "</div>" +
+        '<div style="max-width:420px;color:rgba(25,25,25,0.70);font-size:0.88rem;line-height:1.7;">地方大印：艺术字地名 + 标志性景物，淡墨山水底纹；解锁之印将从灰中亮起。</div>' +
+        '<div class="checkin-seal"><div>' + city.name + "<small>" + city.sealSub + "</small></div></div>" +
+        '<div class="checkin-inkwash"></div>' +
+        "</div>" +
+        '<div class="checkin-body-inner">' +
+        '<div class="checkin-stamp-title"><strong>' + city.stampTitle + '</strong><span>已解锁 ' + unlockedCount + " / " + city.foods.length + "</span></div>" +
+        '<div class="checkin-stamp-grid" id="checkinStampGrid"></div>' +
+        "</div>" +
+        "</div>";
+
+      page.innerHTML = headHtml;
+      const grid = document.getElementById("checkinStampGrid");
+      city.foods.forEach((food) => {
+        const div = document.createElement("div");
+        const isUnlocked = !!unlocked[food.id];
+        div.className = "checkin-stamp " + (isUnlocked ? "unlocked" : "locked");
+        div.onclick = () => openFoodCard(city, food);
+        const icon = document.createElement("div");
+        icon.className = "checkin-stamp-icon";
+        icon.innerHTML = stampIconSvg(food.icon);
+        const top = document.createElement("div");
+        top.className = "checkin-stamp-top";
+        const name = document.createElement("div");
+        name.className = "checkin-stamp-name";
+        name.textContent = food.name;
+        top.appendChild(name);
+        top.appendChild(icon);
+        const hint = document.createElement("div");
+        hint.className = "checkin-stamp-hint";
+        hint.textContent = isUnlocked ? "已点亮 · 点击读卡" : "未解锁 · 点击读卡";
+        div.appendChild(top);
+        div.appendChild(hint);
+        grid.appendChild(div);
+      });
+    }
+
+    function initCheckinSection() {
+      if (checkinInited) return;
+      checkinInited = true;
+      checkinCityIndex = checkinLoadCityIndex();
+      document.getElementById("foodCardBackdrop").onclick = closeFoodCard;
+      document.getElementById("foodCardClose").onclick = closeFoodCard;
+      renderCheckin();
     }
 
     initMap();
