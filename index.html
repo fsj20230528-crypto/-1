@@ -626,6 +626,168 @@
       color: var(--cinnabar);
       font-weight: 600;
     }
+    .memory-card[data-section-index] {
+      cursor: pointer;
+    }
+    .memory-card[data-section-index]:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(0, 0, 0, 0.1);
+    }
+    .memory-summary {
+      margin-top: 0.6rem;
+    }
+    .memory-summary ul {
+      margin-top: 0.55rem;
+    }
+    .memory-more {
+      margin-top: 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 37, 0, 0.22);
+      background: rgba(139, 37, 0, 0.06);
+      color: var(--cinnabar);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      user-select: none;
+    }
+    .memory-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.42);
+      z-index: 1200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .memory-drawer-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .memory-drawer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: -100%;
+      z-index: 1201;
+      transition: bottom 0.28s ease;
+      padding: 14px 14px 18px;
+    }
+    .memory-drawer.show {
+      bottom: 0;
+    }
+    .memory-drawer-sheet {
+      margin: 0 auto;
+      width: min(980px, 100%);
+      max-height: calc(92vh - 14px);
+      overflow: auto;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(246, 236, 220, 0.92));
+      border: 1px solid rgba(80, 54, 34, 0.16);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      position: relative;
+    }
+    .memory-drawer-sheet::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px dashed rgba(90, 60, 35, 0.18);
+      border-radius: 16px;
+      pointer-events: none;
+    }
+    .memory-drawer-grab {
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 0;
+      z-index: 3;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0));
+    }
+    .memory-drawer-grab i {
+      display: block;
+      width: 64px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(80, 54, 34, 0.2);
+    }
+    .memory-drawer-hero {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px 22px 0 0;
+    }
+    .memory-drawer-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.9) contrast(1.02);
+    }
+    .memory-drawer-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(26, 26, 26, 0.06), rgba(26, 26, 26, 0.56));
+    }
+    .memory-drawer-head {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-end;
+      color: rgba(255, 248, 240, 0.98);
+      z-index: 2;
+    }
+    .memory-drawer-title {
+      font-size: 1.05rem;
+      letter-spacing: 0.1em;
+      margin: 0;
+      text-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
+    }
+    .memory-drawer-close {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255, 250, 242, 0.16);
+      border: 1px solid rgba(255, 250, 242, 0.25);
+      color: rgba(255, 248, 240, 0.96);
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .memory-drawer-body {
+      padding: 18px 18px 22px;
+      position: relative;
+    }
+    .memory-drawer-body h3 {
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+    }
+    .memory-drawer-body p {
+      margin-top: 0.65rem;
+      line-height: 1.9;
+      color: var(--ink);
+      text-align: justify;
+    }
+    .memory-drawer-body ul {
+      margin: 0.65rem 0 0.65rem 1.2rem;
+      padding: 0;
+    }
+    .memory-drawer-body li {
+      margin: 0.45rem 0;
+      line-height: 1.85;
+      color: var(--ink);
+    }
+    .memory-drawer-body strong {
+      color: var(--cinnabar);
+      font-weight: 600;
+    }
     .memory-loading {
       opacity: 0.75;
     }
@@ -1229,6 +1391,20 @@
           <p class="hint" id="introHint">每一座县城都有自己的声音，点击地图即可相遇。</p>
           <button class="btn-primary" id="goChatBtn">和TA聊天</button>
           <div class="memory-content" id="memoryContent"></div>
+          <div class="memory-drawer-overlay" id="memoryDrawerOverlay"></div>
+          <div class="memory-drawer" id="memoryDrawer" aria-hidden="true">
+            <div class="memory-drawer-sheet" role="dialog" aria-modal="true" aria-label="城市记忆详情">
+              <div class="memory-drawer-grab"><i></i></div>
+              <div class="memory-drawer-hero">
+                <img id="memoryDrawerImg" alt="章节封面" loading="lazy" />
+                <div class="memory-drawer-head">
+                  <h3 class="memory-drawer-title" id="memoryDrawerTitle">—</h3>
+                  <button class="memory-drawer-close" id="memoryDrawerClose" aria-label="关闭">×</button>
+                </div>
+              </div>
+              <div class="memory-drawer-body" id="memoryDrawerBody"></div>
+            </div>
+          </div>
         </div>
         <div class="panel" id="panel-chat">
           <div class="api-config">
@@ -1594,7 +1770,7 @@
       };
     }
 
-    const MEMORY_STORAGE_PREFIX = "city_memory_v1_";
+    const MEMORY_STORAGE_PREFIX = "city_memory_v2_";
     function getMemoryStorageKey(geoName) {
       return MEMORY_STORAGE_PREFIX + encodeURIComponent(geoName);
     }
@@ -1608,18 +1784,45 @@
         "城市自我介绍（第一人称旅游版）\n" +
         "你好呀，我叫" +
         short +
-        "，是" +
+        "，住在" +
         parent +
-        "的一方山水与烟火。若你愿意放慢脚步，来听听我的风景、故事与日常。\n\n" +
+        "的山水与烟火里。有人匆匆路过，只记得我一眼的风景；也有人慢慢停下，听见我街巷的回声。\n" +
+        "如果你愿意把行程放慢一点，我会用一段山风、一碗热汤、几页旧事，把自己讲给你听。\n\n" +
         "## 我的山水家底\n" +
-        "- 我有自己的山与水：清晨的薄雾、傍晚的归鸟、四季轮转的颜色。\n" +
-        "- 若你喜欢自然，就来走走看；若你爱热闹，就去街巷里尝一口人情。\n\n" +
+        "我把最好的风景藏在日常里：清晨薄雾挂在山脊，午后溪水穿过林间，傍晚的光落在水面上，像给天地盖了一层柔软的绸。\n" +
+        "四季来到我这里，都会换一套颜色：春有花事，夏有清凉，秋有层林，冬有温热。\n" +
+        "- 山林与步道适合慢走，转一个弯就能遇见风声与鸟鸣。\n" +
+        "- 溪谷与飞瀑最会“解暑”，水气一扑上来，整个人都松下来。\n" +
+        "- 湖泽与湿地适合发呆，船行其间，像走进一幅水墨。\n" +
+        "- 观景台与山顶多半有好天光，云来云去，心事也跟着散开。\n\n" +
         "## 我的千年故事\n" +
-        "- 历史并不遥远，它藏在老城的砖瓦、庙宇的香火、古道的脚印里。\n\n" +
+        "我不喜欢把历史挂在嘴边，因为它一直就在生活里：旧城的砖瓦、庙宇的香火、桥下的水声、古道的脚印，都是时间留下的注脚。\n" +
+        "你若愿意听，我可以把旧事讲得像今天发生的一样：一盏灯、一段路、一句传说，都能把你带回很久以前。\n" +
+        "- 老街与古桥最会说话，石板被脚步磨得发亮。\n" +
+        "- 寺观与塔影像守望者，把一城风雨都收进沉静里。\n" +
+        "- 博物馆与碑刻把故事写得更清楚，读着读着就懂了来处。\n" +
+        "- 传说与技艺藏在民间，越朴素越动人。\n\n" +
+        "## 我的文墨风华\n" +
+        "有些地方靠热闹取胜，我更愿意把温柔留在字里行间：一段诗句、几页旧书、一次展览里安静的凝视。\n" +
+        "当你在我这里读到某句古人的偏爱，也许会忽然明白：山水与风骨，从来不是两件事。\n" +
+        "### 诗词流韵\n" +
+        "- 有人写我春雨与小巷，有人写我山色与归舟。\n" +
+        "- 若你喜欢诗意，就在雨后走一走，路面会把光照得更亮。\n" +
+        "### 典籍载誉\n" +
+        "- 地方志与旧笔记里，常有我不肯轻易示人的细节。\n" +
+        "- 读几段，就像在地图上找到一条更隐秘的路。\n\n" +
         "## 我的生活日常\n" +
-        "- 一碗热汤、一口时令小吃、一次集市的喧闹，都能让你更懂我。\n\n" +
+        "我最想留住你的，不是“到此一游”，而是那种很生活的瞬间：集市的叫卖、灶台的热气、巷口的闲谈。\n" +
+        "你不用赶景点，跟着香气走、跟着人声走，就会走进我的日常。\n" +
+        "- 时令小吃与家常菜最能代表我：新鲜、踏实、不张扬。\n" +
+        "- 茶馆与小店适合坐一坐，听人聊天，听时间变慢。\n" +
+        "- 伴手礼不必奢华，一份土产、一包茶，就够把我带回去。\n" +
+        "- 夜里找个住处歇一歇，抬头看看天色，你会更喜欢我。\n\n" +
         "## 怎么找到我\n" +
-        "跟着地图来就好。等你抵达，我会把最好的风景留给你。"
+        "跟着地图来就好。你可以坐车、开车，也可以先到" +
+        parent +
+        "再慢慢转进我的怀里。\n" +
+        "等你抵达，我会把最好的风景留给你，把最温柔的慢时光也留给你。"
       );
     }
 
@@ -1637,6 +1840,31 @@
       const parent = geoMeta[geoName]?.parentName || "浙江";
       const prompt =
         "realistic travel photography, misty mountains and lake, jiangnan ecological scenery, traditional chinese aesthetic, warm parchment tones, editorial magazine cover, high detail, " +
+        short +
+        ", " +
+        parent +
+        ", Zhejiang, China";
+      return (
+        "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" +
+        encodeURIComponent(prompt) +
+        "&image_size=landscape_16_9"
+      );
+    }
+
+    function buildMemorySectionHeroUrl(geoName, sectionTitle) {
+      const short = shortCountyName(geoName || "");
+      const parent = geoMeta[geoName]?.parentName || "浙江";
+      const t = String(sectionTitle || "");
+      let subject = "misty mountains and lake, jiangnan ecological scenery";
+      if (t.includes("山水")) subject = "misty mountains, river valley waterfall, lake forest, jiangnan scenery";
+      if (t.includes("千年") || t.includes("故事") || t.includes("历史")) subject = "ancient town stone bridge, historic architecture, warm sunlight, jiangnan heritage";
+      if (t.includes("文墨") || t.includes("风华") || t.includes("诗") || t.includes("典籍")) subject = "traditional chinese calligraphy brush, ancient books, ink wash aesthetic, quiet study room";
+      if (t.includes("日常") || t.includes("生活") || t.includes("美食")) subject = "traditional tea house, local street food, warm lantern light, slow life";
+      if (t.includes("找到") || t.includes("交通") || t.includes("怎么来")) subject = "ancient compass, travel map, footpath, jiangnan town entrance, warm parchment tones";
+      const prompt =
+        "realistic travel photography, " +
+        subject +
+        ", traditional chinese aesthetic, warm parchment tones, editorial magazine, high detail, " +
         short +
         ", " +
         parent +
@@ -1777,6 +2005,17 @@
         return out;
       };
 
+      const renderSummary = (nodes) => {
+        const p = nodes.find((n) => n.type === "p")?.html || "";
+        const ul = nodes.find((n) => n.type === "ul")?.items || [];
+        const ulPreview = ul.slice(0, 2);
+        let out = "";
+        if (p) out += "<p>" + p + "</p>";
+        if (ulPreview.length) out += "<ul>" + ulPreview.map((i) => "<li>" + i + "</li>").join("") + "</ul>";
+        out += "<span class=\"memory-more\">展开详情</span>";
+        return "<div class=\"memory-summary\">" + out + "</div>";
+      };
+
       const coverBody = coverParas.length ? "<div class=\"memory-card-body\">" + coverParas.map((p) => "<p>" + p + "</p>").join("") + "</div>" : "";
       const heroUrl = buildMemoryHeroUrl(geoName);
       const heroAlt = escapeHtml(shortCountyName(geoName || "") + "风景封面");
@@ -1802,7 +2041,7 @@
 
       const cardsHtml = sections
         .filter((s) => s.title || s.nodes.length)
-        .map((s) => {
+        .map((s, idx) => {
           const key = iconKey(s.title);
           const head =
             "<div class=\"memory-card-head\">" +
@@ -1813,12 +2052,14 @@
             inline(escapeHtml(s.title || "城市记忆")) +
             "</div>" +
             "</div>";
-          const body = "<div class=\"memory-card-body\">" + renderNodes(s.nodes) + "</div>";
-          return "<section class=\"memory-card\">" + head + body + "</section>";
+          const body = "<div class=\"memory-card-body\">" + renderSummary(s.nodes) + "</div>";
+          return "<section class=\"memory-card\" data-section-index=\"" + idx + "\">" + head + body + "</section>";
         })
         .join("");
 
       const loadingClass = String(md || "").includes("正在生成") ? " memory-loading" : "";
+      const view = { geoName, title, coverParas, sections };
+      window.__memoryView = view;
       return "<div class=\"memory-cards" + loadingClass + "\">" + coverHtml + cardsHtml + "</div>";
     }
 
@@ -1829,12 +2070,12 @@
       const raw = await callDeepSeek({
         apiKey: getApiKey(),
         baseUrl: getApiBase(),
-        max_tokens: 1800,
+        max_tokens: 2400,
         messages: [
           {
             role: "system",
             content:
-              "你是一个中文旅行文案写作者。只输出 markdown 纯文本，不要代码块，不要解释，不要输出 JSON。必须使用标题与列表，结构参考示例。"
+              "你是一个中文旅行文案写作者。只输出 markdown 纯文本，不要代码块，不要解释，不要输出 JSON。必须使用标题与列表，结构参考示例。每个二级标题章节必须写够内容，不要偷懒。"
           },
           {
             role: "user",
@@ -1864,7 +2105,7 @@
               "- 若干条要点\n" +
               "## 怎么找到我\n" +
               "结尾一段\n\n" +
-              "要求：内容尽量贴合当地真实特征；不确定具体景点/典故时，用更泛化的表达替代，避免杜撰；全篇中文，不要出现“作为AI”。"
+              "硬性要求（必须满足）：每个“##”章节至少 2-3 段正文 + 4-6 条列表要点；段落写具体一点，带场景与感官细节；内容尽量贴合当地真实特征；不确定具体景点/典故时，用更泛化的表达替代，避免杜撰；全篇中文，不要出现“作为AI”。"
           }
         ]
       });
@@ -2208,8 +2449,48 @@
       }
     }
 
+    function renderMemoryNodes(nodes) {
+      let out = "";
+      (nodes || []).forEach((n) => {
+        if (n.type === "h3") out += "<h3>" + n.html + "</h3>";
+        if (n.type === "p") out += "<p>" + n.html + "</p>";
+        if (n.type === "ul") {
+          out += "<ul>" + (n.items || []).map((i) => "<li>" + i + "</li>").join("") + "</ul>";
+        }
+      });
+      return out;
+    }
+
+    function closeMemoryDrawer() {
+      document.getElementById("memoryDrawerOverlay")?.classList.remove("show");
+      const drawer = document.getElementById("memoryDrawer");
+      drawer?.classList.remove("show");
+      drawer?.setAttribute("aria-hidden", "true");
+    }
+
+    function openMemoryDrawer(sectionIndex) {
+      const view = window.__memoryView;
+      if (!view?.sections?.length) return;
+      const section = view.sections[sectionIndex];
+      if (!section) return;
+      const overlayEl = document.getElementById("memoryDrawerOverlay");
+      const drawerEl = document.getElementById("memoryDrawer");
+      const titleEl = document.getElementById("memoryDrawerTitle");
+      const imgEl = document.getElementById("memoryDrawerImg");
+      const bodyEl = document.getElementById("memoryDrawerBody");
+      if (!overlayEl || !drawerEl || !titleEl || !imgEl || !bodyEl) return;
+      titleEl.textContent = section.title || "城市记忆";
+      imgEl.src = buildMemorySectionHeroUrl(view.geoName, section.title);
+      imgEl.alt = shortCountyName(view.geoName || "") + " · " + (section.title || "城市记忆");
+      bodyEl.innerHTML = renderMemoryNodes(section.nodes);
+      overlayEl.classList.add("show");
+      drawerEl.classList.add("show");
+      drawerEl.setAttribute("aria-hidden", "false");
+    }
+
     async function openSidebarByGeoName(geoName) {
       currentCounty = getCountyPersona(geoName);
+      closeMemoryDrawer();
       updateSidebarPersonaUI();
       chatHistory = [];
       renderChatWelcome();
@@ -2369,6 +2650,18 @@
     });
     document.getElementById("goChatBtn").onclick = () => switchTab("chat");
     document.getElementById("sendChatBtn").onclick = sendChat;
+    document.getElementById("memoryDrawerClose").onclick = closeMemoryDrawer;
+    document.getElementById("memoryDrawerOverlay").onclick = closeMemoryDrawer;
+    document.getElementById("memoryContent").addEventListener("click", (e) => {
+      const card = e.target.closest(".memory-card[data-section-index]");
+      if (!card) return;
+      const idx = Number(card.dataset.sectionIndex);
+      if (Number.isNaN(idx)) return;
+      openMemoryDrawer(idx);
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMemoryDrawer();
+    });
     document.getElementById("chatInput").onkeydown = (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
