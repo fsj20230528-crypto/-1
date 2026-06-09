@@ -476,6 +476,45 @@
       color: var(--cinnabar);
       opacity: 0.35;
     }
+    .memory-content {
+      margin-top: 1rem;
+      padding: 1rem 1rem;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--border);
+    }
+    .memory-content h1 {
+      font-size: 1.08rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.6rem;
+      color: var(--ink);
+    }
+    .memory-content h2 {
+      margin-top: 0.9rem;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      color: var(--cinnabar);
+    }
+    .memory-content h3 {
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+    }
+    .memory-content p {
+      margin-top: 0.65rem;
+      line-height: 1.9;
+      color: var(--ink);
+      text-align: justify;
+    }
+    .memory-content ul {
+      margin: 0.65rem 0 0.65rem 1.2rem;
+      padding: 0;
+    }
+    .memory-content li {
+      margin: 0.45rem 0;
+      line-height: 1.85;
+      color: var(--ink);
+    }
     .btn-primary {
       width: 100%;
       margin-top: 1rem;
@@ -1075,6 +1114,7 @@
           <div class="intro-seal" id="introSeal">印</div>
           <p class="hint" id="introHint">每一座县城都有自己的声音，点击地图即可相遇。</p>
           <button class="btn-primary" id="goChatBtn">和TA聊天</button>
+          <div class="memory-content" id="memoryContent"></div>
         </div>
         <div class="panel" id="panel-chat">
           <div class="api-config">
@@ -1427,6 +1467,9 @@
         tagline: "浙里山水间的" + short,
         bio: "我是" + short + "，隶属" + parent + "的一方水土。街巷、江潮与乡音，都是我话语里的纹路。欢迎与我聊聊这里的人情风物。",
         seal: short.charAt(0) || "县",
+        memory: "",
+        memoryEnriched: false,
+        memoryLoading: null,
         systemPrompt:
           "你是浙江省" + geoName + "的人格化身，代表这座县级行政区。\n" +
           "你生活在" + parent + "所辖的" + short + "，说话用第一人称，温润隽永，略带古典韵味与江南意象。\n" +
@@ -1437,10 +1480,184 @@
       };
     }
 
+    const MEMORY_STORAGE_PREFIX = "city_memory_v1_";
+    function getMemoryStorageKey(geoName) {
+      return MEMORY_STORAGE_PREFIX + encodeURIComponent(geoName);
+    }
+
+    function buildDefaultMemoryMarkdown(geoName) {
+      const short = shortCountyName(geoName);
+      const parent = geoMeta[geoName]?.parentName || "浙江";
+      return (
+        "# " +
+        short +
+        "城市自我介绍（第一人称旅游版）\n" +
+        "你好呀，我叫" +
+        short +
+        "，是" +
+        parent +
+        "的一方山水与烟火。若你愿意放慢脚步，来听听我的风景、故事与日常。\n\n" +
+        "## 我的山水家底\n" +
+        "- 我有自己的山与水：清晨的薄雾、傍晚的归鸟、四季轮转的颜色。\n" +
+        "- 若你喜欢自然，就来走走看；若你爱热闹，就去街巷里尝一口人情。\n\n" +
+        "## 我的千年故事\n" +
+        "- 历史并不遥远，它藏在老城的砖瓦、庙宇的香火、古道的脚印里。\n\n" +
+        "## 我的生活日常\n" +
+        "- 一碗热汤、一口时令小吃、一次集市的喧闹，都能让你更懂我。\n\n" +
+        "## 怎么找到我\n" +
+        "跟着地图来就好。等你抵达，我会把最好的风景留给你。"
+      );
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function renderMarkdownLite(md) {
+      const lines = String(md || "").replace(/\r\n/g, "\n").split("\n");
+      let html = "";
+      let inList = false;
+      let para = [];
+      const inline = (s) => s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      const flushPara = () => {
+        if (!para.length) return;
+        html += "<p>" + para.join("<br/>") + "</p>";
+        para = [];
+      };
+      const closeList = () => {
+        if (!inList) return;
+        html += "</ul>";
+        inList = false;
+      };
+      lines.forEach((raw) => {
+        const line = raw.trimEnd();
+        if (!line.trim()) {
+          flushPara();
+          closeList();
+          return;
+        }
+        const heading = line.match(/^(#{1,3})\s+(.*)$/);
+        if (heading) {
+          flushPara();
+          closeList();
+          const level = heading[1].length;
+          html += "<h" + level + ">" + inline(escapeHtml(heading[2].trim())) + "</h" + level + ">";
+          return;
+        }
+        const bullet = line.match(/^\-\s+(.*)$/);
+        if (bullet) {
+          flushPara();
+          if (!inList) {
+            html += "<ul>";
+            inList = true;
+          }
+          html += "<li>" + inline(escapeHtml(bullet[1].trim())) + "</li>";
+          return;
+        }
+        closeList();
+        para.push(inline(escapeHtml(line.trim())));
+      });
+      flushPara();
+      closeList();
+      return html;
+    }
+
+    async function enrichMemoryWithAI(geoName) {
+      await geoMetaReady;
+      const short = shortCountyName(geoName);
+      const parent = geoMeta[geoName]?.parentName || "浙江";
+      const raw = await callDeepSeek({
+        apiKey: getApiKey(),
+        baseUrl: getApiBase(),
+        max_tokens: 1800,
+        messages: [
+          {
+            role: "system",
+            content:
+              "你是一个中文旅行文案写作者。只输出 markdown 纯文本，不要代码块，不要解释，不要输出 JSON。必须使用标题与列表，结构参考示例。"
+          },
+          {
+            role: "user",
+            content:
+              "为浙江省" +
+              geoName +
+              "（隶属" +
+              parent +
+              "）写一篇第一人称旅游版城市自我介绍，称呼自己为“" +
+              short +
+              "”。\n\n" +
+              "结构示例（按此结构输出）：\n" +
+              "# <地名>城市自我介绍（第一人称旅游版）\n" +
+              "开场一段\n" +
+              "## 我的山水家底\n" +
+              "- 若干条要点\n" +
+              "## 我的千年故事\n" +
+              "- 若干条要点\n" +
+              "## 我的文墨风华\n" +
+              "### 诗词流韵\n" +
+              "- 若干条要点\n" +
+              "### 丹青遗珍\n" +
+              "- 若干条要点\n" +
+              "### 典籍载誉\n" +
+              "- 若干条要点\n" +
+              "## 我的生活日常\n" +
+              "- 若干条要点\n" +
+              "## 怎么找到我\n" +
+              "结尾一段\n\n" +
+              "要求：内容尽量贴合当地真实特征；不确定具体景点/典故时，用更泛化的表达替代，避免杜撰；全篇中文，不要出现“作为AI”。"
+          }
+        ]
+      });
+      return raw.replace(/^```+\w*\s*|```+\s*$/g, "").trim();
+    }
+
+    async function ensureCountyMemory(geoName) {
+      const persona = personaCache[geoName] || currentCounty;
+      if (!persona) return;
+      if (persona.memoryEnriched && persona.memory) return;
+      const storageKey = getMemoryStorageKey(geoName);
+      const cached = localStorage.getItem(storageKey);
+      if (cached) {
+        persona.memory = cached;
+        persona.memoryEnriched = true;
+        if (currentCounty?.geoName === geoName) updateSidebarPersonaUI();
+        return;
+      }
+      if (!getApiKey()) {
+        if (!persona.memory) persona.memory = buildDefaultMemoryMarkdown(geoName);
+        if (currentCounty?.geoName === geoName) updateSidebarPersonaUI();
+        return;
+      }
+      if (persona.memoryLoading) return;
+      if (currentCounty?.geoName === geoName) {
+        persona.memory = "正在生成城市记忆…";
+        updateSidebarPersonaUI();
+      }
+      persona.memoryLoading = (async () => {
+        const md = await enrichMemoryWithAI(geoName);
+        persona.memory = md;
+        persona.memoryEnriched = true;
+        localStorage.setItem(storageKey, md);
+      })()
+        .catch(() => {
+          if (!persona.memory) persona.memory = buildDefaultMemoryMarkdown(geoName);
+        })
+        .finally(() => {
+          persona.memoryLoading = null;
+          if (currentCounty?.geoName === geoName) updateSidebarPersonaUI();
+        });
+      return persona.memoryLoading;
+    }
+
     function getCountyPersona(geoName) {
       const demoId = NAME_TO_DEMO[geoName];
       if (demoId) {
-        return { ...COUNTIES[demoId], enriched: true, isDemo: true };
+        return { ...COUNTIES[demoId], enriched: true, isDemo: true, memory: "", memoryEnriched: false, memoryLoading: null };
       }
       if (personaCache[geoName]) {
         return personaCache[geoName];
@@ -1729,6 +1946,11 @@
           ? "示范县域，人格已深度定制。可聊天。"
           : "点击「和TA聊天」，与" + currentCounty.name + "对谈。";
       }
+      const memoryEl = document.getElementById("memoryContent");
+      if (memoryEl) {
+        const md = currentCounty.memory || buildDefaultMemoryMarkdown(currentCounty.geoName);
+        memoryEl.innerHTML = renderMarkdownLite(md);
+      }
     }
 
     async function openSidebarByGeoName(geoName) {
@@ -1743,6 +1965,7 @@
       sidebar.setAttribute("aria-hidden", "false");
       overlay.classList.add("visible");
       setTimeout(() => chart && chart.resize(), 400);
+      ensureCountyMemory(geoName);
 
       if (!currentCounty.enriched && getApiKey()) {
         const taglineEl = document.getElementById("countyTagline");
