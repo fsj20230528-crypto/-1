@@ -999,6 +999,273 @@
     }
     .overlay.visible { opacity: 1; pointer-events: auto; }
 
+    .profile-btn img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+      background: rgba(26, 26, 26, 0.38);
+      backdrop-filter: blur(4px);
+    }
+    .login-overlay.open { display: flex; }
+    .login-modal {
+      width: min(980px, 94vw);
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      border-radius: 18px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 90% 70% at 20% 10%, rgba(180, 170, 150, 0.22), transparent 60%),
+        radial-gradient(ellipse 70% 55% at 85% 75%, rgba(120, 110, 95, 0.18), transparent 62%),
+        linear-gradient(180deg, rgba(250, 246, 238, 0.98), rgba(245, 240, 230, 0.96));
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.22);
+      display: grid;
+      grid-template-columns: 6fr 4fr;
+    }
+    @media (max-width: 860px) {
+      .login-modal { grid-template-columns: 1fr; }
+    }
+    .login-brand {
+      position: relative;
+      padding: 2.25rem 2.2rem;
+      background:
+        radial-gradient(ellipse 80% 55% at 22% 12%, rgba(139, 37, 0, 0.10), transparent 60%),
+        radial-gradient(ellipse 90% 70% at 75% 28%, rgba(120, 150, 140, 0.18), transparent 62%),
+        radial-gradient(ellipse 90% 70% at 55% 85%, rgba(0, 0, 0, 0.06), transparent 65%),
+        linear-gradient(180deg, rgba(245, 230, 200, 0.80), rgba(248, 244, 236, 0.96));
+    }
+    .login-brand::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 30% 35%, rgba(0, 0, 0, 0.10), transparent 62%),
+        radial-gradient(ellipse 60% 45% at 62% 55%, rgba(0, 0, 0, 0.07), transparent 62%);
+      opacity: 0.6;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+    .login-brand-head {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .login-logo {
+      font-family: "Ma Shan Zheng", "KaiTi", "楷体", cursive;
+      font-size: 2.1rem;
+      letter-spacing: 0.18em;
+      font-weight: 400;
+    }
+    .login-stamp {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 14px;
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      background: rgba(120, 160, 150, 0.18);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .login-stamp::after {
+      content: "";
+      position: absolute;
+      inset: 0.6rem;
+      border-radius: 10px;
+      background: rgba(120, 160, 150, 0.22);
+      border: 1px solid rgba(120, 160, 150, 0.28);
+    }
+    .login-brand-mid {
+      position: relative;
+      margin-top: 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+    .login-chest {
+      width: 160px;
+      height: 132px;
+      border-radius: 16px;
+      border: 1px solid rgba(120, 160, 150, 0.35);
+      background: rgba(255, 255, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-chest::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(120, 160, 150, 0.18), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(139, 37, 0, 0.10), transparent 62%);
+      opacity: 0.7;
+    }
+    .login-chest-icon {
+      position: relative;
+      width: 62px;
+      height: 62px;
+      border-radius: 16px;
+      background: rgba(120, 160, 150, 0.22);
+      border: 1px solid rgba(120, 160, 150, 0.32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(70, 110, 105, 0.92);
+      animation: float 3s ease-in-out infinite;
+    }
+    .login-fly {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .login-chest:hover .login-fly { opacity: 1; transform: translateY(0); }
+    .login-fly i {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 6px;
+      background: rgba(139, 37, 0, 0.20);
+      border: 1px solid rgba(139, 37, 0, 0.25);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.10);
+    }
+    .login-fly i:nth-child(1) { left: 4px; top: 8px; background: rgba(139, 37, 0, 0.22); }
+    .login-fly i:nth-child(2) { left: 54px; top: -2px; background: rgba(120, 160, 150, 0.22); border-color: rgba(120, 160, 150, 0.28); }
+    .login-fly i:nth-child(3) { right: 10px; top: 18px; background: rgba(168, 168, 120, 0.22); border-color: rgba(168, 168, 120, 0.30); }
+    .login-fly i:nth-child(4) { left: 66px; bottom: 2px; background: rgba(120, 150, 140, 0.18); border-color: rgba(120, 150, 140, 0.26); }
+    .login-brand-foot {
+      position: relative;
+      margin-top: 1.8rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .login-slogan {
+      color: rgba(139, 37, 0, 0.92);
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      letter-spacing: 0.08em;
+      line-height: 1.7;
+      max-width: 22ch;
+    }
+    .login-form {
+      padding: 2.25rem 2.2rem;
+      background: rgba(255, 255, 255, 0.72);
+    }
+    .login-form-card {
+      border: 1px solid rgba(26, 26, 26, 0.14);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.86);
+      padding: 2rem;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.10);
+    }
+    .login-title {
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .login-field {
+      margin-top: 1rem;
+    }
+    .login-field label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+    .login-input {
+      width: 100%;
+      padding: 0.75rem 0.85rem;
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .login-input:focus {
+      outline: none;
+      border-color: rgba(120, 160, 150, 0.65);
+      box-shadow: 0 0 0 4px rgba(120, 160, 150, 0.14);
+    }
+    .login-avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .login-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      background: rgba(250, 246, 238, 0.85);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .login-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .login-avatar svg { width: 24px; height: 24px; fill: rgba(139, 37, 0, 0.85); }
+    .login-upload-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 37, 0, 0.26);
+      background: rgba(139, 37, 0, 0.08);
+      color: rgba(139, 37, 0, 0.92);
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.08em;
+      font-size: 0.82rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .login-upload-btn:hover { background: rgba(139, 37, 0, 0.12); transform: scale(1.03); }
+    .login-submit {
+      margin-top: 1.2rem;
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 14px;
+      background: rgba(120, 160, 150, 0.95);
+      color: #fff;
+      font-family: inherit;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .login-submit:hover { background: rgba(95, 140, 133, 0.98); }
+    .login-submit:active { transform: translateY(1px) scale(0.99); }
+    .login-error {
+      margin-top: 0.75rem;
+      color: rgba(139, 37, 0, 0.95);
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+      min-height: 1.2rem;
+    }
+
     .checkin-body { padding: 0.8rem 1.1rem 1.5rem; }
     .checkin-city-strip {
       display: flex;
@@ -1364,6 +1631,70 @@
 
   <div class="overlay" id="overlay"></div>
 
+  <div class="login-overlay" id="loginOverlay" aria-hidden="true">
+    <div class="login-modal" role="dialog" aria-modal="true" aria-label="登录">
+      <section class="login-brand">
+        <div class="login-brand-head">
+          <div>
+            <div class="login-logo">浙里寻味</div>
+            <div style="margin-top:0.45rem;font-size:0.9rem;color:rgba(74,74,74,0.85);letter-spacing:0.08em;">江南烟火 · 现代寻宝</div>
+          </div>
+          <div class="login-stamp" aria-hidden="true"></div>
+        </div>
+        <div class="login-brand-mid">
+          <div class="login-chest" aria-hidden="true">
+            <div class="login-chest-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M7 7h10l1 4H6l1-4zm-1 6h12v6a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-6zm3-9V3h6v1h4v2H5V4h4z"/>
+              </svg>
+            </div>
+            <div class="login-fly" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+        </div>
+        <div class="login-brand-foot">
+          <div class="login-slogan">一张地图，吃遍浙江百县千味</div>
+          <div style="font-size:0.78rem;color:rgba(74,74,74,0.6);letter-spacing:0.08em;">浙里寻味 · 2026</div>
+        </div>
+      </section>
+      <section class="login-form">
+        <div class="login-form-card">
+          <div class="login-title">开启你的浙江美食寻宝之旅</div>
+
+          <div class="login-field">
+            <label>头像</label>
+            <div class="login-avatar-row">
+              <div class="login-avatar" id="loginAvatarPreview" aria-label="头像预览">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+              <div>
+                <button class="login-upload-btn" id="loginAvatarBtn" type="button">上传头像</button>
+                <input type="file" id="loginAvatarInput" accept="image/*" style="display:none" />
+                <div style="margin-top:0.35rem;font-size:0.78rem;color:rgba(74,74,74,0.6);letter-spacing:0.06em;">支持常见图片格式</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="login-field">
+            <label for="loginPhone">手机号</label>
+            <input class="login-input" id="loginPhone" inputmode="numeric" autocomplete="tel" placeholder="请输入 11 位手机号" />
+          </div>
+
+          <div class="login-field">
+            <label for="loginNickname">昵称</label>
+            <input class="login-input" id="loginNickname" autocomplete="nickname" placeholder="例如：阿浙小馋猫" maxlength="12" />
+          </div>
+
+          <button class="login-submit" id="loginSubmitBtn" type="button">进入寻宝地图</button>
+          <div class="login-error" id="loginError" aria-live="polite"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
   <aside class="sidebar" id="sidebar" aria-hidden="true">
     <div class="sidebar-top">
       <button class="sidebar-close" id="sidebarClose" aria-label="关闭">×</button>
@@ -1594,10 +1925,32 @@
       <h2 class="profile-drawer-title">个人中心</h2>
     </div>
     <div class="profile-drawer-body">
-      <div class="section-placeholder">
-        <div class="placeholder-seal">我</div>
-        <h3>个人中心</h3>
-        <p>你的浙游档案，尚待开启。此板块内容即将上线。</p>
+      <div class="api-config" style="margin-top:0">
+        <label>头像</label>
+        <div class="login-avatar-row" style="margin-top:0.4rem">
+          <div class="login-avatar" id="profileAvatarPreview" aria-label="头像预览">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+          <div>
+            <button class="login-upload-btn" id="profileAvatarBtn" type="button">更换头像</button>
+            <input type="file" id="profileAvatarInput" accept="image/*" style="display:none" />
+          </div>
+        </div>
+
+        <label for="profilePhone" style="margin-top:1rem">手机号</label>
+        <input type="text" id="profilePhone" class="login-input" placeholder="请输入 11 位手机号" inputmode="numeric" autocomplete="tel" />
+
+        <label for="profileNickname" style="margin-top:1rem">昵称</label>
+        <input type="text" id="profileNickname" class="login-input" placeholder="请输入昵称" maxlength="12" autocomplete="nickname" />
+
+        <div class="login-error" id="profileError" aria-live="polite"></div>
+
+        <div class="food-card-actions" style="margin-top:1rem">
+          <button class="primary" id="profileSaveBtn" type="button">保存</button>
+          <button id="logoutBtn" type="button">退出登录</button>
+        </div>
       </div>
     </div>
   </aside>
@@ -2429,6 +2782,191 @@
     const sidebar = document.getElementById("sidebar");
     const profileDrawer = document.getElementById("profileDrawer");
     const overlay = document.getElementById("overlay");
+    const loginOverlay = document.getElementById("loginOverlay");
+    const PROFILE_KEY = "zlxw_profile_v1";
+    const profileBtnEl = document.getElementById("profileBtn");
+    const defaultProfileBtnHTML = profileBtnEl ? profileBtnEl.innerHTML : "";
+    let pendingAvatarDataUrl = "";
+
+    function digitsOnly(s) {
+      return String(s || "").replace(/\D/g, "");
+    }
+
+    function isValidPhone(d) {
+      return /^1\d{10}$/.test(digitsOnly(d));
+    }
+
+    function readProfile() {
+      try {
+        const raw = localStorage.getItem(PROFILE_KEY);
+        if (!raw) return null;
+        const p = JSON.parse(raw);
+        if (!p || typeof p !== "object") return null;
+        if (!p.avatarDataUrl || !p.phoneDigits || !p.nickname) return null;
+        return p;
+      } catch {
+        return null;
+      }
+    }
+
+    function writeProfile(profile) {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    }
+
+    function clearProfile() {
+      localStorage.removeItem(PROFILE_KEY);
+    }
+
+    function openLoginOverlay() {
+      closeAllPanels();
+      if (!loginOverlay) return;
+      loginOverlay.classList.add("open");
+      loginOverlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeLoginOverlay() {
+      if (!loginOverlay) return;
+      loginOverlay.classList.remove("open");
+      loginOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    function setAvatarPreview(containerEl, dataUrl) {
+      if (!containerEl) return;
+      const url = String(dataUrl || "");
+      if (!url) {
+        containerEl.innerHTML =
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+        return;
+      }
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "头像";
+      containerEl.innerHTML = "";
+      containerEl.appendChild(img);
+    }
+
+    function syncProfileBtn(profile) {
+      if (!profileBtnEl) return;
+      if (profile?.avatarDataUrl) {
+        profileBtnEl.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = profile.avatarDataUrl;
+        img.alt = "个人头像";
+        profileBtnEl.appendChild(img);
+      } else {
+        profileBtnEl.innerHTML = defaultProfileBtnHTML;
+      }
+    }
+
+    function syncForms(profile) {
+      const loginPhone = document.getElementById("loginPhone");
+      const loginNickname = document.getElementById("loginNickname");
+      const profilePhone = document.getElementById("profilePhone");
+      const profileNickname = document.getElementById("profileNickname");
+      const loginErr = document.getElementById("loginError");
+      const profileErr = document.getElementById("profileError");
+
+      if (loginErr) loginErr.textContent = "";
+      if (profileErr) profileErr.textContent = "";
+
+      pendingAvatarDataUrl = profile?.avatarDataUrl || "";
+      setAvatarPreview(document.getElementById("loginAvatarPreview"), pendingAvatarDataUrl);
+      setAvatarPreview(document.getElementById("profileAvatarPreview"), pendingAvatarDataUrl);
+
+      if (loginPhone) loginPhone.value = profile?.phoneDigits || "";
+      if (loginNickname) loginNickname.value = profile?.nickname || "";
+      if (profilePhone) profilePhone.value = profile?.phoneDigits || "";
+      if (profileNickname) profileNickname.value = profile?.nickname || "";
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("头像读取失败"));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handleAvatarFile(inputEl) {
+      const file = inputEl?.files?.[0];
+      if (!file) return;
+      if (!file.type?.startsWith("image/")) return;
+      const res = await fileToDataUrl(file);
+      pendingAvatarDataUrl = String(res || "");
+      setAvatarPreview(document.getElementById("loginAvatarPreview"), pendingAvatarDataUrl);
+      setAvatarPreview(document.getElementById("profileAvatarPreview"), pendingAvatarDataUrl);
+    }
+
+    function validateProfile({ avatarDataUrl, phoneDigits, nickname }) {
+      const nick = String(nickname || "").trim();
+      const phone = digitsOnly(phoneDigits);
+      if (!avatarDataUrl) return "请先上传头像"
+      if (!isValidPhone(phone)) return "请输入正确的 11 位手机号"
+      if (nick.length < 2 || nick.length > 12) return "昵称长度需为 2-12"
+      return ""
+    }
+
+    async function submitLogin() {
+      const phone = digitsOnly(document.getElementById("loginPhone")?.value || "");
+      const nickname = String(document.getElementById("loginNickname")?.value || "").trim();
+      const err = validateProfile({ avatarDataUrl: pendingAvatarDataUrl, phoneDigits: phone, nickname });
+      const el = document.getElementById("loginError");
+      if (err) {
+        if (el) el.textContent = err;
+        return;
+      }
+      const profile = {
+        avatarDataUrl: pendingAvatarDataUrl,
+        phoneDigits: phone,
+        nickname,
+        updatedAt: new Date().toISOString()
+      };
+      writeProfile(profile);
+      syncProfileBtn(profile);
+      syncForms(profile);
+      closeLoginOverlay();
+    }
+
+    function saveProfileFromDrawer() {
+      const phone = digitsOnly(document.getElementById("profilePhone")?.value || "");
+      const nickname = String(document.getElementById("profileNickname")?.value || "").trim();
+      const err = validateProfile({ avatarDataUrl: pendingAvatarDataUrl, phoneDigits: phone, nickname });
+      const el = document.getElementById("profileError");
+      if (err) {
+        if (el) el.textContent = err;
+        return;
+      }
+      const profile = {
+        avatarDataUrl: pendingAvatarDataUrl,
+        phoneDigits: phone,
+        nickname,
+        updatedAt: new Date().toISOString()
+      };
+      writeProfile(profile);
+      syncProfileBtn(profile);
+      syncForms(profile);
+      if (el) el.textContent = "已保存"
+    }
+
+    function logoutAndRelogin() {
+      clearProfile();
+      syncProfileBtn(null);
+      syncForms(null);
+      closeProfileDrawer();
+      openLoginOverlay();
+    }
+
+    function ensureLoginOrOpenOverlay() {
+      const profile = readProfile();
+      syncProfileBtn(profile);
+      syncForms(profile);
+      if (!profile) {
+        openLoginOverlay();
+        return;
+      }
+      openProfileDrawer();
+    }
 
     function updateSidebarPersonaUI() {
       if (!currentCounty) return;
@@ -2639,7 +3177,7 @@
 
     document.getElementById("sidebarClose").onclick = closeSidebar;
     document.getElementById("communityBtn").onclick = openCommunity;
-    document.getElementById("profileBtn").onclick = openProfileDrawer;
+    document.getElementById("profileBtn").onclick = ensureLoginOrOpenOverlay;
     document.getElementById("profileClose").onclick = closeProfileDrawer;
     overlay.onclick = closeAllPanels;
     document.querySelectorAll(".nav-btn").forEach((b) => {
@@ -2672,6 +3210,21 @@
     if (DEEPSEEK_API_KEY) {
       document.getElementById("apiKey").value = DEEPSEEK_API_KEY;
     }
+
+    document.getElementById("loginAvatarBtn")?.addEventListener("click", () => document.getElementById("loginAvatarInput")?.click());
+    document.getElementById("profileAvatarBtn")?.addEventListener("click", () => document.getElementById("profileAvatarInput")?.click());
+    document.getElementById("loginAvatarInput")?.addEventListener("change", (e) => handleAvatarFile(e.target));
+    document.getElementById("profileAvatarInput")?.addEventListener("change", (e) => handleAvatarFile(e.target));
+    document.getElementById("loginSubmitBtn")?.addEventListener("click", submitLogin);
+    document.getElementById("profileSaveBtn")?.addEventListener("click", saveProfileFromDrawer);
+    document.getElementById("logoutBtn")?.addEventListener("click", logoutAndRelogin);
+
+    (function initLoginGate() {
+      const profile = readProfile();
+      syncProfileBtn(profile);
+      syncForms(profile);
+      if (!profile) openLoginOverlay();
+    })();
 
     function setChipsActive(containerId, singleSelect) {
       const el = document.getElementById(containerId);
