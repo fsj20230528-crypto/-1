@@ -552,6 +552,51 @@
       font-size: 1.12rem;
       letter-spacing: 0.12em;
     }
+    .memory-card-cover {
+      padding: 0;
+    }
+    .memory-hero {
+      position: relative;
+      height: 180px;
+      overflow: hidden;
+    }
+    .memory-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.9) contrast(1.02);
+      transform: scale(1.02);
+    }
+    .memory-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(26, 26, 26, 0.05), rgba(26, 26, 26, 0.46));
+      pointer-events: none;
+    }
+    .memory-cover-head {
+      position: absolute;
+      inset: auto 14px 14px 14px;
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      color: rgba(255, 248, 240, 0.98);
+      z-index: 2;
+    }
+    .memory-cover-head .memory-icon {
+      background: rgba(255, 250, 242, 0.12);
+      border-color: rgba(255, 250, 242, 0.28);
+    }
+    .memory-cover-head .memory-icon svg {
+      stroke: rgba(255, 248, 240, 0.98);
+    }
+    .memory-cover-head .memory-title {
+      color: rgba(255, 248, 240, 0.98);
+      text-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
+    }
+    .memory-cover-body {
+      padding: 0.85rem 1.05rem 1.05rem;
+    }
     .memory-card-body {
       position: relative;
       margin-top: 0.55rem;
@@ -1399,7 +1444,7 @@
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
   <script>
     // ========== 请在此处填写你的 DeepSeek API Key ==========
-    const DEEPSEEK_API_KEY = "sk-40ff9e15c65448959d04cc3421efb774"; // 例: "sk-xxxxxxxxxxxxxxxx"
+    const DEEPSEEK_API_KEY = ""; // 例: "sk-xxxxxxxxxxxxxxxx"
     const AMAP_WEB_KEY = "";
     const AMAP_SECURITY_JS_CODE = "";
 
@@ -1587,6 +1632,22 @@
         .replace(/'/g, "&#39;");
     }
 
+    function buildMemoryHeroUrl(geoName) {
+      const short = shortCountyName(geoName || "");
+      const parent = geoMeta[geoName]?.parentName || "浙江";
+      const prompt =
+        "realistic travel photography, misty mountains and lake, jiangnan ecological scenery, traditional chinese aesthetic, warm parchment tones, editorial magazine cover, high detail, " +
+        short +
+        ", " +
+        parent +
+        ", Zhejiang, China";
+      return (
+        "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" +
+        encodeURIComponent(prompt) +
+        "&image_size=landscape_16_9"
+      );
+    }
+
     function renderMemoryCards(md, geoName) {
       const lines = String(md || "").replace(/\r\n/g, "\n").split("\n");
       const inline = (s) => s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
@@ -1717,9 +1778,17 @@
       };
 
       const coverBody = coverParas.length ? "<div class=\"memory-card-body\">" + coverParas.map((p) => "<p>" + p + "</p>").join("") + "</div>" : "";
+      const heroUrl = buildMemoryHeroUrl(geoName);
+      const heroAlt = escapeHtml(shortCountyName(geoName || "") + "风景封面");
       const coverHtml =
         "<section class=\"memory-card memory-card-cover\">" +
-        "<div class=\"memory-card-head\">" +
+        "<div class=\"memory-hero\">" +
+        "<img src=\"" +
+        heroUrl +
+        "\" alt=\"" +
+        heroAlt +
+        "\" loading=\"lazy\" />" +
+        "<div class=\"memory-cover-head\">" +
         "<div class=\"memory-icon\">" +
         iconSvg("seal") +
         "</div>" +
@@ -1727,7 +1796,8 @@
         inline(escapeHtml(title)) +
         "</div>" +
         "</div>" +
-        coverBody +
+        "</div>" +
+        (coverBody ? "<div class=\"memory-cover-body\">" + coverBody + "</div>" : "") +
         "</section>";
 
       const cardsHtml = sections
