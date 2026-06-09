@@ -478,42 +478,111 @@
     }
     .memory-content {
       margin-top: 1rem;
-      padding: 1rem 1rem;
-      background: rgba(255, 255, 255, 0.55);
-      border: 1px solid var(--border);
     }
-    .memory-content h1 {
-      font-size: 1.08rem;
+    .memory-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .memory-card {
+      position: relative;
+      padding: 1rem 1.05rem 1.05rem;
+      border-radius: 14px;
+      background:
+        radial-gradient(ellipse 120% 70% at 20% 10%, rgba(180, 170, 150, 0.22), transparent 55%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(244, 238, 225, 0.62));
+      border: 1px solid rgba(26, 26, 26, 0.18);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+    .memory-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          rgba(0, 0, 0, 0.03) 0px,
+          rgba(0, 0, 0, 0.03) 1px,
+          transparent 1px,
+          transparent 6px
+        );
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .memory-card::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1px dashed rgba(26, 26, 26, 0.16);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+    .memory-card-head {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.35rem;
+    }
+    .memory-icon {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(139, 37, 0, 0.1);
+      border: 1px solid rgba(139, 37, 0, 0.25);
+    }
+    .memory-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--cinnabar);
+      stroke-width: 1.7;
+      fill: none;
+      vector-effect: non-scaling-stroke;
+    }
+    .memory-title {
+      font-size: 1.05rem;
       letter-spacing: 0.08em;
-      margin-bottom: 0.6rem;
       color: var(--ink);
+      line-height: 1.4;
     }
-    .memory-content h2 {
-      margin-top: 0.9rem;
-      font-size: 1rem;
-      letter-spacing: 0.08em;
-      color: var(--cinnabar);
+    .memory-card-cover .memory-title {
+      font-size: 1.12rem;
+      letter-spacing: 0.12em;
     }
-    .memory-content h3 {
+    .memory-card-body {
+      position: relative;
+      margin-top: 0.55rem;
+    }
+    .memory-card h3 {
       margin-top: 0.75rem;
       font-size: 0.95rem;
       letter-spacing: 0.08em;
       color: var(--ink);
     }
-    .memory-content p {
+    .memory-card p {
       margin-top: 0.65rem;
       line-height: 1.9;
       color: var(--ink);
       text-align: justify;
     }
-    .memory-content ul {
+    .memory-card ul {
       margin: 0.65rem 0 0.65rem 1.2rem;
       padding: 0;
     }
-    .memory-content li {
+    .memory-card li {
       margin: 0.45rem 0;
       line-height: 1.85;
       color: var(--ink);
+    }
+    .memory-card strong {
+      color: var(--cinnabar);
+      font-weight: 600;
+    }
+    .memory-loading {
+      opacity: 0.75;
     }
     .btn-primary {
       width: 100%;
@@ -1518,53 +1587,169 @@
         .replace(/'/g, "&#39;");
     }
 
-    function renderMarkdownLite(md) {
+    function renderMemoryCards(md, geoName) {
       const lines = String(md || "").replace(/\r\n/g, "\n").split("\n");
-      let html = "";
-      let inList = false;
-      let para = [];
       const inline = (s) => s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      const titleFallback = shortCountyName(geoName || "") + "城市自我介绍（第一人称旅游版）";
+      let title = "";
+      let coverParas = [];
+      const sections = [];
+      let para = [];
+      let current = null;
+
       const flushPara = () => {
         if (!para.length) return;
-        html += "<p>" + para.join("<br/>") + "</p>";
+        const text = para.join("<br/>");
+        if (current) {
+          current.nodes.push({ type: "p", html: text });
+        } else {
+          coverParas.push(text);
+        }
         para = [];
       };
-      const closeList = () => {
-        if (!inList) return;
-        html += "</ul>";
-        inList = false;
+
+      const pushSection = () => {
+        if (!current) return;
+        sections.push(current);
+        current = null;
       };
+
+      const ensureList = () => {
+        if (!current) {
+          current = { title: "", nodes: [] };
+        }
+        const last = current.nodes[current.nodes.length - 1];
+        if (last?.type === "ul") return last;
+        const ul = { type: "ul", items: [] };
+        current.nodes.push(ul);
+        return ul;
+      };
+
       lines.forEach((raw) => {
         const line = raw.trimEnd();
         if (!line.trim()) {
           flushPara();
-          closeList();
           return;
         }
-        const heading = line.match(/^(#{1,3})\s+(.*)$/);
-        if (heading) {
+        const h1 = line.match(/^#\s+(.*)$/);
+        if (h1) {
           flushPara();
-          closeList();
-          const level = heading[1].length;
-          html += "<h" + level + ">" + inline(escapeHtml(heading[2].trim())) + "</h" + level + ">";
+          pushSection();
+          title = h1[1].trim();
+          return;
+        }
+        const h2 = line.match(/^##\s+(.*)$/);
+        if (h2) {
+          flushPara();
+          pushSection();
+          current = { title: h2[1].trim(), nodes: [] };
+          return;
+        }
+        const h3 = line.match(/^###\s+(.*)$/);
+        if (h3) {
+          flushPara();
+          if (!current) current = { title: "", nodes: [] };
+          current.nodes.push({ type: "h3", html: inline(escapeHtml(h3[1].trim())) });
           return;
         }
         const bullet = line.match(/^\-\s+(.*)$/);
         if (bullet) {
           flushPara();
-          if (!inList) {
-            html += "<ul>";
-            inList = true;
-          }
-          html += "<li>" + inline(escapeHtml(bullet[1].trim())) + "</li>";
+          const ul = ensureList();
+          ul.items.push(inline(escapeHtml(bullet[1].trim())));
           return;
         }
-        closeList();
         para.push(inline(escapeHtml(line.trim())));
       });
       flushPara();
-      closeList();
-      return html;
+      pushSection();
+      if (!title) title = titleFallback;
+
+      const iconKey = (t) => {
+        const s = String(t || "");
+        if (s.includes("山水")) return "landscape";
+        if (s.includes("千年") || s.includes("故事") || s.includes("历史")) return "history";
+        if (s.includes("文墨") || s.includes("风华") || s.includes("诗") || s.includes("典籍")) return "culture";
+        if (s.includes("日常") || s.includes("生活") || s.includes("美食")) return "life";
+        if (s.includes("找到") || s.includes("交通") || s.includes("怎么来")) return "route";
+        return "seal";
+      };
+
+      const iconSvg = (key) => {
+        if (key === "landscape") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18" /><path d="M4 17l5-6 4 5 3-4 4 5" /><path d="M15 6a2 2 0 1 0 0.01 0" /></svg>'
+          );
+        }
+        if (key === "history") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v16H7z" /><path d="M9 7h6" /><path d="M9 10h6" /><path d="M9 13h5" /></svg>'
+          );
+        }
+        if (key === "culture") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c6-1 10-5 12-12" /><path d="M14 7l3 3" /><path d="M6 18l4-1 1 4" /><path d="M9 16c2-2 4-5 6-9" /></svg>'
+          );
+        }
+        if (key === "life") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11h10" /><path d="M8 11c0 5 2 8 4 8s4-3 4-8" /><path d="M9 6h6" /><path d="M9 6c0 2 1 3 3 3s3-1 3-3" /></svg>'
+          );
+        }
+        if (key === "route") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5 6-10a6 6 0 1 0-12 0c0 5 6 10 6 10z" /><path d="M12 11a2 2 0 1 0 0.01 0" /></svg>'
+          );
+        }
+        return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z" /><path d="M9 9h6v6H9z" /></svg>';
+      };
+
+      const renderNodes = (nodes) => {
+        let out = "";
+        nodes.forEach((n) => {
+          if (n.type === "h3") out += "<h3>" + n.html + "</h3>";
+          if (n.type === "p") out += "<p>" + n.html + "</p>";
+          if (n.type === "ul") {
+            out += "<ul>" + n.items.map((i) => "<li>" + i + "</li>").join("") + "</ul>";
+          }
+        });
+        return out;
+      };
+
+      const coverBody = coverParas.length ? "<div class=\"memory-card-body\">" + coverParas.map((p) => "<p>" + p + "</p>").join("") + "</div>" : "";
+      const coverHtml =
+        "<section class=\"memory-card memory-card-cover\">" +
+        "<div class=\"memory-card-head\">" +
+        "<div class=\"memory-icon\">" +
+        iconSvg("seal") +
+        "</div>" +
+        "<div class=\"memory-title\">" +
+        inline(escapeHtml(title)) +
+        "</div>" +
+        "</div>" +
+        coverBody +
+        "</section>";
+
+      const cardsHtml = sections
+        .filter((s) => s.title || s.nodes.length)
+        .map((s) => {
+          const key = iconKey(s.title);
+          const head =
+            "<div class=\"memory-card-head\">" +
+            "<div class=\"memory-icon\">" +
+            iconSvg(key) +
+            "</div>" +
+            "<div class=\"memory-title\">" +
+            inline(escapeHtml(s.title || "城市记忆")) +
+            "</div>" +
+            "</div>";
+          const body = "<div class=\"memory-card-body\">" + renderNodes(s.nodes) + "</div>";
+          return "<section class=\"memory-card\">" + head + body + "</section>";
+        })
+        .join("");
+
+      const loadingClass = String(md || "").includes("正在生成") ? " memory-loading" : "";
+      return "<div class=\"memory-cards" + loadingClass + "\">" + coverHtml + cardsHtml + "</div>";
     }
 
     async function enrichMemoryWithAI(geoName) {
@@ -1949,7 +2134,7 @@
       const memoryEl = document.getElementById("memoryContent");
       if (memoryEl) {
         const md = currentCounty.memory || buildDefaultMemoryMarkdown(currentCounty.geoName);
-        memoryEl.innerHTML = renderMarkdownLite(md);
+        memoryEl.innerHTML = renderMemoryCards(md, currentCounty.geoName);
       }
     }
 
