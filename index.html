@@ -1102,7 +1102,7 @@
           <input type="password" id="amapKey" placeholder="填写你的高德 Key" autocomplete="off" />
           <label for="amapSecurityCode" style="margin-top:0.6rem">JSAPI 安全密钥（securityJsCode，可选）</label>
           <input type="password" id="amapSecurityCode" placeholder="在高德控制台复制 securityJsCode" autocomplete="off" />
-          <p class="hint">首次填写后会保存在浏览器本地。若接口不可用，请检查 Key 权限是否包含 Web JS API。</p>
+          <p class="hint">首次填写后会保存在浏览器本地。修改 securityJsCode 后需要刷新页面生效。若接口不可用，请检查 Key 权限是否包含 Web JS API。</p>
         </div>
 
         <div class="form-grid">
@@ -1949,6 +1949,8 @@
       if (code) localStorage.setItem("amap_security_js_code", code);
     }
 
+    let amapLoadedSecurityCode = null;
+
     function loadAmapSdk(key) {
       const scode = getAmapSecurityCode();
       if (scode) {
@@ -1963,6 +1965,12 @@
           return;
         }
         if (window.AMap) {
+          const loaded = amapLoadedSecurityCode;
+          if (loaded !== null && loaded !== scode) {
+            reject(new Error("高德 SDK 已加载，但 securityJsCode 已变化，请刷新页面后重试。"));
+            return;
+          }
+          amapLoadedSecurityCode = loaded === null ? scode : loaded;
           resolve(window.AMap);
           return;
         }
@@ -1981,7 +1989,10 @@
           "&plugin=" +
           encodeURIComponent(plugins);
         script.async = true;
-        script.onload = () => resolve(window.AMap);
+        script.onload = () => {
+          amapLoadedSecurityCode = scode;
+          resolve(window.AMap);
+        };
         script.onerror = () => reject(new Error("高德 SDK 加载失败，请检查 Key 与网络"));
         document.head.appendChild(script);
       });
@@ -2353,14 +2364,19 @@
       return await new Promise((resolve, reject) => {
         const c = new AMap.LngLat(center.lng, center.lat);
         foodPlaceSearch.searchNearBy(keyword, c, radiusMeters, (status, result) => {
-          const pois = result?.poiList?.pois || [];
-          const info = result?.info || result?.message || "";
-          const infocode = result?.infocode ? String(result.infocode) : "";
+          const info =
+            typeof result === "string"
+              ? result
+              : result?.info || result?.message || "";
+          const infocode =
+            typeof result === "object" && result?.infocode ? String(result.infocode) : "";
+          const pois = typeof result === "object" ? result?.poiList?.pois || [] : [];
           if (status !== "complete") {
             const parts = [];
             if (status) parts.push("status=" + status);
             if (info) parts.push("info=" + info);
             if (infocode) parts.push("infocode=" + infocode);
+            if (!result) parts.push("result=null");
             if (keyword) parts.push("keyword=" + keyword);
             if (radiusMeters) parts.push("radiusKm=" + (radiusMeters / 1000).toFixed(1));
             parts.push(
