@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>城市记忆视觉方向预览</title>
+  <style>
+    :root {
+      --bg: #efe6d6;
+      --paper: rgba(255, 250, 240, 0.78);
+      --paper-strong: rgba(250, 244, 232, 0.96);
+      --ink: #2f241c;
+      --muted: #6a5647;
+      --line: rgba(80, 54, 34, 0.16);
+      --red: #8b2500;
+      --shadow: rgba(65, 44, 25, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(171, 124, 74, 0.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(120, 93, 66, 0.12), transparent 24%),
+        linear-gradient(180deg, #f6efe4, var(--bg));
+    }
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 40px 28px 56px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: 0.12em;
+      text-align: center;
+    }
+    .subtitle {
+      margin: 14px auto 0;
+      max-width: 860px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 15px;
+    }
+    .grid {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+    .scheme {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.52), rgba(246,236,220,0.76));
+      box-shadow: 0 14px 32px var(--shadow);
+    }
+    .scheme::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px dashed rgba(90, 60, 35, 0.18);
+      border-radius: 16px;
+      pointer-events: none;
+    }
+    .tag {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 2;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(139, 37, 0, 0.9);
+      color: #fff8ef;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+    }
+    .hero {
+      position: relative;
+      height: 212px;
+      overflow: hidden;
+    }
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.88) contrast(1.02);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(44, 28, 16, 0.04), rgba(44, 28, 16, 0.35));
+    }
+    .head {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 16px;
+      z-index: 2;
+      color: #fff8f1;
+    }
+    .head h2 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      letter-spacing: 0.08em;
+    }
+    .head p {
+      margin: 0;
+      line-height: 1.7;
+      font-size: 13px;
+      color: rgba(255, 247, 238, 0.94);
+    }
+    .body {
+      padding: 18px 18px 22px;
+    }
+    .body h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: var(--red);
+      letter-spacing: 0.08em;
+    }
+    .body p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 14px;
+    }
+    .mini-cards {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .mini-card {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: var(--paper);
+      border: 1px solid rgba(72, 52, 34, 0.12);
+    }
+    .stamp {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(139, 37, 0, 0.1);
+      color: var(--red);
+      font-size: 22px;
+    }
+    .mini-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+    }
+    .mini-card span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 13px;
+    }
+    .mosaic {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 10px;
+    }
+    .tile {
+      position: relative;
+      min-height: 116px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--paper);
+      border: 1px solid rgba(72, 52, 34, 0.12);
+    }
+    .tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .tile .overlay {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 12px;
+      color: #fff8f0;
+      background: linear-gradient(180deg, transparent, rgba(30, 17, 10, 0.72));
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .rail {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .rail-item {
+      padding: 12px 14px;
+      border-left: 3px solid rgba(139, 37, 0, 0.5);
+      background: rgba(255, 251, 245, 0.78);
+      border-radius: 0 12px 12px 0;
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 13px;
+    }
+    .pick {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(139, 37, 0, 0.08);
+      color: var(--ink);
+      line-height: 1.8;
+      font-size: 13px;
+    }
+    .pick strong { color: var(--red); }
+    @media (max-width: 1024px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>城市记忆图文并茂方向预览</h1>
+    <p class="subtitle">
+      下面是 3 种适合“城市印象 → 城市记忆”的古风图文版式。它们都保留你现在的长文结构，但强化了图片、卡片层次和阅读节奏。
+    </p>
+
+    <div class="grid">
+      <section class="scheme">
+        <div class="tag">方案 A</div>
+        <div class="hero">
+          <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=ancient%20chinese%20travel%20magazine%20cover%20style%2C%20misty%20mountains%2C%20lakeside%20forest%2C%20warm%20ink%20wash%20tones%2C%20elegant%20jiangnan%20atmosphere%2C%20realistic%20scenic%20photography%2C%20editorial%20composition&image_size=landscape_16_9" alt="封面大图示意">
+          <div class="head">
+            <h2>封面大图 + 章节卡</h2>
+            <p>顶部一张风景图定调，下面每个“我的山水家底 / 千年故事 / 文墨风华”拆成独立卡片。</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>适合现在的结构</h3>
+          <p>最稳妥，最容易直接落到你现在的页面里。阅读上像翻一本地方志游记，首屏就有记忆点。</p>
+          <div class="mini-cards">
+            <div class="mini-card">
+              <div class="stamp">山</div>
+              <div>
+                <strong>山水家底</strong>
+                <span>章节卡配小图标，正文仍是列表与段落，信息完整。</span>
+              </div>
+            </div>
+            <div class="mini-card">
+              <div class="stamp">史</div>
+              <div>
+                <strong>千年故事</strong>
+                <span>适合放古镇、王陵、博物馆等要点，读起来更像一页一页看展签。</span>
+              </div>
+            </div>
+          </div>
+          <div class="pick"><strong>推荐指数：</strong>最高，改造成本低，整体最像“古色古香的城市名片册”。</div>
+        </div>
+      </section>
+
+      <section class="scheme">
+        <div class="tag">方案 B</div>
+        <div class="hero">
+          <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=jiangnan%20old%20town%20travel%20editorial%2C%20ancient%20bridge%2C%20stone%20path%2C%20warm%20sunlight%2C%20heritage%20culture%2C%20elegant%20traditional%20china%20magazine%20layout%2C%20realistic&image_size=landscape_16_9" alt="左图右文卷轴示意">
+          <div class="head">
+            <h2>图文对开 + 卷轴感</h2>
+            <p>每张卡都做成“左图右文”或“上图下文”，像册页或画卷题跋。</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>更强调“图文并茂”</h3>
+          <p>每个章节都能搭配一张主题图，视觉更丰富，但页面会更长，对移动端空间要求更高。</p>
+          <div class="mosaic">
+            <div class="tile">
+              <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=mountain%20sea%20clouds%20traditional%20china%20travel%20photo%2C%20moody%20mist%2C%20elegant%20natural%20landscape%2C%20editorial%20quality&image_size=portrait_4_3" alt="山水章节示意">
+              <div class="overlay">山水章节配专属图</div>
+            </div>
+            <div class="tile">
+              <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=traditional%20museum%20artifact%20display%2C%20warm%20light%2C%20historic%20chinese%20heritage%2C%20editorial%20travel%20feature&image_size=portrait_4_3" alt="历史章节示意">
+              <div class="overlay">历史章节配文博图</div>
+            </div>
+          </div>
+          <div class="pick"><strong>适合：</strong>你非常在意“每一段都要有图”，愿意接受页面更长、更像杂志特刊。</div>
+        </div>
+      </section>
+
+      <section class="scheme">
+        <div class="tag">方案 C</div>
+        <div class="hero">
+          <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=traditional%20chinese%20travel%20collage%2C%20tea%20house%2C%20street%20food%2C%20mountain%20town%2C%20warm%20parchment%20palette%2C%20rich%20editorial%20storytelling&image_size=landscape_16_9" alt="拼贴信息流示意">
+          <div class="head">
+            <h2>拼贴图册 + 信息流</h2>
+            <p>多张小图穿插在正文卡之间，像“地方游记拼贴板”，更活泼，也更年轻。</p>
+          </div>
+        </div>
+        <div class="body">
+          <h3>视觉最丰富</h3>
+          <p>能把风景、美食、古迹都塞进一页里，但会稍微削弱你现在那种“静气”的古典感。</p>
+          <div class="rail">
+            <div class="rail-item">上半部分是封面大图和摘要，下半部分插入 2-3 张小图卡，节奏更像社交媒体专题。</div>
+            <div class="rail-item">适合强调“景点打卡”“美食伴手礼”“出行攻略”等信息。</div>
+            <div class="rail-item">如果你想更像文旅宣传页，而不是地方志册页，这个方向会更讨喜。</div>
+          </div>
+          <div class="pick"><strong>适合：</strong>更现代的文旅宣传气质，但古味会比 A / B 稍弱一点。</div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
