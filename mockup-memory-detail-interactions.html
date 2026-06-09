@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>城市记忆详情交互示例</title>
+  <style>
+    :root{
+      --bg:#efe6d6;
+      --paper:rgba(255,250,240,0.84);
+      --paper-2:rgba(250,244,232,0.96);
+      --ink:#2f241c;
+      --muted:#6a5647;
+      --line:rgba(80,54,34,0.16);
+      --red:#8b2500;
+      --shadow:rgba(65,44,25,0.14);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Noto Serif SC","Songti SC","SimSun",serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(171,124,74,0.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(120,93,66,0.12), transparent 24%),
+        linear-gradient(180deg, #f6efe4, var(--bg));
+    }
+    .wrap{max-width:1180px;margin:0 auto;padding:34px 22px 56px}
+    h1{margin:0;text-align:center;font-size:30px;letter-spacing:0.14em}
+    .subtitle{margin:14px auto 0;max-width:860px;text-align:center;color:var(--muted);line-height:1.9;font-size:15px}
+    .grid{margin-top:28px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .panel{
+      position:relative;
+      border:1px solid var(--line);
+      border-radius:22px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,0.58), rgba(246,236,220,0.78));
+      box-shadow:0 14px 32px var(--shadow);
+    }
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:12px;
+      border:1px dashed rgba(90,60,35,0.18);
+      border-radius:16px;
+      pointer-events:none;
+    }
+    .tag{
+      position:absolute;
+      top:16px;
+      left:16px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(139,37,0,0.9);
+      color:#fff8ef;
+      font-size:12px;
+      letter-spacing:0.14em;
+      z-index:2;
+    }
+    .panel-body{padding:18px 18px 22px}
+    .panel h2{margin:0 0 10px;font-size:18px;letter-spacing:0.08em;color:var(--red)}
+    .panel p{margin:0;color:var(--muted);line-height:1.85;font-size:14px}
+    .card{
+      margin-top:14px;
+      border-radius:16px;
+      background:var(--paper);
+      border:1px solid rgba(72,52,34,0.12);
+      overflow:hidden;
+      cursor:pointer;
+      box-shadow:0 8px 18px rgba(0,0,0,0.08);
+    }
+    .hero{position:relative;height:148px}
+    .hero img{width:100%;height:100%;object-fit:cover;filter:saturate(0.9) contrast(1.02)}
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(26,26,26,0.06), rgba(26,26,26,0.48));
+    }
+    .card-head{
+      position:absolute;
+      left:14px;
+      right:14px;
+      bottom:12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      z-index:2;
+      color:rgba(255,248,240,0.98);
+    }
+    .stamp{
+      width:34px;height:34px;border-radius:11px;
+      display:grid;place-items:center;
+      background:rgba(255,250,242,0.14);
+      border:1px solid rgba(255,250,242,0.28);
+      font-size:16px;
+      letter-spacing:0.08em;
+    }
+    .card-head strong{font-size:16px;letter-spacing:0.08em}
+    .card-body{padding:14px 14px 16px}
+    .card-body .line{margin-top:8px;display:flex;gap:8px;align-items:flex-start;color:var(--muted);line-height:1.8;font-size:13px}
+    .dot{width:6px;height:6px;border-radius:50%;background:rgba(139,37,0,0.55);margin-top:8px;flex:0 0 auto}
+    .hint{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(139,37,0,0.08);
+      border:1px solid rgba(139,37,0,0.14);
+      color:var(--ink);
+      line-height:1.85;
+      font-size:13px;
+    }
+    .hint strong{color:var(--red)}
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(26,26,26,0.42);
+      z-index:999;
+      padding:18px;
+    }
+    .overlay.show{display:flex}
+    .modal{
+      width:min(980px, 100%);
+      max-height:calc(100vh - 36px);
+      overflow:auto;
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.75), rgba(246,236,220,0.92));
+      border:1px solid rgba(80,54,34,0.16);
+      box-shadow:0 18px 44px rgba(0,0,0,0.22);
+      position:relative;
+    }
+    .modal::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border:1px dashed rgba(90,60,35,0.18);
+      border-radius:16px;
+      pointer-events:none;
+    }
+    .modal-hero{height:220px;position:relative;overflow:hidden;border-radius:22px 22px 0 0}
+    .modal-hero img{width:100%;height:100%;object-fit:cover;filter:saturate(0.9) contrast(1.02)}
+    .modal-hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(26,26,26,0.06), rgba(26,26,26,0.56));
+    }
+    .modal-head{
+      position:absolute;
+      left:16px;
+      right:16px;
+      bottom:14px;
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:flex-end;
+      color:rgba(255,248,240,0.98);
+      z-index:2;
+    }
+    .modal-title{
+      font-size:20px;
+      letter-spacing:0.1em;
+      margin:0;
+      text-shadow:0 10px 22px rgba(0,0,0,0.45);
+    }
+    .close{
+      width:38px;height:38px;border-radius:12px;
+      background:rgba(255,250,242,0.16);
+      border:1px solid rgba(255,250,242,0.25);
+      color:rgba(255,248,240,0.96);
+      cursor:pointer;
+      font-size:18px;
+    }
+    .modal-body{padding:18px 18px 22px;position:relative}
+    .modal-body h3{margin:0 0 10px;font-size:16px;letter-spacing:0.08em;color:var(--red)}
+    .modal-body p{margin:10px 0 0;line-height:1.9;color:var(--ink);text-align:justify}
+    .modal-body ul{margin:12px 0 0 1.2rem;padding:0}
+    .modal-body li{margin:8px 0;line-height:1.85;color:var(--ink)}
+    .drawer{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:-100%;
+      z-index:999;
+      transition:bottom 0.28s ease;
+      padding:14px 14px 18px;
+    }
+    .drawer.show{bottom:0}
+    .sheet{
+      margin:0 auto;
+      width:min(980px, 100%);
+      max-height:calc(92vh - 14px);
+      overflow:auto;
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.78), rgba(246,236,220,0.92));
+      border:1px solid rgba(80,54,34,0.16);
+      box-shadow:0 18px 44px rgba(0,0,0,0.22);
+      position:relative;
+    }
+    .grab{
+      position:sticky;
+      top:0;
+      display:flex;
+      justify-content:center;
+      padding:10px 0 0;
+      z-index:3;
+      background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0));
+    }
+    .grab i{display:block;width:64px;height:5px;border-radius:999px;background:rgba(80,54,34,0.2)}
+    .sheet .modal-hero{border-radius:22px 22px 0 0;height:200px}
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>“点进去”的两种交互示例</h1>
+    <p class="subtitle">你点任意章节卡后，要么<strong>全屏遮罩弹窗</strong>（更沉浸），要么<strong>底部抽屉</strong>（更像 App）。下面各给一个可点的示例。</p>
+
+    <div class="grid">
+      <section class="panel">
+        <div class="tag">方案 1</div>
+        <div class="panel-body">
+          <h2>全屏遮罩弹窗</h2>
+          <p>点击章节卡后，居中弹出详情，背景变暗；适合长内容阅读与沉浸。</p>
+          <div class="card" id="openModal">
+            <div class="hero">
+              <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=realistic%20travel%20photography%2C%20misty%20mountains%20and%20lake%2C%20jiangnan%20scenery%2C%20warm%20parchment%20palette%2C%20traditional%20chinese%20aesthetic%2C%20editorial%20cover&image_size=landscape_16_9" alt="山水封面示例" />
+              <div class="card-head">
+                <div class="stamp">山</div>
+                <strong>我的山水家底</strong>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="line"><i class="dot"></i><span>摘要：四季各有风景，山林与湖泽相映。</span></div>
+              <div class="line"><i class="dot"></i><span>要点：高山云海、溪谷飞瀑、水上森林。</span></div>
+              <div class="hint"><strong>点击这张卡</strong>查看详情弹窗</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="tag">方案 2</div>
+        <div class="panel-body">
+          <h2>底部半屏抽屉</h2>
+          <p>点击章节卡后，从底部滑出；更像手机 App 的“详情”，可快速关闭。</p>
+          <div class="card" id="openDrawer">
+            <div class="hero">
+              <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=realistic%20travel%20photography%2C%20ancient%20town%20stone%20bridge%2C%20warm%20sunlight%2C%20jiangnan%20heritage%2C%20traditional%20chinese%20aesthetic%2C%20editorial%20cover&image_size=landscape_16_9" alt="历史封面示例" />
+              <div class="card-head">
+                <div class="stamp">史</div>
+                <strong>我的千年故事</strong>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="line"><i class="dot"></i><span>摘要：旧城砖瓦与古道脚印里，藏着我的来处。</span></div>
+              <div class="line"><i class="dot"></i><span>要点：古镇、陵寝、博物馆、传说。</span></div>
+              <div class="hint"><strong>点击这张卡</strong>查看底部抽屉</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="章节详情">
+      <div class="modal-hero">
+        <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=realistic%20travel%20photography%2C%20misty%20mountains%20and%20lake%2C%20jiangnan%20scenery%2C%20warm%20parchment%20palette%2C%20traditional%20chinese%20aesthetic%2C%20editorial%20cover&image_size=landscape_16_9" alt="章节封面" />
+        <div class="modal-head">
+          <div>
+            <h2 class="modal-title">我的山水家底（详情）</h2>
+          </div>
+          <button class="close" id="closeModal" aria-label="关闭">×</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <h3>示例内容结构</h3>
+        <p>这里会展示该章节的完整内容：2–3 段文字 + 4–6 条要点。整体仍保持古色古香的纸感与朱砂印章点缀。</p>
+        <p>如果后续你想更“图文并茂”，也可以在要点之间插入 1–2 张小图卡，但本方案先以封面大图定调，避免太花。</p>
+        <ul>
+          <li><strong>要点 1：</strong>云海与古树撑起一座山的气度</li>
+          <li><strong>要点 2：</strong>清溪入谷，飞瀑成声，夏日最宜</li>
+          <li><strong>要点 3：</strong>湖上水杉成林，舟行其间如入画</li>
+          <li><strong>要点 4：</strong>徒步、露营、观星，各有慢时光</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="章节详情抽屉">
+      <div class="grab"><i></i></div>
+      <div class="modal-hero">
+        <img src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=realistic%20travel%20photography%2C%20ancient%20town%20stone%20bridge%2C%20warm%20sunlight%2C%20jiangnan%20heritage%2C%20traditional%20chinese%20aesthetic%2C%20editorial%20cover&image_size=landscape_16_9" alt="章节封面" />
+        <div class="modal-head">
+          <div>
+            <h2 class="modal-title">我的千年故事（抽屉）</h2>
+          </div>
+          <button class="close" id="closeDrawer" aria-label="关闭">×</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <h3>示例内容结构</h3>
+        <p>底部抽屉更适合“轻点即开、看完即关”的体验。你也可以让它只占 70% 高度，留下顶部空间，显得更轻巧。</p>
+        <ul>
+          <li><strong>要点 1：</strong>古镇青石板路，留着明清旧影</li>
+          <li><strong>要点 2：</strong>博物馆与碑刻，藏着一城文脉</li>
+          <li><strong>要点 3：</strong>乡野传说口口相传，夜里更有味</li>
+          <li><strong>要点 4：</strong>旧码头与河埠头，是记忆的坐标</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById("overlay");
+    const drawer = document.getElementById("drawer");
+    const openModal = document.getElementById("openModal");
+    const closeModal = document.getElementById("closeModal");
+    const openDrawer = document.getElementById("openDrawer");
+    const closeDrawer = document.getElementById("closeDrawer");
+
+    function showOverlay() {
+      overlay.classList.add("show");
+    }
+    function hideOverlay() {
+      overlay.classList.remove("show");
+    }
+    function showDrawer() {
+      drawer.classList.add("show");
+      drawer.setAttribute("aria-hidden", "false");
+    }
+    function hideDrawer() {
+      drawer.classList.remove("show");
+      drawer.setAttribute("aria-hidden", "true");
+    }
+
+    openModal.addEventListener("click", showOverlay);
+    closeModal.addEventListener("click", hideOverlay);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) hideOverlay();
+    });
+
+    openDrawer.addEventListener("click", showDrawer);
+    closeDrawer.addEventListener("click", hideDrawer);
+    drawer.addEventListener("click", (e) => {
+      if (e.target === drawer) hideDrawer();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        hideOverlay();
+        hideDrawer();
+      }
+    });
+  </script>
+</body>
+</html>
