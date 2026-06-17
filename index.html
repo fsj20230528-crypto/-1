@@ -476,6 +476,321 @@
       color: var(--cinnabar);
       opacity: 0.35;
     }
+    .memory-content {
+      margin-top: 1rem;
+    }
+    .memory-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .memory-card {
+      position: relative;
+      padding: 1rem 1.05rem 1.05rem;
+      border-radius: 14px;
+      background:
+        radial-gradient(ellipse 120% 70% at 20% 10%, rgba(180, 170, 150, 0.22), transparent 55%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(244, 238, 225, 0.62));
+      border: 1px solid rgba(26, 26, 26, 0.18);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+    .memory-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          rgba(0, 0, 0, 0.03) 0px,
+          rgba(0, 0, 0, 0.03) 1px,
+          transparent 1px,
+          transparent 6px
+        );
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .memory-card::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border: 1px dashed rgba(26, 26, 26, 0.16);
+      border-radius: 10px;
+      pointer-events: none;
+    }
+    .memory-card-head {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.35rem;
+    }
+    .memory-icon {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(139, 37, 0, 0.1);
+      border: 1px solid rgba(139, 37, 0, 0.25);
+    }
+    .memory-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--cinnabar);
+      stroke-width: 1.7;
+      fill: none;
+      vector-effect: non-scaling-stroke;
+    }
+    .memory-title {
+      font-size: 1.05rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+    .memory-card-cover .memory-title {
+      font-size: 1.12rem;
+      letter-spacing: 0.12em;
+    }
+    .memory-card-cover {
+      padding: 0;
+    }
+    .memory-hero {
+      position: relative;
+      height: 180px;
+      overflow: hidden;
+    }
+    .memory-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.9) contrast(1.02);
+      transform: scale(1.02);
+    }
+    .memory-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(26, 26, 26, 0.05), rgba(26, 26, 26, 0.46));
+      pointer-events: none;
+    }
+    .memory-cover-head {
+      position: absolute;
+      inset: auto 14px 14px 14px;
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      color: rgba(255, 248, 240, 0.98);
+      z-index: 2;
+    }
+    .memory-cover-head .memory-icon {
+      background: rgba(255, 250, 242, 0.12);
+      border-color: rgba(255, 250, 242, 0.28);
+    }
+    .memory-cover-head .memory-icon svg {
+      stroke: rgba(255, 248, 240, 0.98);
+    }
+    .memory-cover-head .memory-title {
+      color: rgba(255, 248, 240, 0.98);
+      text-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
+    }
+    .memory-cover-body {
+      padding: 0.85rem 1.05rem 1.05rem;
+    }
+    .memory-card-body {
+      position: relative;
+      margin-top: 0.55rem;
+    }
+    .memory-card h3 {
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+    }
+    .memory-card p {
+      margin-top: 0.65rem;
+      line-height: 1.9;
+      color: var(--ink);
+      text-align: justify;
+    }
+    .memory-card ul {
+      margin: 0.65rem 0 0.65rem 1.2rem;
+      padding: 0;
+    }
+    .memory-card li {
+      margin: 0.45rem 0;
+      line-height: 1.85;
+      color: var(--ink);
+    }
+    .memory-card strong {
+      color: var(--cinnabar);
+      font-weight: 600;
+    }
+    .memory-card[data-section-index] {
+      cursor: pointer;
+    }
+    .memory-card[data-section-index]:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 26px rgba(0, 0, 0, 0.1);
+    }
+    .memory-summary {
+      margin-top: 0.6rem;
+    }
+    .memory-summary ul {
+      margin-top: 0.55rem;
+    }
+    .memory-more {
+      margin-top: 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 37, 0, 0.22);
+      background: rgba(139, 37, 0, 0.06);
+      color: var(--cinnabar);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      user-select: none;
+    }
+    .memory-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.42);
+      z-index: 1200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .memory-drawer-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .memory-drawer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: -100%;
+      z-index: 1201;
+      transition: bottom 0.28s ease;
+      padding: 14px 14px 18px;
+    }
+    .memory-drawer.show {
+      bottom: 0;
+    }
+    .memory-drawer-sheet {
+      margin: 0 auto;
+      width: min(980px, 100%);
+      max-height: calc(92vh - 14px);
+      overflow: auto;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(246, 236, 220, 0.92));
+      border: 1px solid rgba(80, 54, 34, 0.16);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      position: relative;
+    }
+    .memory-drawer-sheet::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px dashed rgba(90, 60, 35, 0.18);
+      border-radius: 16px;
+      pointer-events: none;
+    }
+    .memory-drawer-grab {
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: center;
+      padding: 10px 0 0;
+      z-index: 3;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0));
+    }
+    .memory-drawer-grab i {
+      display: block;
+      width: 64px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(80, 54, 34, 0.2);
+    }
+    .memory-drawer-hero {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px 22px 0 0;
+    }
+    .memory-drawer-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.9) contrast(1.02);
+    }
+    .memory-drawer-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(26, 26, 26, 0.06), rgba(26, 26, 26, 0.56));
+    }
+    .memory-drawer-head {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-end;
+      color: rgba(255, 248, 240, 0.98);
+      z-index: 2;
+    }
+    .memory-drawer-title {
+      font-size: 1.05rem;
+      letter-spacing: 0.1em;
+      margin: 0;
+      text-shadow: 0 10px 22px rgba(0, 0, 0, 0.45);
+    }
+    .memory-drawer-close {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(255, 250, 242, 0.16);
+      border: 1px solid rgba(255, 250, 242, 0.25);
+      color: rgba(255, 248, 240, 0.96);
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .memory-drawer-body {
+      padding: 18px 18px 22px;
+      position: relative;
+    }
+    .memory-drawer-body h3 {
+      margin-top: 0.75rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+    }
+    .memory-drawer-body p {
+      margin-top: 0.65rem;
+      line-height: 1.9;
+      color: var(--ink);
+      text-align: justify;
+    }
+    .memory-drawer-body ul {
+      margin: 0.65rem 0 0.65rem 1.2rem;
+      padding: 0;
+    }
+    .memory-drawer-body li {
+      margin: 0.45rem 0;
+      line-height: 1.85;
+      color: var(--ink);
+    }
+    .memory-drawer-body strong {
+      color: var(--cinnabar);
+      font-weight: 600;
+    }
+    .memory-loading {
+      opacity: 0.75;
+    }
     .btn-primary {
       width: 100%;
       margin-top: 1rem;
@@ -671,189 +986,6 @@
       font-family: inherit;
       font-size: 0.95rem;
     }
-    .memory-content {
-      margin-top: 0.95rem;
-      display: grid;
-      gap: 0.8rem;
-    }
-    .memory-card {
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.55);
-      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
-      border-radius: 14px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-    }
-    .memory-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(139, 37, 0, 0.55);
-      background: rgba(255, 255, 255, 0.7);
-    }
-    .memory-card-cover {
-      cursor: default;
-    }
-    .memory-card-cover:hover {
-      transform: none;
-      border-color: var(--border);
-      background: rgba(255, 255, 255, 0.55);
-    }
-    .memory-hero {
-      width: 100%;
-      height: 172px;
-      object-fit: cover;
-      display: block;
-      filter: saturate(1.02) contrast(1.02);
-    }
-    .memory-cover-body {
-      padding: 0.9rem 0.95rem 1rem;
-      background:
-        radial-gradient(ellipse 120% 80% at 20% 0%, rgba(139, 37, 0, 0.1), transparent 60%),
-        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.03) 0 1px, transparent 1px 7px);
-    }
-    .memory-cover-title {
-      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
-      font-size: 1.2rem;
-      letter-spacing: 0.12em;
-      color: var(--ink);
-    }
-    .memory-cover-subtitle {
-      margin-top: 0.35rem;
-      font-size: 0.86rem;
-      line-height: 1.75;
-      color: var(--ink-light);
-      text-align: justify;
-    }
-    .memory-card-body {
-      padding: 0.85rem 0.95rem 0.95rem;
-    }
-    .memory-card-head {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .memory-section-hero {
-      width: 92px;
-      height: 64px;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      flex-shrink: 0;
-    }
-    .memory-card-title {
-      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
-      font-size: 1.05rem;
-      letter-spacing: 0.12em;
-      color: var(--ink);
-      line-height: 1.35;
-    }
-    .memory-card-excerpt {
-      margin-top: 0.55rem;
-      font-size: 0.86rem;
-      line-height: 1.75;
-      color: var(--ink-light);
-      text-align: justify;
-    }
-    .memory-card-more {
-      margin-top: 0.55rem;
-      font-size: 0.78rem;
-      color: var(--cinnabar);
-      letter-spacing: 0.12em;
-      opacity: 0.9;
-    }
-    .memory-drawer-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(26, 26, 26, 0.25);
-      z-index: 1200;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-    .memory-drawer-overlay.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .memory-drawer {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1201;
-      max-height: 86vh;
-      background: linear-gradient(135deg, #faf6ee 0%, #efe8da 100%);
-      border-top: 2px solid var(--border);
-      border-radius: 18px 18px 0 0;
-      box-shadow: 0 -14px 32px rgba(0, 0, 0, 0.18);
-      transform: translateY(102%);
-      transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .memory-drawer.open {
-      transform: translateY(0);
-    }
-    .memory-drawer-hero {
-      width: 100%;
-      height: 190px;
-      object-fit: cover;
-      display: block;
-    }
-    .memory-drawer-header {
-      flex-shrink: 0;
-      padding: 0.85rem 1rem;
-      display: flex;
-      gap: 0.85rem;
-      align-items: baseline;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.45);
-    }
-    .memory-drawer-title {
-      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
-      font-size: 1.15rem;
-      letter-spacing: 0.12em;
-      color: var(--ink);
-      line-height: 1.35;
-    }
-    .memory-drawer-close {
-      width: 2rem;
-      height: 2rem;
-      border: 1px solid var(--border);
-      background: var(--paper);
-      cursor: pointer;
-      font-size: 1.1rem;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .memory-drawer-body {
-      padding: 1rem 1.1rem 1.35rem;
-      overflow-y: auto;
-      line-height: 1.85;
-      color: var(--ink-light);
-    }
-    .memory-h3 {
-      margin-top: 0.95rem;
-      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
-      color: var(--ink);
-      letter-spacing: 0.1em;
-      font-size: 1.02rem;
-    }
-    .memory-paragraph {
-      margin-top: 0.75rem;
-      text-align: justify;
-      font-size: 0.92rem;
-    }
-    .memory-list {
-      margin-top: 0.75rem;
-      padding-left: 1.15rem;
-      font-size: 0.92rem;
-    }
-    .memory-list li {
-      margin-top: 0.35rem;
-      text-align: justify;
-    }
     .loading { animation: pulse 1.2s ease infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
     .overlay {
@@ -866,6 +998,608 @@
       transition: opacity 0.3s;
     }
     .overlay.visible { opacity: 1; pointer-events: auto; }
+
+    .profile-btn img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+      background: rgba(26, 26, 26, 0.38);
+      backdrop-filter: blur(4px);
+    }
+    .login-overlay.open { display: flex; }
+    .login-modal {
+      width: min(980px, 94vw);
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      border-radius: 18px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 90% 70% at 20% 10%, rgba(180, 170, 150, 0.22), transparent 60%),
+        radial-gradient(ellipse 70% 55% at 85% 75%, rgba(120, 110, 95, 0.18), transparent 62%),
+        linear-gradient(180deg, rgba(250, 246, 238, 0.98), rgba(245, 240, 230, 0.96));
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.22);
+      display: grid;
+      grid-template-columns: 6fr 4fr;
+    }
+    @media (max-width: 860px) {
+      .login-modal { grid-template-columns: 1fr; }
+    }
+    .login-brand {
+      position: relative;
+      padding: 2.25rem 2.2rem;
+      background:
+        radial-gradient(ellipse 80% 55% at 22% 12%, rgba(139, 37, 0, 0.10), transparent 60%),
+        radial-gradient(ellipse 90% 70% at 75% 28%, rgba(120, 150, 140, 0.18), transparent 62%),
+        radial-gradient(ellipse 90% 70% at 55% 85%, rgba(0, 0, 0, 0.06), transparent 65%),
+        linear-gradient(180deg, rgba(245, 230, 200, 0.80), rgba(248, 244, 236, 0.96));
+    }
+    .login-brand::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 30% 35%, rgba(0, 0, 0, 0.10), transparent 62%),
+        radial-gradient(ellipse 60% 45% at 62% 55%, rgba(0, 0, 0, 0.07), transparent 62%);
+      opacity: 0.6;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+    .login-brand-head {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .login-logo {
+      font-family: "Ma Shan Zheng", "KaiTi", "楷体", cursive;
+      font-size: 2.1rem;
+      letter-spacing: 0.18em;
+      font-weight: 400;
+    }
+    .login-stamp {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 14px;
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      background: rgba(120, 160, 150, 0.18);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .login-stamp::after {
+      content: "";
+      position: absolute;
+      inset: 0.6rem;
+      border-radius: 10px;
+      background: rgba(120, 160, 150, 0.22);
+      border: 1px solid rgba(120, 160, 150, 0.28);
+    }
+    .login-brand-mid {
+      position: relative;
+      margin-top: 1.6rem;
+      display: flex;
+      justify-content: center;
+    }
+    .login-chest {
+      width: 160px;
+      height: 132px;
+      border-radius: 16px;
+      border: 1px solid rgba(120, 160, 150, 0.35);
+      background: rgba(255, 255, 255, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-chest::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(120, 160, 150, 0.18), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(139, 37, 0, 0.10), transparent 62%);
+      opacity: 0.7;
+    }
+    .login-chest-icon {
+      position: relative;
+      width: 62px;
+      height: 62px;
+      border-radius: 16px;
+      background: rgba(120, 160, 150, 0.22);
+      border: 1px solid rgba(120, 160, 150, 0.32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(70, 110, 105, 0.92);
+      animation: float 3s ease-in-out infinite;
+    }
+    .login-fly {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .login-chest:hover .login-fly { opacity: 1; transform: translateY(0); }
+    .login-fly i {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 6px;
+      background: rgba(139, 37, 0, 0.20);
+      border: 1px solid rgba(139, 37, 0, 0.25);
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.10);
+    }
+    .login-fly i:nth-child(1) { left: 4px; top: 8px; background: rgba(139, 37, 0, 0.22); }
+    .login-fly i:nth-child(2) { left: 54px; top: -2px; background: rgba(120, 160, 150, 0.22); border-color: rgba(120, 160, 150, 0.28); }
+    .login-fly i:nth-child(3) { right: 10px; top: 18px; background: rgba(168, 168, 120, 0.22); border-color: rgba(168, 168, 120, 0.30); }
+    .login-fly i:nth-child(4) { left: 66px; bottom: 2px; background: rgba(120, 150, 140, 0.18); border-color: rgba(120, 150, 140, 0.26); }
+    .login-brand-foot {
+      position: relative;
+      margin-top: 1.8rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .login-slogan {
+      color: rgba(139, 37, 0, 0.92);
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      letter-spacing: 0.08em;
+      line-height: 1.7;
+      max-width: 22ch;
+    }
+    .login-form {
+      padding: 2.25rem 2.2rem;
+      background: rgba(255, 255, 255, 0.72);
+    }
+    .login-form-card {
+      border: 1px solid rgba(26, 26, 26, 0.14);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.86);
+      padding: 2rem;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.10);
+    }
+    .login-title {
+      font-size: 1.15rem;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .login-field {
+      margin-top: 1rem;
+    }
+    .login-field label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--ink-light);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.35rem;
+    }
+    .login-input {
+      width: 100%;
+      padding: 0.75rem 0.85rem;
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .login-input:focus {
+      outline: none;
+      border-color: rgba(120, 160, 150, 0.65);
+      box-shadow: 0 0 0 4px rgba(120, 160, 150, 0.14);
+    }
+    .login-avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .login-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      background: rgba(250, 246, 238, 0.85);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .login-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .login-avatar svg { width: 24px; height: 24px; fill: rgba(139, 37, 0, 0.85); }
+    .login-upload-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.6rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(139, 37, 0, 0.26);
+      background: rgba(139, 37, 0, 0.08);
+      color: rgba(139, 37, 0, 0.92);
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.08em;
+      font-size: 0.82rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .login-upload-btn:hover { background: rgba(139, 37, 0, 0.12); transform: scale(1.03); }
+    .login-submit {
+      margin-top: 1.2rem;
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: none;
+      border-radius: 14px;
+      background: rgba(120, 160, 150, 0.95);
+      color: #fff;
+      font-family: inherit;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .login-submit:hover { background: rgba(95, 140, 133, 0.98); }
+    .login-submit:active { transform: translateY(1px) scale(0.99); }
+    .login-error {
+      margin-top: 0.75rem;
+      color: rgba(139, 37, 0, 0.95);
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      line-height: 1.6;
+      min-height: 1.2rem;
+    }
+
+    .checkin-body { padding: 0.8rem 1.1rem 1.5rem; }
+    .checkin-city-strip {
+      display: flex;
+      gap: 0.45rem;
+      overflow-x: auto;
+      padding-bottom: 0.65rem;
+      margin-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      -webkit-overflow-scrolling: touch;
+    }
+    .checkin-city-btn {
+      padding: 0.35rem 0.55rem;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.35);
+      color: var(--ink-light);
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      font-size: 0.82rem;
+      border-radius: 999px;
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .checkin-city-btn.active {
+      color: var(--cinnabar);
+      border-color: rgba(139, 37, 0, 0.45);
+      background: rgba(255, 255, 255, 0.75);
+    }
+    .checkin-city-btn:hover { background: rgba(255, 255, 255, 0.7); color: var(--ink); }
+
+    .checkin-passport {
+      border: 1px solid rgba(26, 26, 26, 0.16);
+      border-radius: 14px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse 110% 80% at 20% 10%, rgba(120, 110, 95, 0.22), transparent 55%),
+        radial-gradient(ellipse 90% 70% at 85% 60%, rgba(70, 90, 105, 0.16), transparent 60%),
+        linear-gradient(180deg, #fbf7ee 0%, #efe6d4 100%);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+    }
+    .checkin-head {
+      position: relative;
+      padding: 1.1rem 1.15rem 1rem;
+      min-height: 210px;
+      border-bottom: 1px solid rgba(26, 26, 26, 0.14);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.78), rgba(255,255,255,0.18)),
+        radial-gradient(ellipse 120% 90% at 25% 20%, rgba(0,0,0,0.10), transparent 62%),
+        radial-gradient(ellipse 120% 90% at 85% 85%, rgba(0,0,0,0.06), transparent 62%);
+    }
+    .checkin-cityline {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.85rem;
+    }
+    .checkin-city-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 650;
+      letter-spacing: 0.12em;
+      color: rgba(20,20,20,0.85);
+    }
+    .checkin-city-badge .code {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      background: rgba(139, 37, 0, 0.08);
+      border: 1px solid rgba(139, 37, 0, 0.22);
+      color: rgba(139, 37, 0, 0.9);
+      flex-shrink: 0;
+    }
+    .checkin-city-badge .name {
+      font-family: "Ma Shan Zheng", "KaiTi", cursive;
+      font-size: 1.35rem;
+      letter-spacing: 0.16em;
+    }
+    .checkin-page-meta {
+      font-size: 0.78rem;
+      color: rgba(40,40,40,0.55);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+    }
+    .checkin-seal {
+      position: absolute;
+      right: 1.05rem;
+      bottom: 0.95rem;
+      width: 142px;
+      height: 142px;
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0)),
+        radial-gradient(60% 60% at 35% 30%, rgba(255,255,255,0.24), transparent 60%),
+        linear-gradient(135deg, rgba(139,37,0,0.90), rgba(110,18,0,0.90));
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0.9rem;
+      color: rgba(255,255,255,0.92);
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      line-height: 1.1;
+    }
+    .checkin-seal small {
+      display: block;
+      margin-top: 0.55rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      opacity: 0.92;
+      font-weight: 700;
+    }
+    .checkin-inkwash {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.55;
+      mix-blend-mode: multiply;
+      background:
+        radial-gradient(ellipse 120% 90% at 20% 20%, rgba(0,0,0,0.08), transparent 65%),
+        radial-gradient(ellipse 90% 70% at 85% 40%, rgba(0,0,0,0.06), transparent 70%),
+        radial-gradient(ellipse 80% 70% at 35% 85%, rgba(0,0,0,0.04), transparent 72%);
+    }
+    .checkin-body-inner { padding: 1.05rem 1.1rem 1.2rem; }
+    .checkin-stamp-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .checkin-stamp-title strong {
+      font-size: 0.92rem;
+      letter-spacing: 0.12em;
+      color: rgba(30, 30, 30, 0.82);
+    }
+    .checkin-stamp-title span {
+      font-size: 0.78rem;
+      color: rgba(40, 40, 40, 0.55);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .checkin-stamp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.7rem;
+    }
+    @media (max-width: 520px) { .checkin-stamp-grid { grid-template-columns: repeat(2, 1fr); } }
+    .checkin-stamp {
+      border-radius: 12px;
+      border: 1px dashed rgba(0, 0, 0, 0.20);
+      background: rgba(255, 255, 255, 0.32);
+      padding: 0.75rem 0.7rem;
+      min-height: 98px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      user-select: none;
+    }
+    .checkin-stamp:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.10);
+      border-color: rgba(139, 37, 0, 0.30);
+    }
+    .checkin-stamp.locked { filter: grayscale(1); opacity: 0.45; }
+    .checkin-stamp.unlocked {
+      border-style: solid;
+      border-color: rgba(139, 37, 0, 0.28);
+      box-shadow: 0 8px 16px rgba(139, 37, 0, 0.10);
+    }
+    .checkin-stamp-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem; }
+    .checkin-stamp-name {
+      font-weight: 750;
+      letter-spacing: 0.06em;
+      color: rgba(25,25,25,0.86);
+      line-height: 1.15;
+      font-size: 0.9rem;
+    }
+    .checkin-stamp-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background:
+        radial-gradient(60% 60% at 40% 35%, rgba(255,255,255,0.45), transparent 60%),
+        linear-gradient(135deg, rgba(70,120,130,0.48), rgba(139,37,0,0.50));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.92);
+    }
+    .checkin-stamp-icon svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: 0.95; }
+    .checkin-stamp-hint { font-size: 0.72rem; color: rgba(40,40,40,0.56); letter-spacing: 0.04em; }
+
+    .food-card-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 26, 0.35);
+      z-index: 1200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .food-card-backdrop.visible { opacity: 1; pointer-events: auto; }
+    .food-card-modal {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.98);
+      width: min(720px, 92vw);
+      max-height: min(82vh, 760px);
+      z-index: 1201;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    .food-card-modal.visible { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+    .food-card-paper {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.14);
+      background: linear-gradient(180deg, #fffaf0 0%, #f2e7d1 100%);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      max-height: inherit;
+    }
+    .food-card-head {
+      padding: 1.05rem 1.15rem 0.95rem;
+      border-bottom: 1px solid rgba(0,0,0,0.10);
+      background:
+        radial-gradient(120% 90% at 20% 20%, rgba(139,37,0,0.12), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,0.68), rgba(255,255,255,0.14));
+      position: relative;
+    }
+    .food-card-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .food-card-title strong {
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      color: rgba(25,25,25,0.88);
+    }
+    .food-card-title span {
+      font-size: 0.78rem;
+      color: rgba(40,40,40,0.56);
+      letter-spacing: 0.12em;
+    }
+    .food-card-close {
+      position: absolute;
+      right: 0.85rem;
+      top: 0.85rem;
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.65);
+      cursor: pointer;
+      font-size: 1.15rem;
+      color: rgba(25,25,25,0.78);
+    }
+    .food-card-tear {
+      height: 14px;
+      background:
+        radial-gradient(circle at 10px 7px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 30px 6px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 52px 8px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 76px 7px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        radial-gradient(circle at 98px 6px, rgba(0,0,0,0.10) 0 1px, transparent 2px),
+        linear-gradient(180deg, rgba(0,0,0,0.06), transparent);
+      opacity: 0.25;
+    }
+    .food-card-body {
+      padding: 1.05rem 1.15rem 1.1rem;
+      overflow: auto;
+      display: grid;
+      gap: 0.75rem;
+    }
+    .food-card-line { display: grid; grid-template-columns: 6.6rem 1fr; gap: 0.75rem; align-items: start; }
+    .food-card-line b {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      color: rgba(139,37,0,0.92);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .food-card-line p { font-size: 0.88rem; color: rgba(25,25,25,0.78); line-height: 1.7; }
+    .food-card-tags { display: flex; flex-wrap: wrap; gap: 0.45rem 0.65rem; }
+    .food-card-tag {
+      font-size: 0.78rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(139,37,0,0.25);
+      background: rgba(139,37,0,0.08);
+      color: rgba(55,25,15,0.85);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .food-card-actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.25rem;
+    }
+    .food-card-actions button {
+      flex: 1;
+      padding: 0.75rem 0.9rem;
+      border: 1px solid rgba(139,37,0,0.28);
+      background: rgba(139,37,0,0.10);
+      color: rgba(139,37,0,0.95);
+      font-family: inherit;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+    }
+    .food-card-actions button.primary {
+      border: none;
+      background: var(--cinnabar);
+      color: #faf6ee;
+    }
   </style>
 </head>
 <body>
@@ -897,6 +1631,70 @@
 
   <div class="overlay" id="overlay"></div>
 
+  <div class="login-overlay" id="loginOverlay" aria-hidden="true">
+    <div class="login-modal" role="dialog" aria-modal="true" aria-label="登录">
+      <section class="login-brand">
+        <div class="login-brand-head">
+          <div>
+            <div class="login-logo">浙里寻味</div>
+            <div style="margin-top:0.45rem;font-size:0.9rem;color:rgba(74,74,74,0.85);letter-spacing:0.08em;">江南烟火 · 现代寻宝</div>
+          </div>
+          <div class="login-stamp" aria-hidden="true"></div>
+        </div>
+        <div class="login-brand-mid">
+          <div class="login-chest" aria-hidden="true">
+            <div class="login-chest-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M7 7h10l1 4H6l1-4zm-1 6h12v6a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-6zm3-9V3h6v1h4v2H5V4h4z"/>
+              </svg>
+            </div>
+            <div class="login-fly" aria-hidden="true">
+              <i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+        </div>
+        <div class="login-brand-foot">
+          <div class="login-slogan">一张地图，吃遍浙江百县千味</div>
+          <div style="font-size:0.78rem;color:rgba(74,74,74,0.6);letter-spacing:0.08em;">浙里寻味 · 2026</div>
+        </div>
+      </section>
+      <section class="login-form">
+        <div class="login-form-card">
+          <div class="login-title">开启你的浙江美食寻宝之旅</div>
+
+          <div class="login-field">
+            <label>头像</label>
+            <div class="login-avatar-row">
+              <div class="login-avatar" id="loginAvatarPreview" aria-label="头像预览">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+              <div>
+                <button class="login-upload-btn" id="loginAvatarBtn" type="button">上传头像</button>
+                <input type="file" id="loginAvatarInput" accept="image/*" style="display:none" />
+                <div style="margin-top:0.35rem;font-size:0.78rem;color:rgba(74,74,74,0.6);letter-spacing:0.06em;">支持常见图片格式</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="login-field">
+            <label for="loginPhone">手机号</label>
+            <input class="login-input" id="loginPhone" inputmode="numeric" autocomplete="tel" placeholder="请输入 11 位手机号" />
+          </div>
+
+          <div class="login-field">
+            <label for="loginNickname">昵称</label>
+            <input class="login-input" id="loginNickname" autocomplete="nickname" placeholder="例如：阿浙小馋猫" maxlength="12" />
+          </div>
+
+          <button class="login-submit" id="loginSubmitBtn" type="button">进入寻宝地图</button>
+          <div class="login-error" id="loginError" aria-live="polite"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
   <aside class="sidebar" id="sidebar" aria-hidden="true">
     <div class="sidebar-top">
       <button class="sidebar-close" id="sidebarClose" aria-label="关闭">×</button>
@@ -922,16 +1720,21 @@
         <div class="panel active" id="panel-intro">
           <div class="intro-seal" id="introSeal">印</div>
           <p class="hint" id="introHint">每一座县城都有自己的声音，点击地图即可相遇。</p>
-          <div class="memory-content" id="memoryContent"></div>
           <button class="btn-primary" id="goChatBtn">和TA聊天</button>
-          <div class="memory-drawer-overlay" id="memoryDrawerOverlay" aria-hidden="true"></div>
+          <div class="memory-content" id="memoryContent"></div>
+          <div class="memory-drawer-overlay" id="memoryDrawerOverlay"></div>
           <div class="memory-drawer" id="memoryDrawer" aria-hidden="true">
-            <img class="memory-drawer-hero" id="memoryDrawerImg" alt="" loading="lazy" />
-            <div class="memory-drawer-header">
-              <div class="memory-drawer-title" id="memoryDrawerTitle">—</div>
-              <button class="memory-drawer-close" id="memoryDrawerClose" aria-label="关闭">×</button>
+            <div class="memory-drawer-sheet" role="dialog" aria-modal="true" aria-label="城市记忆详情">
+              <div class="memory-drawer-grab"><i></i></div>
+              <div class="memory-drawer-hero">
+                <img id="memoryDrawerImg" alt="章节封面" loading="lazy" />
+                <div class="memory-drawer-head">
+                  <h3 class="memory-drawer-title" id="memoryDrawerTitle">—</h3>
+                  <button class="memory-drawer-close" id="memoryDrawerClose" aria-label="关闭">×</button>
+                </div>
+              </div>
+              <div class="memory-drawer-body" id="memoryDrawerBody"></div>
             </div>
-            <div class="memory-drawer-body" id="memoryDrawerBody"></div>
           </div>
         </div>
         <div class="panel" id="panel-chat">
@@ -958,7 +1761,9 @@
         <div class="api-config">
           <label for="amapKey">高德 Web JS Key（本地保存）</label>
           <input type="password" id="amapKey" placeholder="填写你的高德 Key" autocomplete="off" />
-          <p class="hint">首次填写后会保存在浏览器本地。若接口不可用，请检查 Key 权限是否包含 Web JS API。</p>
+          <label for="amapSecurityCode" style="margin-top:0.6rem">JSAPI 安全密钥（securityJsCode，可选）</label>
+          <input type="password" id="amapSecurityCode" placeholder="在高德控制台复制 securityJsCode" autocomplete="off" />
+          <p class="hint">首次填写后会保存在浏览器本地。修改 securityJsCode 后需要刷新页面生效。若接口不可用，请检查 Key 权限是否包含 Web JS API。</p>
         </div>
 
         <div class="form-grid">
@@ -996,32 +1801,35 @@
             </div>
           </div>
 
-          <div class="field">
-            <label for="foodDuration">总时长（小时）</label>
-            <input type="text" id="foodDuration" value="3" />
-          </div>
-          <div class="field">
-            <label for="foodSort">排序</label>
-            <input type="text" id="foodSort" value="距离优先" />
-          </div>
-
           <div class="field full">
             <label>口味（多选）</label>
             <div class="chips" id="tasteChips">
-              <span class="chip" data-value="辣">辣</span>
-              <span class="chip" data-value="鲜">鲜</span>
+              <span class="chip" data-value="酸">酸</span>
               <span class="chip" data-value="甜">甜</span>
+              <span class="chip" data-value="辣">辣</span>
               <span class="chip" data-value="咸">咸</span>
-              <span class="chip" data-value="糯">糯</span>
+              <span class="chip" data-value="鲜">鲜</span>
             </div>
           </div>
 
           <div class="field full">
-            <label>类型（多选）</label>
-            <div class="chips" id="typeChips">
-              <span class="chip" data-value="菜">菜</span>
-              <span class="chip" data-value="面">面</span>
-              <span class="chip" data-value="点心">点心</span>
+            <label>烹饪方式（多选）</label>
+            <div class="chips" id="cookChips">
+              <span class="chip" data-value="炒菜类">炒菜类</span>
+              <span class="chip" data-value="炖菜类">炖菜类</span>
+              <span class="chip" data-value="烧烤类">烧烤类</span>
+              <span class="chip" data-value="清蒸类">清蒸类</span>
+              <span class="chip" data-value="油炸类">油炸类</span>
+            </div>
+          </div>
+
+          <div class="field full">
+            <label>功能（多选）</label>
+            <div class="chips" id="funcChips">
+              <span class="chip" data-value="主食类">主食类</span>
+              <span class="chip" data-value="小吃类">小吃类</span>
+              <span class="chip" data-value="甜品">甜品</span>
+              <span class="chip" data-value="汤羹类">汤羹类</span>
             </div>
           </div>
 
@@ -1036,6 +1844,15 @@
           </div>
 
           <div class="field">
+            <label for="stopCount">站点数</label>
+            <select id="stopCount" aria-label="站点数">
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          <div class="field">
             <label for="maxDistanceKm">距离上限（km）</label>
             <input type="text" id="maxDistanceKm" value="5" />
           </div>
@@ -1045,12 +1862,8 @@
           </div>
 
           <div class="field">
-            <label for="maxPrice">人均上限（可空）</label>
-            <input type="text" id="maxPrice" placeholder="例如 80" />
-          </div>
-          <div class="field">
-            <label for="stopCountHint">站点数</label>
-            <input type="text" id="stopCountHint" value="按时长自动" disabled />
+            <label for="priceRange">人均消费（可空）</label>
+            <input type="text" id="priceRange" placeholder="示例：20-60元" />
           </div>
         </div>
 
@@ -1062,10 +1875,14 @@
     </div>
 
     <div class="sidebar-section" id="section-checkin">
-      <div class="section-placeholder">
-        <div class="placeholder-seal">印</div>
-        <h3>打卡系统</h3>
-        <p>行旅足迹，一印一程。此板块内容即将上线。</p>
+      <div class="sidebar-header">
+        <h2 class="county-name">通关文牒</h2>
+        <p class="county-tagline">每城一页 · 一地一大印 · 一食一小印</p>
+        <p class="county-bio">解锁美食印章，翻阅浙江十一城的味觉版图。点击任意美食章，会弹出仿古信笺卡片，读它的前世今生与城中记忆。</p>
+      </div>
+      <div class="sidebar-body checkin-body">
+        <div class="checkin-city-strip" id="checkinCityStrip" aria-label="城市分页"></div>
+        <div id="checkinPage"></div>
       </div>
     </div>
 
@@ -1108,19 +1925,57 @@
       <h2 class="profile-drawer-title">个人中心</h2>
     </div>
     <div class="profile-drawer-body">
-      <div class="section-placeholder">
-        <div class="placeholder-seal">我</div>
-        <h3>个人中心</h3>
-        <p>你的浙游档案，尚待开启。此板块内容即将上线。</p>
+      <div class="api-config" style="margin-top:0">
+        <label>头像</label>
+        <div class="login-avatar-row" style="margin-top:0.4rem">
+          <div class="login-avatar" id="profileAvatarPreview" aria-label="头像预览">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+          <div>
+            <button class="login-upload-btn" id="profileAvatarBtn" type="button">更换头像</button>
+            <input type="file" id="profileAvatarInput" accept="image/*" style="display:none" />
+          </div>
+        </div>
+
+        <label for="profilePhone" style="margin-top:1rem">手机号</label>
+        <input type="text" id="profilePhone" class="login-input" placeholder="请输入 11 位手机号" inputmode="numeric" autocomplete="tel" />
+
+        <label for="profileNickname" style="margin-top:1rem">昵称</label>
+        <input type="text" id="profileNickname" class="login-input" placeholder="请输入昵称" maxlength="12" autocomplete="nickname" />
+
+        <div class="login-error" id="profileError" aria-live="polite"></div>
+
+        <div class="food-card-actions" style="margin-top:1rem">
+          <button class="primary" id="profileSaveBtn" type="button">保存</button>
+          <button id="logoutBtn" type="button">退出登录</button>
+        </div>
       </div>
     </div>
   </aside>
+
+  <div class="food-card-backdrop" id="foodCardBackdrop" aria-hidden="true"></div>
+  <div class="food-card-modal" id="foodCardModal" aria-hidden="true">
+    <div class="food-card-paper">
+      <div class="food-card-head">
+        <button class="food-card-close" id="foodCardClose" aria-label="关闭">×</button>
+        <div class="food-card-title">
+          <strong id="foodCardTitle">—</strong>
+          <span id="foodCardSub">仿古信笺</span>
+        </div>
+      </div>
+      <div class="food-card-tear"></div>
+      <div class="food-card-body" id="foodCardBody"></div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
   <script>
     // ========== 请在此处填写你的 DeepSeek API Key ==========
     const DEEPSEEK_API_KEY = ""; // 例: "sk-xxxxxxxxxxxxxxxx"
-    const AMAP_WEB_KEY = "1686fc912c24581e4ac70ea99d11bb1b";
+    const AMAP_WEB_KEY = "";
+    const AMAP_SECURITY_JS_CODE = "";
 
     const GEO_BASE = "https://geo.datav.aliyun.com/areas_v3/bound/";
     const ZJ_CITY_CODES = [
@@ -1197,6 +2052,10 @@
     let chatHistory = [];
     const personaCache = {};
     const geoMeta = {};
+    let geoMetaReadyResolve = null;
+    const geoMetaReady = new Promise((resolve) => {
+      geoMetaReadyResolve = resolve;
+    });
     let foodInited = false;
     let foodMap = null;
     let foodAmapReady = null;
@@ -1210,6 +2069,10 @@
     let foodStartFixed = null;
     let foodZJCityCache = [];
     let foodZJCountyCache = [];
+    let checkinInited = false;
+    let checkinCityIndex = 0;
+    let checkinCurrentFoodId = "";
+    let checkinCurrentCityPlate = "";
 
     async function loadZhejiangCountyGeo() {
       const parts = await Promise.all(
@@ -1247,6 +2110,9 @@
         tagline: "浙里山水间的" + short,
         bio: "我是" + short + "，隶属" + parent + "的一方水土。街巷、江潮与乡音，都是我话语里的纹路。欢迎与我聊聊这里的人情风物。",
         seal: short.charAt(0) || "县",
+        memory: "",
+        memoryEnriched: false,
+        memoryLoading: null,
         systemPrompt:
           "你是浙江省" + geoName + "的人格化身，代表这座县级行政区。\n" +
           "你生活在" + parent + "所辖的" + short + "，说话用第一人称，温润隽永，略带古典韵味与江南意象。\n" +
@@ -1257,10 +2123,390 @@
       };
     }
 
+    const MEMORY_STORAGE_PREFIX = "city_memory_v2_";
+    function getMemoryStorageKey(geoName) {
+      return MEMORY_STORAGE_PREFIX + encodeURIComponent(geoName);
+    }
+
+    function buildDefaultMemoryMarkdown(geoName) {
+      const short = shortCountyName(geoName);
+      const parent = geoMeta[geoName]?.parentName || "浙江";
+      return (
+        "# " +
+        short +
+        "城市自我介绍（第一人称旅游版）\n" +
+        "你好呀，我叫" +
+        short +
+        "，住在" +
+        parent +
+        "的山水与烟火里。有人匆匆路过，只记得我一眼的风景；也有人慢慢停下，听见我街巷的回声。\n" +
+        "如果你愿意把行程放慢一点，我会用一段山风、一碗热汤、几页旧事，把自己讲给你听。\n\n" +
+        "## 我的山水家底\n" +
+        "我把最好的风景藏在日常里：清晨薄雾挂在山脊，午后溪水穿过林间，傍晚的光落在水面上，像给天地盖了一层柔软的绸。\n" +
+        "四季来到我这里，都会换一套颜色：春有花事，夏有清凉，秋有层林，冬有温热。\n" +
+        "- 山林与步道适合慢走，转一个弯就能遇见风声与鸟鸣。\n" +
+        "- 溪谷与飞瀑最会“解暑”，水气一扑上来，整个人都松下来。\n" +
+        "- 湖泽与湿地适合发呆，船行其间，像走进一幅水墨。\n" +
+        "- 观景台与山顶多半有好天光，云来云去，心事也跟着散开。\n\n" +
+        "## 我的千年故事\n" +
+        "我不喜欢把历史挂在嘴边，因为它一直就在生活里：旧城的砖瓦、庙宇的香火、桥下的水声、古道的脚印，都是时间留下的注脚。\n" +
+        "你若愿意听，我可以把旧事讲得像今天发生的一样：一盏灯、一段路、一句传说，都能把你带回很久以前。\n" +
+        "- 老街与古桥最会说话，石板被脚步磨得发亮。\n" +
+        "- 寺观与塔影像守望者，把一城风雨都收进沉静里。\n" +
+        "- 博物馆与碑刻把故事写得更清楚，读着读着就懂了来处。\n" +
+        "- 传说与技艺藏在民间，越朴素越动人。\n\n" +
+        "## 我的文墨风华\n" +
+        "有些地方靠热闹取胜，我更愿意把温柔留在字里行间：一段诗句、几页旧书、一次展览里安静的凝视。\n" +
+        "当你在我这里读到某句古人的偏爱，也许会忽然明白：山水与风骨，从来不是两件事。\n" +
+        "### 诗词流韵\n" +
+        "- 有人写我春雨与小巷，有人写我山色与归舟。\n" +
+        "- 若你喜欢诗意，就在雨后走一走，路面会把光照得更亮。\n" +
+        "### 典籍载誉\n" +
+        "- 地方志与旧笔记里，常有我不肯轻易示人的细节。\n" +
+        "- 读几段，就像在地图上找到一条更隐秘的路。\n\n" +
+        "## 我的生活日常\n" +
+        "我最想留住你的，不是“到此一游”，而是那种很生活的瞬间：集市的叫卖、灶台的热气、巷口的闲谈。\n" +
+        "你不用赶景点，跟着香气走、跟着人声走，就会走进我的日常。\n" +
+        "- 时令小吃与家常菜最能代表我：新鲜、踏实、不张扬。\n" +
+        "- 茶馆与小店适合坐一坐，听人聊天，听时间变慢。\n" +
+        "- 伴手礼不必奢华，一份土产、一包茶，就够把我带回去。\n" +
+        "- 夜里找个住处歇一歇，抬头看看天色，你会更喜欢我。\n\n" +
+        "## 怎么找到我\n" +
+        "跟着地图来就好。你可以坐车、开车，也可以先到" +
+        parent +
+        "再慢慢转进我的怀里。\n" +
+        "等你抵达，我会把最好的风景留给你，把最温柔的慢时光也留给你。"
+      );
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function buildMemoryHeroUrl(geoName) {
+      const short = shortCountyName(geoName || "");
+      const parent = geoMeta[geoName]?.parentName || "浙江";
+      const prompt =
+        "realistic travel photography, misty mountains and lake, jiangnan ecological scenery, traditional chinese aesthetic, warm parchment tones, editorial magazine cover, high detail, " +
+        short +
+        ", " +
+        parent +
+        ", Zhejiang, China";
+      return (
+        "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" +
+        encodeURIComponent(prompt) +
+        "&image_size=landscape_16_9"
+      );
+    }
+
+    function buildMemorySectionHeroUrl(geoName, sectionTitle) {
+      const short = shortCountyName(geoName || "");
+      const parent = geoMeta[geoName]?.parentName || "浙江";
+      const t = String(sectionTitle || "");
+      let subject = "misty mountains and lake, jiangnan ecological scenery";
+      if (t.includes("山水")) subject = "misty mountains, river valley waterfall, lake forest, jiangnan scenery";
+      if (t.includes("千年") || t.includes("故事") || t.includes("历史")) subject = "ancient town stone bridge, historic architecture, warm sunlight, jiangnan heritage";
+      if (t.includes("文墨") || t.includes("风华") || t.includes("诗") || t.includes("典籍")) subject = "traditional chinese calligraphy brush, ancient books, ink wash aesthetic, quiet study room";
+      if (t.includes("日常") || t.includes("生活") || t.includes("美食")) subject = "traditional tea house, local street food, warm lantern light, slow life";
+      if (t.includes("找到") || t.includes("交通") || t.includes("怎么来")) subject = "ancient compass, travel map, footpath, jiangnan town entrance, warm parchment tones";
+      const prompt =
+        "realistic travel photography, " +
+        subject +
+        ", traditional chinese aesthetic, warm parchment tones, editorial magazine, high detail, " +
+        short +
+        ", " +
+        parent +
+        ", Zhejiang, China";
+      return (
+        "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" +
+        encodeURIComponent(prompt) +
+        "&image_size=landscape_16_9"
+      );
+    }
+
+    function renderMemoryCards(md, geoName) {
+      const lines = String(md || "").replace(/\r\n/g, "\n").split("\n");
+      const inline = (s) => s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      const titleFallback = shortCountyName(geoName || "") + "城市自我介绍（第一人称旅游版）";
+      let title = "";
+      let coverParas = [];
+      const sections = [];
+      let para = [];
+      let current = null;
+
+      const flushPara = () => {
+        if (!para.length) return;
+        const text = para.join("<br/>");
+        if (current) {
+          current.nodes.push({ type: "p", html: text });
+        } else {
+          coverParas.push(text);
+        }
+        para = [];
+      };
+
+      const pushSection = () => {
+        if (!current) return;
+        sections.push(current);
+        current = null;
+      };
+
+      const ensureList = () => {
+        if (!current) {
+          current = { title: "", nodes: [] };
+        }
+        const last = current.nodes[current.nodes.length - 1];
+        if (last?.type === "ul") return last;
+        const ul = { type: "ul", items: [] };
+        current.nodes.push(ul);
+        return ul;
+      };
+
+      lines.forEach((raw) => {
+        const line = raw.trimEnd();
+        if (!line.trim()) {
+          flushPara();
+          return;
+        }
+        const h1 = line.match(/^#\s+(.*)$/);
+        if (h1) {
+          flushPara();
+          pushSection();
+          title = h1[1].trim();
+          return;
+        }
+        const h2 = line.match(/^##\s+(.*)$/);
+        if (h2) {
+          flushPara();
+          pushSection();
+          current = { title: h2[1].trim(), nodes: [] };
+          return;
+        }
+        const h3 = line.match(/^###\s+(.*)$/);
+        if (h3) {
+          flushPara();
+          if (!current) current = { title: "", nodes: [] };
+          current.nodes.push({ type: "h3", html: inline(escapeHtml(h3[1].trim())) });
+          return;
+        }
+        const bullet = line.match(/^\-\s+(.*)$/);
+        if (bullet) {
+          flushPara();
+          const ul = ensureList();
+          ul.items.push(inline(escapeHtml(bullet[1].trim())));
+          return;
+        }
+        para.push(inline(escapeHtml(line.trim())));
+      });
+      flushPara();
+      pushSection();
+      if (!title) title = titleFallback;
+
+      const iconKey = (t) => {
+        const s = String(t || "");
+        if (s.includes("山水")) return "landscape";
+        if (s.includes("千年") || s.includes("故事") || s.includes("历史")) return "history";
+        if (s.includes("文墨") || s.includes("风华") || s.includes("诗") || s.includes("典籍")) return "culture";
+        if (s.includes("日常") || s.includes("生活") || s.includes("美食")) return "life";
+        if (s.includes("找到") || s.includes("交通") || s.includes("怎么来")) return "route";
+        return "seal";
+      };
+
+      const iconSvg = (key) => {
+        if (key === "landscape") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18" /><path d="M4 17l5-6 4 5 3-4 4 5" /><path d="M15 6a2 2 0 1 0 0.01 0" /></svg>'
+          );
+        }
+        if (key === "history") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v16H7z" /><path d="M9 7h6" /><path d="M9 10h6" /><path d="M9 13h5" /></svg>'
+          );
+        }
+        if (key === "culture") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19c6-1 10-5 12-12" /><path d="M14 7l3 3" /><path d="M6 18l4-1 1 4" /><path d="M9 16c2-2 4-5 6-9" /></svg>'
+          );
+        }
+        if (key === "life") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11h10" /><path d="M8 11c0 5 2 8 4 8s4-3 4-8" /><path d="M9 6h6" /><path d="M9 6c0 2 1 3 3 3s3-1 3-3" /></svg>'
+          );
+        }
+        if (key === "route") {
+          return (
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5 6-10a6 6 0 1 0-12 0c0 5 6 10 6 10z" /><path d="M12 11a2 2 0 1 0 0.01 0" /></svg>'
+          );
+        }
+        return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z" /><path d="M9 9h6v6H9z" /></svg>';
+      };
+
+      const renderNodes = (nodes) => {
+        let out = "";
+        nodes.forEach((n) => {
+          if (n.type === "h3") out += "<h3>" + n.html + "</h3>";
+          if (n.type === "p") out += "<p>" + n.html + "</p>";
+          if (n.type === "ul") {
+            out += "<ul>" + n.items.map((i) => "<li>" + i + "</li>").join("") + "</ul>";
+          }
+        });
+        return out;
+      };
+
+      const renderSummary = (nodes) => {
+        const p = nodes.find((n) => n.type === "p")?.html || "";
+        const ul = nodes.find((n) => n.type === "ul")?.items || [];
+        const ulPreview = ul.slice(0, 2);
+        let out = "";
+        if (p) out += "<p>" + p + "</p>";
+        if (ulPreview.length) out += "<ul>" + ulPreview.map((i) => "<li>" + i + "</li>").join("") + "</ul>";
+        out += "<span class=\"memory-more\">展开详情</span>";
+        return "<div class=\"memory-summary\">" + out + "</div>";
+      };
+
+      const coverBody = coverParas.length ? "<div class=\"memory-card-body\">" + coverParas.map((p) => "<p>" + p + "</p>").join("") + "</div>" : "";
+      const heroUrl = buildMemoryHeroUrl(geoName);
+      const heroAlt = escapeHtml(shortCountyName(geoName || "") + "风景封面");
+      const coverHtml =
+        "<section class=\"memory-card memory-card-cover\">" +
+        "<div class=\"memory-hero\">" +
+        "<img src=\"" +
+        heroUrl +
+        "\" alt=\"" +
+        heroAlt +
+        "\" loading=\"lazy\" />" +
+        "<div class=\"memory-cover-head\">" +
+        "<div class=\"memory-icon\">" +
+        iconSvg("seal") +
+        "</div>" +
+        "<div class=\"memory-title\">" +
+        inline(escapeHtml(title)) +
+        "</div>" +
+        "</div>" +
+        "</div>" +
+        (coverBody ? "<div class=\"memory-cover-body\">" + coverBody + "</div>" : "") +
+        "</section>";
+
+      const cardsHtml = sections
+        .filter((s) => s.title || s.nodes.length)
+        .map((s, idx) => {
+          const key = iconKey(s.title);
+          const head =
+            "<div class=\"memory-card-head\">" +
+            "<div class=\"memory-icon\">" +
+            iconSvg(key) +
+            "</div>" +
+            "<div class=\"memory-title\">" +
+            inline(escapeHtml(s.title || "城市记忆")) +
+            "</div>" +
+            "</div>";
+          const body = "<div class=\"memory-card-body\">" + renderSummary(s.nodes) + "</div>";
+          return "<section class=\"memory-card\" data-section-index=\"" + idx + "\">" + head + body + "</section>";
+        })
+        .join("");
+
+      const loadingClass = String(md || "").includes("正在生成") ? " memory-loading" : "";
+      const view = { geoName, title, coverParas, sections };
+      window.__memoryView = view;
+      return "<div class=\"memory-cards" + loadingClass + "\">" + coverHtml + cardsHtml + "</div>";
+    }
+
+    async function enrichMemoryWithAI(geoName) {
+      await geoMetaReady;
+      const short = shortCountyName(geoName);
+      const parent = geoMeta[geoName]?.parentName || "浙江";
+      const raw = await callDeepSeek({
+        apiKey: getApiKey(),
+        baseUrl: getApiBase(),
+        max_tokens: 2400,
+        messages: [
+          {
+            role: "system",
+            content:
+              "你是一个中文旅行文案写作者。只输出 markdown 纯文本，不要代码块，不要解释，不要输出 JSON。必须使用标题与列表，结构参考示例。每个二级标题章节必须写够内容，不要偷懒。"
+          },
+          {
+            role: "user",
+            content:
+              "为浙江省" +
+              geoName +
+              "（隶属" +
+              parent +
+              "）写一篇第一人称旅游版城市自我介绍，称呼自己为“" +
+              short +
+              "”。\n\n" +
+              "结构示例（按此结构输出）：\n" +
+              "# <地名>城市自我介绍（第一人称旅游版）\n" +
+              "开场一段\n" +
+              "## 我的山水家底\n" +
+              "- 若干条要点\n" +
+              "## 我的千年故事\n" +
+              "- 若干条要点\n" +
+              "## 我的文墨风华\n" +
+              "### 诗词流韵\n" +
+              "- 若干条要点\n" +
+              "### 丹青遗珍\n" +
+              "- 若干条要点\n" +
+              "### 典籍载誉\n" +
+              "- 若干条要点\n" +
+              "## 我的生活日常\n" +
+              "- 若干条要点\n" +
+              "## 怎么找到我\n" +
+              "结尾一段\n\n" +
+              "硬性要求（必须满足）：每个“##”章节至少 2-3 段正文 + 4-6 条列表要点；段落写具体一点，带场景与感官细节；内容尽量贴合当地真实特征；不确定具体景点/典故时，用更泛化的表达替代，避免杜撰；全篇中文，不要出现“作为AI”。"
+          }
+        ]
+      });
+      return raw.replace(/^```+\w*\s*|```+\s*$/g, "").trim();
+    }
+
+    async function ensureCountyMemory(geoName) {
+      const persona = personaCache[geoName] || currentCounty;
+      if (!persona) return;
+      if (persona.memoryEnriched && persona.memory) return;
+      const storageKey = getMemoryStorageKey(geoName);
+      const cached = localStorage.getItem(storageKey);
+      if (cached) {
+        persona.memory = cached;
+        persona.memoryEnriched = true;
+        if (currentCounty?.geoName === geoName) updateSidebarPersonaUI();
+        return;
+      }
+      if (!getApiKey()) {
+        if (!persona.memory) persona.memory = buildDefaultMemoryMarkdown(geoName);
+        if (currentCounty?.geoName === geoName) updateSidebarPersonaUI();
+        return;
+      }
+      if (persona.memoryLoading) return;
+      if (currentCounty?.geoName === geoName) {
+        persona.memory = "正在生成城市记忆…";
+        updateSidebarPersonaUI();
+      }
+      persona.memoryLoading = (async () => {
+        const md = await enrichMemoryWithAI(geoName);
+        persona.memory = md;
+        persona.memoryEnriched = true;
+        localStorage.setItem(storageKey, md);
+      })()
+        .catch(() => {
+          if (!persona.memory) persona.memory = buildDefaultMemoryMarkdown(geoName);
+        })
+        .finally(() => {
+          persona.memoryLoading = null;
+          if (currentCounty?.geoName === geoName) updateSidebarPersonaUI();
+        });
+      return persona.memoryLoading;
+    }
+
     function getCountyPersona(geoName) {
       const demoId = NAME_TO_DEMO[geoName];
       if (demoId) {
-        return { ...COUNTIES[demoId], enriched: true, isDemo: true };
+        return { ...COUNTIES[demoId], enriched: true, isDemo: true, memory: "", memoryEnriched: false, memoryLoading: null };
       }
       if (personaCache[geoName]) {
         return personaCache[geoName];
@@ -1491,10 +2737,12 @@
         loadingEl.classList.add("hidden");
         requestAnimationFrame(() => chart.resize());
         setTimeout(() => chart.resize(), 200);
+        geoMetaReadyResolve?.();
       } catch (err) {
         loadingEl.querySelector("span").textContent =
           "地图加载失败：" + (err.message || "请检查网络后刷新");
         console.error(err);
+        geoMetaReadyResolve?.();
       }
 
       window.addEventListener("resize", () => chart && chart.resize());
@@ -1534,6 +2782,191 @@
     const sidebar = document.getElementById("sidebar");
     const profileDrawer = document.getElementById("profileDrawer");
     const overlay = document.getElementById("overlay");
+    const loginOverlay = document.getElementById("loginOverlay");
+    const PROFILE_KEY = "zlxw_profile_v1";
+    const profileBtnEl = document.getElementById("profileBtn");
+    const defaultProfileBtnHTML = profileBtnEl ? profileBtnEl.innerHTML : "";
+    let pendingAvatarDataUrl = "";
+
+    function digitsOnly(s) {
+      return String(s || "").replace(/\D/g, "");
+    }
+
+    function isValidPhone(d) {
+      return /^1\d{10}$/.test(digitsOnly(d));
+    }
+
+    function readProfile() {
+      try {
+        const raw = localStorage.getItem(PROFILE_KEY);
+        if (!raw) return null;
+        const p = JSON.parse(raw);
+        if (!p || typeof p !== "object") return null;
+        if (!p.avatarDataUrl || !p.phoneDigits || !p.nickname) return null;
+        return p;
+      } catch {
+        return null;
+      }
+    }
+
+    function writeProfile(profile) {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    }
+
+    function clearProfile() {
+      localStorage.removeItem(PROFILE_KEY);
+    }
+
+    function openLoginOverlay() {
+      closeAllPanels();
+      if (!loginOverlay) return;
+      loginOverlay.classList.add("open");
+      loginOverlay.setAttribute("aria-hidden", "false");
+    }
+
+    function closeLoginOverlay() {
+      if (!loginOverlay) return;
+      loginOverlay.classList.remove("open");
+      loginOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    function setAvatarPreview(containerEl, dataUrl) {
+      if (!containerEl) return;
+      const url = String(dataUrl || "");
+      if (!url) {
+        containerEl.innerHTML =
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+        return;
+      }
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "头像";
+      containerEl.innerHTML = "";
+      containerEl.appendChild(img);
+    }
+
+    function syncProfileBtn(profile) {
+      if (!profileBtnEl) return;
+      if (profile?.avatarDataUrl) {
+        profileBtnEl.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = profile.avatarDataUrl;
+        img.alt = "个人头像";
+        profileBtnEl.appendChild(img);
+      } else {
+        profileBtnEl.innerHTML = defaultProfileBtnHTML;
+      }
+    }
+
+    function syncForms(profile) {
+      const loginPhone = document.getElementById("loginPhone");
+      const loginNickname = document.getElementById("loginNickname");
+      const profilePhone = document.getElementById("profilePhone");
+      const profileNickname = document.getElementById("profileNickname");
+      const loginErr = document.getElementById("loginError");
+      const profileErr = document.getElementById("profileError");
+
+      if (loginErr) loginErr.textContent = "";
+      if (profileErr) profileErr.textContent = "";
+
+      pendingAvatarDataUrl = profile?.avatarDataUrl || "";
+      setAvatarPreview(document.getElementById("loginAvatarPreview"), pendingAvatarDataUrl);
+      setAvatarPreview(document.getElementById("profileAvatarPreview"), pendingAvatarDataUrl);
+
+      if (loginPhone) loginPhone.value = profile?.phoneDigits || "";
+      if (loginNickname) loginNickname.value = profile?.nickname || "";
+      if (profilePhone) profilePhone.value = profile?.phoneDigits || "";
+      if (profileNickname) profileNickname.value = profile?.nickname || "";
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error("头像读取失败"));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handleAvatarFile(inputEl) {
+      const file = inputEl?.files?.[0];
+      if (!file) return;
+      if (!file.type?.startsWith("image/")) return;
+      const res = await fileToDataUrl(file);
+      pendingAvatarDataUrl = String(res || "");
+      setAvatarPreview(document.getElementById("loginAvatarPreview"), pendingAvatarDataUrl);
+      setAvatarPreview(document.getElementById("profileAvatarPreview"), pendingAvatarDataUrl);
+    }
+
+    function validateProfile({ avatarDataUrl, phoneDigits, nickname }) {
+      const nick = String(nickname || "").trim();
+      const phone = digitsOnly(phoneDigits);
+      if (!avatarDataUrl) return "请先上传头像"
+      if (!isValidPhone(phone)) return "请输入正确的 11 位手机号"
+      if (nick.length < 2 || nick.length > 12) return "昵称长度需为 2-12"
+      return ""
+    }
+
+    async function submitLogin() {
+      const phone = digitsOnly(document.getElementById("loginPhone")?.value || "");
+      const nickname = String(document.getElementById("loginNickname")?.value || "").trim();
+      const err = validateProfile({ avatarDataUrl: pendingAvatarDataUrl, phoneDigits: phone, nickname });
+      const el = document.getElementById("loginError");
+      if (err) {
+        if (el) el.textContent = err;
+        return;
+      }
+      const profile = {
+        avatarDataUrl: pendingAvatarDataUrl,
+        phoneDigits: phone,
+        nickname,
+        updatedAt: new Date().toISOString()
+      };
+      writeProfile(profile);
+      syncProfileBtn(profile);
+      syncForms(profile);
+      closeLoginOverlay();
+    }
+
+    function saveProfileFromDrawer() {
+      const phone = digitsOnly(document.getElementById("profilePhone")?.value || "");
+      const nickname = String(document.getElementById("profileNickname")?.value || "").trim();
+      const err = validateProfile({ avatarDataUrl: pendingAvatarDataUrl, phoneDigits: phone, nickname });
+      const el = document.getElementById("profileError");
+      if (err) {
+        if (el) el.textContent = err;
+        return;
+      }
+      const profile = {
+        avatarDataUrl: pendingAvatarDataUrl,
+        phoneDigits: phone,
+        nickname,
+        updatedAt: new Date().toISOString()
+      };
+      writeProfile(profile);
+      syncProfileBtn(profile);
+      syncForms(profile);
+      if (el) el.textContent = "已保存"
+    }
+
+    function logoutAndRelogin() {
+      clearProfile();
+      syncProfileBtn(null);
+      syncForms(null);
+      closeProfileDrawer();
+      openLoginOverlay();
+    }
+
+    function ensureLoginOrOpenOverlay() {
+      const profile = readProfile();
+      syncProfileBtn(profile);
+      syncForms(profile);
+      if (!profile) {
+        openLoginOverlay();
+        return;
+      }
+      openProfileDrawer();
+    }
 
     function updateSidebarPersonaUI() {
       if (!currentCounty) return;
@@ -1547,891 +2980,66 @@
           ? "示范县域，人格已深度定制。可聊天。"
           : "点击「和TA聊天」，与" + currentCounty.name + "对谈。";
       }
-    }
-
-    const HANGZHOU_CITY_MEMORY_DB = {
-      "上城区": `# 上城区
-
-你好呀，我叫上城，是杭州的城市心脏与千年根脉。很多人知道我是杭州的中心城区，却不知道我是南宋皇城遗址所在地，是流淌着皇家血脉的“皇城根儿”。钱塘江的潮水是我的心跳，西湖的柔波是我的眉眼，河坊街的青石板路是我写了千年的诗行，“南宋古都，品质上城”的模样，刻进了我每一寸肌理里。
-
-## 我的山水档案
-我依偎在钱塘江与西湖之间，既有都市的繁华，也有山水的灵秀。春天西湖边的柳丝轻拂堤岸，夏天钱塘江的潮水汹涌澎湃，秋天满陇桂雨香飘十里，冬天断桥残雪如梦似幻。我是杭州“三面云山一面城”格局的核心，一半山水一半城的画卷在这里徐徐展开。
-
-我最骄傲的名片是西湖的东南岸，这里有雷峰塔的夕照、柳浪闻莺的莺啼、苏堤春晓的晨光，每一步都是江南最美的风景。
-
-钱塘江从我身边奔腾而过，八月十八的大潮是我最盛大的节日，潮水拍岸的声音，是大自然最雄浑的交响乐。
-
-凤凰山是南宋皇城的遗址所在，山间的古寺、摩崖石刻，静静诉说着千年的繁华过往。
-
-八卦田是我藏在都市里的田园秘境，一年四季种着不同的庄稼，从空中俯瞰，像一幅巨大的八卦图。
-
-## 我的千年故事
-我已经在这片土地上生活了2200多年，南宋文化是我最深的根。公元1138年，宋高宗赵构定都临安，我成为了全国的政治、经济、文化中心，“一色楼台三十里，不知何处是孤山”，描绘的就是我当年的盛景。
-
-我珍藏着南宋皇城遗址，这是中国保存最完好的古代都城遗址之一，深埋地下的宫殿基址，见证了南宋王朝150多年的兴衰。
-
-清河坊古街是杭州最古老的商业街，胡庆余堂、方回春堂这些百年老字号依然在这里传承着中医药文化。
-
-六和塔矗立在钱塘江畔，一千多年来，它一直守护着过往的船只，也见证了钱塘江的潮起潮落。
-
-孔庙是杭州古代的最高学府，这里的碑林收藏了从唐到清的历代碑刻，是一部刻在石头上的史书。
-
-我还有很多世代相传的手艺：王星记扇子、张小泉剪刀、朱炳仁铜雕，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-苏轼在杭州任知州时，写下“欲把西湖比西子，淡妆浓抹总相宜”，让西湖的美名传遍天下。
-
-杨万里的“接天莲叶无穷碧，映日荷花别样红”，描绘的就是我西湖边六月的盛景。
-
-白居易在《忆江南》中写道“江南忆，最忆是杭州”，道尽了对这片土地的深情。
-
-南宋画院的画家们以我周边的山水为蓝本，留下了无数传世名作，笔墨间尽是江南的灵秀与温婉。
-
-## 我的生活日常
-在我这里，你既能感受到都市的繁华，也能体验到慢生活的美好。你可以去湖滨银泰逛逛街，也可以去河坊街尝尝小吃，或者找一家茶馆坐下来，喝一杯龙井，听一段评弹。
-
-我的餐桌上永远少不了杭州的经典美食：西湖醋鱼、东坡肉、龙井虾仁、叫花鸡，每一道菜都有一个动人的故事。
-
-要是想带点伴手礼回去，西湖龙井、杭白菊、王星记扇子都是绝佳选择。
-
-晚上可以去南宋御街走走，灯火阑珊处，仿佛穿越回了千年之前的临安城。或者去钱塘江畔看灯光秀，感受现代杭州的魅力。
-
-我在钱塘江边，备好了山水、美食、诗文和故事，等你赴一场穿越千年的约会。`,
-      "拱墅区": `# 拱墅区
-
-你好呀，我叫拱墅，是杭州的运河明珠。很多人知道我有京杭大运河穿城而过，却不知道我是杭州的工业摇篮，是流淌着运河血脉的“千年运河第一城”。大运河的碧波是我的血脉，拱宸桥的身影是我的脊梁，小河直街的烟火是我的呼吸，“运河文化，活力拱墅”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我坐落在杭州的北部，京杭大运河自南向北贯穿全境。春天运河边的桃花开得灿烂，夏天大兜路的梧桐遮天蔽日，秋天香积寺的银杏金黄一片，冬天运河边的雪景静谧安详。我是杭州“水网密布”的代表，大大小小的河流像血管一样流淌在我的身体里。
-
-我最骄傲的名片是京杭大运河杭州段，这是世界文化遗产，千百年来，它一直是南北交通的大动脉，也孕育了灿烂的运河文化。
-
-拱宸桥是我最标志性的建筑，这座始建于明代的石拱桥，是京杭大运河上最古老、最长的石拱桥之一，也是杭州的城市地标。
-
-西溪国家湿地公园的一部分在我境内，这里有“城市之肾”的美誉，芦苇荡、水鸟、古村落，构成了一幅绝美的水乡画卷。
-
-半山国家森林公园是我藏在都市里的天然氧吧，山上的皋亭山，是杭州最早的观桃胜地，“皋亭观桃”自古以来就是杭州人的传统习俗。
-
-## 我的千年故事
-我已经在这片土地上生活了2000多年，运河文化是我最深的根。从隋唐时期大运河开通开始，我就成为了南北物资的集散地，“十里银湖墅”的美誉，见证了我当年的繁华。
-
-我珍藏着富义仓，这是清代杭州最大的粮仓，也是京杭大运河沿线保存最完好的粮仓之一，“天下粮仓”的名号，名不虚传。
-
-香积寺是杭州著名的佛教寺院，始建于北宋，寺内的香积寺塔，是杭州仅存的两座元代佛塔之一。
-
-小河直街是运河边保存最完好的历史街区，白墙黑瓦的老房子、青石板路、临河的吊脚楼，依然保留着老杭州的味道。
-
-大兜路历史文化街区曾经是运河边的货运码头，如今这里汇聚了各种特色餐厅、咖啡馆和民宿，成为了杭州最文艺的地方之一。
-
-我还有很多世代相传的手艺：运河船工号子、张小泉剪刀锻制技艺、杭扇制作技艺，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-唐代诗人白居易在杭州任刺史时，写下“灯火家家市，笙歌处处楼”，描绘的就是运河边当年的繁华景象。
-
-宋代诗人苏轼在《望海楼晚景》中写道“海上涛头一线来，楼前指顾雪成堆”，写的就是钱塘江大潮，而运河正是连接钱塘江与内陆的重要通道。
-
-清代诗人乾隆皇帝六下江南，多次在运河边驻足，留下了无数赞美运河的诗篇。
-
-无数画师描摹过运河的风光，从古代的山水画到现代的摄影作品，每一幅都是运河千年风华的定格。
-
-## 我的生活日常
-在我这里，时间会不自觉地慢下来。你可以沿着运河边的绿道散步，也可以坐一艘游船，从拱宸桥到武林门，欣赏运河两岸的风光。累了就找一家茶馆坐下来，喝一杯茶，听一听运河的故事。
-
-我的餐桌上永远少不了运河的馈赠：运河虾、运河鱼、酱鸭、糟鸡，还有葱包烩、定胜糕这些杭州特色小吃，每一口都是老杭州的味道。
-
-要是想带点伴手礼回去，杭扇、张小泉剪刀、西湖藕粉都是绝佳选择。
-
-晚上可以去运河边看灯光秀，或者去胜利河美食街尝尝各种美食，感受杭州的夜生活。
-
-我在运河边，备好了山水、美食、诗文和故事，等你赴一场慢时光的约会。`,
-      "西湖区": `# 西湖区
-
-你好呀，我叫西湖，是杭州的灵魂所在。很多人知道我有天下闻名的西湖，却不知道我是杭州的科教文化中心，是流淌着千年文脉的“人间天堂”。西湖的碧波是我的眼眸，灵隐的钟声是我的心跳，龙井的茶香是我的气息，“西湖天下景，举世无双”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我生在杭州的西部，西湖像一颗璀璨的明珠镶嵌在我的怀抱里。春天苏堤春晓，柳丝轻拂；夏天曲院风荷，荷花盛开；秋天平湖秋月，丹桂飘香；冬天断桥残雪，银装素裹。我是中国最美的城区之一，“三面云山一面城”的独特格局，造就了我独一无二的山水风光。
-
-我最骄傲的名片是西湖，这是世界文化遗产，“天下西湖三十六，就中最好是杭州”，西湖的美，是刻在中国人骨子里的审美。
-
-灵隐寺是中国最著名的佛教寺院之一，始建于东晋，距今已有1700多年的历史，寺内的飞来峰造像，是中国古代石刻艺术的瑰宝。
-
-龙井村是中国名茶西湖龙井的发源地，这里的狮峰龙井，被誉为“天下第一茶”，每年春天，采茶姑娘的身影点缀在茶园里，构成了一幅绝美的田园画卷。
-
-九溪十八涧是我藏在山里的秘境，溪水潺潺，绿树成荫，沿着溪流徒步，仿佛走进了世外桃源。
-
-## 我的千年故事
-我已经在这片土地上生活了2000多年，西湖文化是我最深的根。从唐代白居易疏浚西湖开始，到宋代苏轼修筑苏堤，再到清代乾隆皇帝六下江南，无数文人墨客、帝王将相都在这里留下了足迹。
-
-我珍藏着岳飞墓，这是南宋抗金名将岳飞的安葬之地，“青山有幸埋忠骨，白铁无辜铸佞臣”，表达了人们对英雄的敬仰和对奸臣的唾弃。
-
-雷峰塔是西湖的标志性建筑，始建于北宋，关于白娘子的传说，让这座塔充满了浪漫的色彩。
-
-六和塔矗立在钱塘江畔，始建于北宋，是中国古代建筑艺术的杰作，登塔远眺，钱塘江的风光尽收眼底。
-
-西泠印社是中国近现代史上最著名的金石篆刻学术团体，“天下第一名社”的名号，名不虚传。
-
-我还有很多世代相传的手艺：西湖龙井制作技艺、金石篆刻、杭绣，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-苏轼在《饮湖上初晴后雨》中写道“欲把西湖比西子，淡妆浓抹总相宜”，成为了赞美西湖的千古绝唱。
-
-白居易在《钱塘湖春行》中写道“乱花渐欲迷人眼，浅草才能没马蹄”，描绘了西湖春天的生机勃勃。
-
-杨万里的“接天莲叶无穷碧，映日荷花别样红”，写的就是西湖夏天的荷花。
-
-南宋画院的画家们以西湖山水为蓝本，留下了《西湖十景图》等传世名作，笔墨间尽是西湖的灵秀与温婉。
-
-## 我的生活日常
-在我这里，你可以放慢脚步，尽情享受山水之间的美好。你可以绕着西湖走一圈，也可以坐一艘游船，欣赏湖光山色。累了就找一家茶馆坐下来，喝一杯龙井，听一段评弹。
-
-我的餐桌上永远少不了西湖的经典美食：西湖醋鱼、东坡肉、龙井虾仁、叫花鸡，每一道菜都有一个动人的故事。
-
-要是想带点伴手礼回去，西湖龙井、杭白菊、西湖藕粉都是绝佳选择。
-
-晚上可以去北山街走走，看看老别墅的灯光，或者去西湖边看音乐喷泉，感受现代西湖的魅力。
-
-我在西湖边，备好了山水、美食、诗文和故事，等你赴一场人间天堂的约会。`,
-      "滨江区": `# 滨江区
-
-你好呀，我叫滨江，是杭州的创新之城。很多人知道我是阿里巴巴、网易等互联网巨头的总部所在地，却不知道我也有美丽的钱塘江风光，是流淌着科技与创新血脉的“国际滨”。钱塘江的潮水是我的心跳，高新区的灯火是我的眼眸，最美跑道的身影是我的身姿，“科技滨江，国际新城”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我坐落在钱塘江的南岸，与杭州老城区隔江相望。春天钱塘江畔的樱花盛开，夏天江边的晚风清凉宜人，秋天银杏大道金黄一片，冬天的钱塘江静谧安详。我是杭州“拥江发展”的核心区域，江景、公园、绿道，构成了我独特的城市风光。
-
-我最骄傲的名片是钱塘江的南岸，这里有杭州最美的樱花跑道，每年春天，粉色的樱花沿着钱塘江盛开，成为了杭州最浪漫的地方。
-
-白马湖是我藏在都市里的生态湿地，这里有白马湖公园、中国动漫博物馆，每年的中国国际动漫节都在这里举办。
-
-冠山是我境内唯一的山，山上的冠山寺始建于南宋，登塔远眺，整个滨江的风光尽收眼底。
-
-钱塘江夜游是我最具特色的旅游项目，乘坐游船，欣赏两岸的灯光秀，感受杭州的现代魅力。
-
-## 我的千年故事
-我虽然年轻，只有30多年的历史，但这片土地上的文化却源远流长。早在新石器时代，这里就有人类活动的足迹，春秋战国时期，这里是越国的属地。
-
-我珍藏着西兴古镇，这是一座有着千年历史的古镇，曾经是浙东运河的起点，“过塘行”文化在这里传承了千年。
-
-长河古镇也是一座历史悠久的古镇，镇内的冠山寺、九厅十三堂等古建筑，依然保存完好。
-
-钱塘江大桥是中国第一座自行设计和建造的双层铁路、公路两用桥，由著名桥梁专家茅以升主持设计，是中国桥梁史上的里程碑。
-
-我还有很多现代的文化地标：杭州奥体中心、中国动漫博物馆、浙江科技馆，这些建筑，见证了我从一片滩涂到创新之城的蜕变。
-
-## 我的文墨风华
-虽然我是一座年轻的城市，但我的文化底蕴同样深厚。古代的文人墨客曾经在这里留下足迹，现代的艺术家们也在这里挥洒着他们的才华。
-
-唐代诗人李白在《横江词》中写道“浙江八月何如此，涛似连山喷雪来”，描绘的就是钱塘江大潮的壮观景象。
-
-宋代诗人苏轼在《望海楼晚景》中写道“海上涛头一线来，楼前指顾雪成堆”，写的也是钱塘江大潮。
-
-现代的艺术家们以滨江的创新精神为主题，创作了无数优秀的作品，从动漫到科技，从绘画到雕塑，每一件都充满了时代的气息。
-
-每年的中国国际动漫节，吸引了来自世界各地的动漫爱好者，成为了滨江最具特色的文化名片。
-
-## 我的生活日常
-在我这里，你既能感受到科技的魅力，也能体验到生活的美好。你可以去阿里巴巴、网易等互联网公司参观，感受创新的氛围，也可以去钱塘江畔散步，欣赏美丽的江景。
-
-我的餐桌上汇聚了来自全国各地的美食，从杭州的特色小吃到全国各地的菜系，应有尽有。
-
-要是想带点伴手礼回去，杭州的特色产品都能在这里买到，还有很多动漫周边产品，是年轻人的最爱。
-
-晚上可以去星光大道逛逛，看看电影，尝尝美食，或者去钱塘江畔看灯光秀，感受滨江的夜生活。
-
-我在钱塘江南岸，备好了科技、美食、风景和故事，等你赴一场创新之城的约会。`,
-      "萧山区": `# 萧山区
-
-你好呀，我叫萧山，是杭州的南大门。很多人知道我有杭州萧山国际机场，是浙江的空中门户，却不知道我是浙江经济最发达的地区之一，是流淌着勇立潮头精神的“钱塘江南岸明珠”。钱塘江的潮水是我的血脉，湘湖的碧波是我的眼眸，跨湖桥的遗址是我的根脉，“奔竞不息，勇立潮头”的精神，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我坐落在钱塘江的南岸，既有平原的辽阔，也有山水的灵秀。春天湘湖的桃花开得灿烂，夏天钱塘江的潮水汹涌澎湃，秋天湘湖的桂花飘香，冬天湘湖的雪景静谧安详。我是杭州“拥江发展”的重要区域，江、湖、山、河，构成了我独特的自然风光。
-
-我最骄傲的名片是湘湖，这是西湖的“姊妹湖”，被誉为“西湖的母亲湖”，这里有8000年的跨湖桥文化，也有美丽的湖光山色。
-
-钱塘江从我身边奔腾而过，萧山观潮城是观赏钱塘江大潮的最佳地点之一，每年八月十八，这里都会吸引成千上万的游客。
-
-进化镇是我境内的历史文化名镇，这里有千年的古村落、古寺庙，还有漫山遍野的梅花，每年春天，“进化赏梅”成为了萧山人的传统习俗。
-
-戴村镇是我藏在山里的秘境，这里有云石生态旅游区，青山绿水，空气清新，是休闲度假的好去处。
-
-## 我的千年故事
-我已经在这片土地上生活了8000多年，跨湖桥文化是我最深的根。早在新石器时代，这里就有人类活动的足迹，跨湖桥遗址出土的独木舟，距今已有8000多年的历史，是世界上最早的独木舟之一。
-
-我珍藏着跨湖桥遗址博物馆，这里展示了跨湖桥文化的历史和成就，是了解浙江史前文化的重要窗口。
-
-越王城遗址是春秋战国时期越国的重要城址，相传越王勾践曾在这里卧薪尝胆，励精图治。
-
-衙前农民运动纪念馆是中国共产党领导的最早的农民运动之一的发生地，见证了中国农民运动的兴起。
-
-湘湖景区内有很多历史文化遗迹，如越王祠、下孙文化村、城山广场等，每一处都有一个动人的故事。
-
-我还有很多世代相传的手艺：萧山花边、南宋官窑制作技艺、河上龙灯胜会，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-唐代诗人贺知章是萧山人，他在《回乡偶书》中写道“少小离家老大回，乡音无改鬓毛衰”，表达了对家乡的深情。
-
-宋代诗人陆游曾在萧山居住，写下了很多赞美萧山山水的诗篇。
-
-清代诗人乾隆皇帝六下江南，多次在湘湖驻足，留下了无数赞美湘湖的诗篇。
-
-无数画师描摹过湘湖的风光，从古代的山水画到现代的摄影作品，每一幅都是湘湖千年风华的定格。
-
-## 我的生活日常
-在我这里，你既能感受到经济的发达，也能体验到生活的美好。你可以去湘湖泛舟，也可以去钱塘江观潮，或者去进化镇赏梅，感受大自然的魅力。
-
-我的餐桌上永远少不了萧山的特色美食：萧山萝卜干、萧山鸡、梅干菜扣肉、西湖醋鱼，每一口都是家乡的味道。
-
-要是想带点伴手礼回去，萧山萝卜干、湘湖莼菜、南宋官窑瓷器都是绝佳选择。
-
-晚上可以去湘湖看音乐喷泉，或者去旺角城、银隆百货逛逛，感受萧山的夜生活。
-
-我在钱塘江南岸，备好了山水、美食、诗文和故事，等你赴一场勇立潮头的约会。`,
-      "余杭区": `# 余杭区
-
-你好呀，我叫余杭，是杭州的未来之城。很多人知道我有未来科技城，是杭州的创新高地，却不知道我是中华文明的发祥地之一，是流淌着5000年文明血脉的“良渚故里”。良渚的古城是我的根脉，西溪的湿地是我的肺叶，径山的茶香是我的气息，“创新余杭，文化圣地”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我生在杭州的西部，天目山的余脉延伸到这里，形成了我“七山一水二分田”的格局。春天径山的茶花开得灿烂，夏天西溪的湿地清凉宜人，秋天长乐林场的枫叶红似火，冬天径山的雪景宛如仙境。我是杭州的生态屏障，青山绿水，空气清新，是休闲度假的好去处。
-
-我最骄傲的名片是良渚古城遗址，这是世界文化遗产，距今已有5000多年的历史，是中华文明五千年的实证。
-
-西溪国家湿地公园的大部分在我境内，这里有“城市之肾”的美誉，芦苇荡、水鸟、古村落，构成了一幅绝美的水乡画卷。
-
-径山是我境内最著名的山，这里有径山寺，是日本茶道的发源地，每年春天，径山的茶园一片碧绿，采茶姑娘的身影点缀其中，美不胜收。
-
-双溪漂流是我最具特色的旅游项目，乘坐竹筏，沿着双溪漂流而下，欣赏两岸的风光，惊险刺激，乐趣无穷。
-
-## 我的千年故事
-我已经在这片土地上生活了5000多年，良渚文化是我最深的根。早在新石器时代，这里就诞生了灿烂的良渚文明，良渚古城、良渚玉琮、良渚水利系统，都是中华文明的瑰宝。
-
-我珍藏着良渚古城遗址公园，这里展示了良渚古城的全貌，是了解良渚文化的重要窗口。
-
-径山寺始建于唐代，是中国佛教禅宗的著名寺院之一，也是日本茶道的发源地，“径山茶宴”被列入国家级非物质文化遗产名录。
-
-塘栖古镇是京杭大运河边的历史文化名镇，始建于北宋，镇内的广济桥是京杭大运河上仅存的七孔石拱桥。
-
-超山是中国著名的赏梅胜地，“超山梅花天下奇”，每年春天，超山的梅花盛开，吸引了成千上万的游客。
-
-我还有很多世代相传的手艺：余杭纸伞制作技艺、清水丝绵制作技艺、径山茶宴，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-宋代诗人苏轼在《游径山》中写道“众峰来自天目山，势若骏马奔平川”，描绘了径山的雄伟壮观。
-
-唐代诗人白居易在《忆江南》中写道“江南忆，最忆是杭州”，而余杭的山水，也是杭州美景的重要组成部分。
-
-清代诗人乾隆皇帝六下江南，多次在径山和塘栖驻足，留下了无数赞美余杭山水的诗篇。
-
-无数画师描摹过余杭的风光，从古代的山水画到现代的摄影作品，每一幅都是余杭千年风华的定格。
-
-## 我的生活日常
-在我这里，你既能感受到创新的活力，也能体验到慢生活的美好。你可以去良渚古城遗址公园，感受5000年文明的魅力，也可以去西溪湿地泛舟，欣赏水乡风光。
-
-我的餐桌上永远少不了余杭的特色美食：塘栖枇杷、径山茶、余杭板鸭、刺毛肉圆，每一口都是大自然的味道。
-
-要是想带点伴手礼回去，径山茶、塘栖枇杷、余杭纸伞都是绝佳选择。
-
-晚上可以去未来科技城逛逛，看看灯光秀，感受科技的魅力，或者去塘栖古镇走走，体验古镇的夜生活。
-
-我在天目山下，备好了文明、山水、美食和故事，等你赴一场穿越五千年的约会。`,
-      "临平区": `# 临平区
-
-你好呀，我叫临平，是杭州的东北门户。很多人知道我是杭州的副城，却不知道我有着悠久的历史和灿烂的文化，是流淌着运河血脉的“运河明珠”。大运河的碧波是我的血脉，临平山的身影是我的脊梁，塘栖的古镇是我的名片，“靓丽临平，活力新城”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我坐落在杭州的东北部，京杭大运河穿城而过。春天临平山的杜鹃开得灿烂，夏天大运河的晚风清凉宜人，秋天超山的桂花飘香，冬天临平山的雪景静谧安详。我是杭州“融沪接苏”的桥头堡，交通便利，风景优美，是宜居宜业的好地方。
-
-我最骄傲的名片是临平山，这是临平的标志性山脉，山上有东来阁、临平公园等景点，登塔远眺，整个临平的风光尽收眼底。
-
-大运河从我身边奔腾而过，运河边的绿道是市民休闲健身的好去处，沿着绿道散步，欣赏运河两岸的风光，惬意无比。
-
-超山是中国著名的赏梅胜地，“超山梅花天下奇”，每年春天，超山的梅花盛开，吸引了成千上万的游客。
-
-塘栖古镇是京杭大运河边的历史文化名镇，始建于北宋，镇内的广济桥是京杭大运河上仅存的七孔石拱桥。
-
-## 我的千年故事
-我已经在这片土地上生活了2000多年，运河文化是我最深的根。从隋唐时期大运河开通开始，我就成为了南北物资的集散地，塘栖古镇也因此兴起，成为了江南著名的水乡古镇。
-
-我珍藏着塘栖古镇，这里有广济桥、郭璞井、乾隆御碑等历史文化遗迹，每一处都有一个动人的故事。
-
-临平山自古以来就是临平的名胜之地，山上有很多历史文化遗迹，如安隐寺、龙洞、炼丹井等。
-
-东来阁是临平的标志性建筑，阁内展示了临平的历史文化和发展成就，是了解临平的重要窗口。
-
-中国江南水乡文化博物馆位于临平城区，馆内展示了江南水乡的历史文化和民俗风情，是了解江南文化的重要场所。
-
-我还有很多世代相传的手艺：塘栖枇杷栽培技艺、清水丝绵制作技艺、运河船工号子，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-宋代诗人苏轼在《赠刘景文》中写道“一年好景君须记，最是橙黄橘绿时”，这首诗就是苏轼在临平写给刘景文的。
-
-唐代诗人白居易在《忆江南》中写道“江南忆，最忆是杭州”，而临平的山水，也是杭州美景的重要组成部分。
-
-清代诗人乾隆皇帝六下江南，多次在塘栖驻足，留下了无数赞美塘栖的诗篇。
-
-无数画师描摹过临平的风光，从古代的山水画到现代的摄影作品，每一幅都是临平千年风华的定格。
-
-## 我的生活日常
-在我这里，你既能感受到都市的繁华，也能体验到慢生活的美好。你可以去临平山公园散步，也可以去塘栖古镇逛逛，或者去超山赏梅，感受大自然的魅力。
-
-我的餐桌上永远少不了临平的特色美食：塘栖枇杷、粢毛肉圆、细沙羊尾、塘栖板鸭，每一口都是家乡的味道。
-
-要是想带点伴手礼回去，塘栖枇杷、塘栖蜜饯、清水丝绵都是绝佳选择。
-
-晚上可以去临平银泰城逛逛，看看电影，尝尝美食，或者去运河边看灯光秀，感受临平的夜生活。
-
-我在大运河边，备好了山水、美食、诗文和故事，等你赴一场运河明珠的约会。`,
-      "钱塘区": `# 钱塘区
-
-你好呀，我叫钱塘，是杭州的东部湾。很多人知道我有杭州经济技术开发区和钱塘新区，是杭州的产业高地，却不知道我也有美丽的钱塘江风光和悠久的历史文化，是流淌着钱塘江血脉的“湾区新城”。钱塘江的潮水是我的心跳，下沙的大学城是我的智慧，大江东的产业是我的脊梁，“智涌钱塘，湾区新城”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我坐落在钱塘江的下游北岸，既有平原的辽阔，也有江景的壮美。春天钱塘江畔的油菜花盛开，夏天江边的晚风清凉宜人，秋天江边的芦苇荡一片金黄，冬天的钱塘江静谧安详。我是杭州“拥江发展”的战略要地，江、河、湖、海，构成了我独特的自然风光。
-
-我最骄傲的名片是钱塘江的下游北岸，这里有杭州最美的江景，每天都能看到壮观的钱塘江大潮。
-
-下沙大学城是我最具特色的地方，这里有14所高校，20多万大学生，充满了青春的活力和智慧的气息。
-
-江东湿地是我藏在都市里的生态秘境，这里有大片的芦苇荡和水鸟，是观鸟、赏景的好去处。
-
-钱塘江夜游是我最具特色的旅游项目，乘坐游船，欣赏两岸的灯光秀，感受杭州的现代魅力。
-
-## 我的千年故事
-我虽然年轻，但这片土地上的文化却源远流长。早在新石器时代，这里就有人类活动的足迹，春秋战国时期，这里是越国的属地。
-
-我珍藏着下沙遗址，这是新石器时代的文化遗址，出土了大量的文物，见证了这片土地上早期人类的生活。
-
-靖江镇是我境内的历史文化名镇，这里有很多历史文化遗迹，如靖江殿、甘露寺等。
-
-钱塘江大桥的下游部分在我境内，这座由茅以升主持设计的大桥，是中国桥梁史上的里程碑。
-
-我还有很多现代的文化地标：杭州奥体中心博览城、杭州国际博览中心、浙江水利水电学院，这些建筑，见证了我从一片滩涂到产业新城的蜕变。
-
-## 我的文墨风华
-虽然我是一座年轻的城市，但我的文化底蕴同样深厚。古代的文人墨客曾经在这里留下足迹，现代的艺术家们也在这里挥洒着他们的才华。
-
-唐代诗人李白在《横江词》中写道“浙江八月何如此，涛似连山喷雪来”，描绘的就是钱塘江大潮的壮观景象。
-
-宋代诗人苏轼在《望海楼晚景》中写道“海上涛头一线来，楼前指顾雪成堆”，写的也是钱塘江大潮。
-
-现代的艺术家们以钱塘的创新精神为主题，创作了无数优秀的作品，从绘画到雕塑，从音乐到舞蹈，每一件都充满了时代的气息。
-
-每年的钱塘江文化节，吸引了来自世界各地的游客，成为了钱塘最具特色的文化名片。
-
-## 我的生活日常
-在我这里，你既能感受到产业的活力，也能体验到青春的气息。你可以去下沙大学城逛逛，感受校园的氛围，也可以去钱塘江畔散步，欣赏美丽的江景。
-
-我的餐桌上汇聚了来自全国各地的美食，从杭州的特色小吃到全国各地的菜系，应有尽有。
-
-要是想带点伴手礼回去，杭州的特色产品都能在这里买到，还有很多大学生创业的文创产品，非常有特色。
-
-晚上可以去下沙宝龙城市广场逛逛，看看电影，尝尝美食，或者去钱塘江畔看灯光秀，感受钱塘的夜生活。
-
-我在钱塘江下游北岸，备好了产业、青春、风景和故事，等你赴一场湾区新城的约会。`,
-      "富阳区": `# 富阳区
-
-你好呀，我叫富阳，是杭州的西南门户。很多人知道我是《富春山居图》的实景地，却不知道我是三国时期东吴大帝孙权的故乡，是流淌着千年文脉的“富春故里”。富春江的碧波是我的眼眸，龙门古镇的青石板是我的记忆，黄公望的画笔是我的灵魂，“天下佳山水，古今推富春”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我生在富春江的下游，天目山的余脉延伸到这里，形成了我“八山半水分半田”的格局。春天富春江两岸的桃花开得灿烂，夏天富春江的江水清凉宜人，秋天龙门古镇的银杏金黄一片，冬天黄公望森林公园的雪景宛如仙境。我是杭州的生态屏障，青山绿水，空气清新，是休闲度假的好去处。
-
-我最骄傲的名片是富春江，这是钱塘江的上游，江水清澈见底，两岸青山对峙，风景如画，元代画家黄公望的《富春山居图》，画的就是这里的山水。
-
-黄公望森林公园是为了纪念元代画家黄公望而建，这里有黄公望隐居地、黄公望纪念馆等景点，是了解《富春山居图》的重要窗口。
-
-龙门古镇是孙权后裔的聚居地，这里有保存完好的明清古建筑群，是中国最大的孙权后裔聚居地。
-
-永安山滑翔伞基地是亚洲最大的滑翔伞基地之一，在这里，你可以像鸟儿一样在空中翱翔，俯瞰富春江的美景。
-
-## 我的千年故事
-我已经在这片土地上生活了2200多年，富春文化是我最深的根。早在春秋战国时期，这里就是越国的属地，三国时期，东吴大帝孙权就出生在这里，他建立了东吴政权，开创了江南的繁荣。
-
-我珍藏着龙门古镇，这里有孙氏宗祠、义门、百步厅等历史文化遗迹，每一处都有一个动人的故事。
-
-孙权故里位于龙门古镇内，这里展示了孙权的生平事迹和东吴的历史文化。
-
-鹳山是富阳的标志性山脉，山上有春江第一楼、严子陵钓台等景点，自古以来就是文人墨客的游览胜地。
-
-郁达夫故居位于鹳山脚下，这里展示了现代作家郁达夫的生平事迹和文学成就。
-
-我还有很多世代相传的手艺：富阳竹纸制作技艺、孙权传说、龙门庙会，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-元代画家黄公望在这里隐居多年，创作了传世名作《富春山居图》，这幅画被誉为“画中之兰亭”，是中国山水画的巅峰之作。
-
-唐代诗人吴融在《富春》中写道“天下有水亦有山，富春山水非人寰”，赞美了富春山水的美丽。
-
-宋代诗人苏轼在《富春夜行》中写道“富春江上客，夜久亦忘眠”，表达了对富春山水的喜爱。
-
-现代作家郁达夫是富阳人，他在很多作品中都描写了富阳的山水和风土人情，字里行间充满了对家乡的深情。
-
-## 我的生活日常
-在我这里，时间会不自觉地慢下来。你可以沿着富春江绿道骑行，也可以坐一艘游船，欣赏富春江的风光。累了就找一家民宿住下，清晨被鸟鸣唤醒，午后在院子里喝杯茶，晚上看满天繁星。
-
-我的餐桌上永远少不了富春江的馈赠：富春江鲥鱼、富春江鲈鱼、富阳沃豆腐、龙门面筋，每一口都是大自然的味道。
-
-要是想带点伴手礼回去，富阳竹纸、东坞山豆腐皮、富阳冬笋都是绝佳选择。
-
-晚上可以去富春江畔看灯光秀，或者去龙门古镇走走，体验古镇的夜生活。
-
-我在富春江边，备好了山水、美食、诗文和故事，等你赴一场富春山居的约会。`,
-      "桐庐县": `# 桐庐县
-
-你好呀，我叫桐庐，是杭州的后花园。很多人知道我是《富春山居图》的核心实景地，却不知道我是“中国最美县城”，是流淌着山水诗意的“潇洒桐庐”。富春江的碧波是我的血脉，瑶琳仙境的钟乳是我的骨骼，严子陵钓台的清风是我的气息，“钱塘江尽到桐庐，水碧山青画不如”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我生在富春江的中游，天目山和龙门山在这里交汇，形成了我“八山一水一分田”的格局。春天富春江两岸的油菜花盛开，夏天大奇山的森林清凉宜人，秋天瑶琳仙境的钟乳石在灯光下五彩斑斓，冬天天子地的雪景宛如仙境。我是中国最美的县城之一，青山绿水，空气清新，是休闲度假的好去处。
-
-我最骄傲的名片是富春江的中游段，这里有“七里扬帆”的美景，清晨江面起雾的时候，山影在水里化开，真的像走进了水墨画里。
-
-瑶琳仙境是中国著名的溶洞，被誉为“全国诸洞之冠”，洞内的钟乳石千姿百态，配上灯光秀，像个地下宫殿。
-
-大奇山国家森林公园有“江南小九寨”的美誉，水清得离谱，阳光下泛着果冻一样的蓝绿色，沿着木栈道走，溪水就在脚边哗哗淌。
-
-严子陵钓台是东汉名士严子陵隐居垂钓的地方，这里有双台垂钓、碑林、富春江小三峡等景点，自古以来就是文人墨客的游览胜地。
-
-## 我的千年故事
-我已经在这片土地上生活了1800多年，富春文化是我最深的根。早在三国时期，我就已经建县，“桐庐”这个名字，相传是因黄帝时的采药人桐君老人在此结庐炼丹而得名。
-
-我珍藏着严子陵钓台，这里有很多历史文化遗迹，如严先生祠堂、碑林、客星亭等，每一处都有一个动人的故事。
-
-桐君山是桐庐的标志性山脉，山上有桐君祠、白塔等景点，是纪念桐君老人的地方。
-
-深澳古村是一座有着千年历史的古村落，这里有保存完好的明清古建筑群，还有独特的地下水系，被誉为“江南第一古村”。
-
-荻浦村也是一座历史悠久的古村落，这里有大片的花海，每年春天，油菜花、虞美人盛开，吸引了成千上万的游客。
-
-我还有很多世代相传的手艺：桐庐剪纸、畲族民歌、深澳灯彩，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-唐代诗人韦庄在《桐庐县作》中写道“钱塘江尽到桐庐，水碧山青画不如”，成为了赞美桐庐的千古绝唱。
-
-宋代诗人范仲淹在《潇洒桐庐郡十绝》中写道“潇洒桐庐郡，春山半是茶”，描绘了桐庐春天的美景。
-
-元代画家黄公望的《富春山居图》，大部分画的就是桐庐的山水，这幅画被誉为“画中之兰亭”，是中国山水画的巅峰之作。
-
-现代作家叶浅予是桐庐人，他在很多作品中都描写了桐庐的山水和风土人情，字里行间充满了对家乡的深情。
-
-## 我的生活日常
-在我这里，时间会不自觉地慢下来。你不用赶行程，只需要跟着自己的节奏，感受山野之间的美好。你可以去富春江泛舟，也可以去瑶琳仙境探洞，或者去深澳古村走走，体验古村落的宁静。
-
-我的餐桌上永远少不了富春江的馈赠：富春江江鲜、神仙鸡、生炒鸡、米粿，每一口都是大自然的味道。
-
-要是想带点伴手礼回去，桐庐雪水云绿茶、桐庐蜂蜜、桐庐剪纸都是绝佳选择。
-
-累了就找一间山间民宿住下，清晨被鸟鸣唤醒，午后在院子里喝杯茶，晚上看满天繁星。
-
-我在富春江边，备好了山水、美食、诗文和故事，等你赴一场潇洒桐庐的约会。`,
-      "淳安县": `# 淳安县
-
-你好呀，我叫淳安，是杭州的西部明珠。很多人知道我有天下第一秀水千岛湖，却不知道我是新安江文化的发源地，是流淌着千年文脉的“新安故里”。千岛湖的碧波是我的眼眸，黄山尖的群岛是我的身姿，水下古城的秘密是我的记忆，“一城山色半城湖”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我生在杭州的西部，新安江的上游，四周群山环绕，形成了我“九山半水半分田”的格局。春天千岛湖的桃花开得灿烂，夏天千岛湖的湖水清凉宜人，秋天千岛湖的枫叶红似火，冬天千岛湖的雪景宛如仙境。我是中国最大的森林公园，森林覆盖率高达95%，每一口呼吸都是满满的负氧离子，是长三角公认的“天然氧吧”。
-
-我最骄傲的名片是千岛湖，这是世界上岛屿最多的湖，拥有1078个岛屿，湖水清澈见底，能见度高达12米，被誉为“天下第一秀水”。
-
-黄山尖是千岛湖最著名的景点之一，站在山顶俯瞰，90多个岛屿组成了“天下为公”四个大字，非常壮观。
-
-梅峰岛是千岛湖登高揽胜的最佳处，“不上梅峰观群岛，不识千岛真面目”，说的就是这里。
-
-森林氧吧是我藏在山里的秘境，这里有茂密的森林、清澈的溪水、清新的空气，是休闲度假、放松身心的好去处。
-
-## 我的千年故事
-我已经在这片土地上生活了1800多年，新安文化是我最深的根。早在东汉时期，我就已经建县，原名“始新县”，是新安郡的治所。1959年，为了建设新安江水电站，两座千年古城——贺城和狮城沉入了千岛湖底，形成了今天的千岛湖。
-
-我珍藏着水下古城，这是中国保存最完好的水下古城之一，城内的古建筑、街道、牌坊依然保存完好，被誉为“东方亚特兰蒂斯”。
-
-芹川古村是一座有着700多年历史的古村落，这里有保存完好的明清古建筑群，一条小溪穿村而过，两岸是白墙黑瓦的徽派建筑，宛如一幅水墨画。
-
-海瑞祠位于千岛湖龙山岛上，是为了纪念明代著名清官海瑞而建，祠内有海瑞的塑像和碑刻，展示了海瑞的生平事迹和清廉风范。
-
-文渊狮城是按照水下狮城的原貌重建的古城，这里有明清时期的古建筑、牌坊、街道，还有各种民俗表演，让你仿佛穿越回了千年之前的狮城。
-
-我还有很多世代相传的手艺：千岛湖木雕、新安江龙舟、八都麻绣，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-唐代诗人李白在《清溪行》中写道“清溪清我心，水色异诸水。借问新安江，见底何如此”，赞美了新安江的清澈。
-
-宋代诗人朱熹在《淳熙甲辰仲春精舍闲居戏作武夷棹歌十首呈诸同游》中写道“武夷山上有仙灵，山下寒流曲曲清。欲识个中奇绝处，棹歌闲听两三声”，虽然写的是武夷山，但新安江的山水也同样美丽。
-
-明代著名清官海瑞曾在淳安任知县，他在淳安留下了很多佳话，“海瑞罢官”的故事就发生在这里。
-
-无数画师描摹过千岛湖的风光，从古代的山水画到现代的摄影作品，每一幅都是千岛湖千年风华的定格。
-
-## 我的生活日常
-在我这里，时间会不自觉地慢下来。你不用赶行程，只需要跟着自己的节奏，感受山水之间的美好。你可以去千岛湖泛舟，也可以去森林氧吧徒步，或者去芹川古村走走，体验古村落的宁静。
-
-我的餐桌上永远少不了千岛湖的馈赠：千岛湖鱼头、千岛湖有机鱼、石耳炖鸡、千岛湖笋干，每一口都是大自然的味道。
-
-要是想带点伴手礼回去，千岛湖鱼干、千岛湖茶叶、千岛湖山核桃都是绝佳选择。
-
-累了就找一间湖景民宿住下，清晨被鸟鸣唤醒，午后在阳台上喝杯茶，看湖光山色，晚上看满天繁星。
-
-我在千岛湖畔，备好了山水、美食、诗文和故事，等你赴一场天下第一秀水的约会。`,
-      "建德市": `# 建德市
-
-你好呀，我叫建德，是杭州的西南门户。很多人知道我有新安江水电站，是中国水电事业的摇篮，却不知道我是古严州府的治所，是流淌着千年严州文化的“严州故里”。新安江的碧波是我的血脉，大慈岩的悬空寺是我的身姿，梅城古镇的城墙是我的记忆，“锦峰绣岭，山水之乡”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我生在新安江的下游，钱塘江的上游，四周群山环绕，形成了我“八山一水一分田”的格局。春天新安江两岸的油菜花盛开，夏天新安江的江水清凉宜人，秋天大慈岩的银杏金黄一片，冬天灵栖洞的钟乳石在灯光下五彩斑斓。我是中国优秀旅游城市，青山绿水，空气清新，是休闲度假的好去处。
-
-我最骄傲的名片是新安江，这是钱塘江的上游，江水清澈见底，水温常年保持在17℃左右，夏天的时候，江面上会升起一层薄雾，宛如仙境。
-
-新安江水电站是中国第一座自行设计、自制设备、自主建设的大型水力发电站，被誉为“长江三峡的试验田”，是中国水电事业的里程碑。
-
-大慈岩是中国著名的佛教圣地，这里有“江南第一悬空寺”，寺庙建在悬崖峭壁上，非常壮观，还有“中华第一天然立佛”，是大自然的鬼斧神工。
-
-灵栖洞是中国著名的溶洞，由灵泉洞、清风洞、霭云洞三个洞组成，洞内的钟乳石千姿百态，配上灯光秀，像个地下宫殿。
-
-## 我的千年故事
-我已经在这片土地上生活了1800多年，严州文化是我最深的根。早在三国时期，我就已经建县，原名“建德县”，取“建功立德”之意。从唐代到清代，我一直是严州府的治所，是浙西的政治、经济、文化中心，“严州”这个名字，承载了千年的历史和文化。
-
-我珍藏着梅城古镇，这是古严州府的所在地，有着1700多年的历史，镇内的古城墙、古街道、古牌坊依然保存完好，被誉为“千年古府”。
-
-严州府衙位于梅城古镇内，是古严州府的行政中心，这里展示了严州府的历史文化和古代的行政制度。
-
-玉泉寺位于梅城古镇的乌龙山脚下，始建于唐代，是浙西著名的佛教寺院，寺内的玉泉，水质清澈，常年不涸。
-
-新叶古村是一座有着800多年历史的古村落，这里有保存完好的明清古建筑群，是中国最大的叶氏聚居地，被誉为“中国明清建筑露天博物馆”。
-
-我还有很多世代相传的手艺：严州虾灯、建德草莓栽培技艺、李家竹马，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-唐代诗人孟浩然在《宿建德江》中写道“移舟泊烟渚，日暮客愁新。野旷天低树，江清月近人”，成为了赞美建德的千古绝唱。
-
-宋代诗人陆游曾在严州任知州，写下了很多赞美严州山水的诗篇，还主持编纂了《严州图经》，是严州历史上第一部地方志。
-
-明代诗人徐霞客曾游历建德，在《徐霞客游记》中详细记载了建德的山水风光和风土人情。
-
-无数画师描摹过建德的风光，从古代的山水画到现代的摄影作品，每一幅都是建德千年风华的定格。
-
-## 我的生活日常
-在我这里，时间会不自觉地慢下来。你可以沿着新安江绿道散步，也可以坐一艘游船，欣赏新安江的风光。累了就找一家民宿住下，清晨被鸟鸣唤醒，午后在院子里喝杯茶，晚上看满天繁星。
-
-我的餐桌上永远少不了新安江的馈赠：建德豆腐包、严州干菜鸭、千岛湖鱼头、建德草莓，每一口都是大自然的味道。
-
-要是想带点伴手礼回去，建德茶叶、建德草莓、严州酥饼都是绝佳选择。
-
-晚上可以去新安江畔看灯光秀，或者去梅城古镇走走，体验古镇的夜生活。
-
-我在新安江边，备好了山水、美食、诗文和故事，等你赴一场千年古府的约会。`,
-      "临安区": `# 临安区
-
-你好呀，我叫临安，是杭州的西部绿肺。很多人知道我是“天目山国家级自然保护区”所在地，却不知道我是吴越国王钱镠的故里，是流淌着千年吴越文脉的“钱王故里”。天目山的青山是我的脊梁，青山湖的碧波是我的眼眸，太湖源的溪水是我的血脉，“吴越名城，天目茶香”的模样，刻进了我每一寸骨血里。
-
-## 我的山水档案
-我生在杭州的西部，天目山脉横贯全境，形成了我“九山半水半分田”的格局。春天太湖源的杜鹃开得灿烂，夏天青山湖的森林清凉宜人，秋天大明山的枫叶红似火，冬天天目山的雪景宛如仙境。我是杭州的生态屏障，森林覆盖率高达81.9%，每一口呼吸都是满满的负氧离子，是长三角公认的“天然氧吧”。
-
-我最骄傲的名片是天目山，这是联合国教科文组织生物圈保护区，被誉为“大树王国”，这里有世界上最大的古柳杉群，还有12000年的古银杏，是大自然的活化石。
-
-青山湖是我藏在都市里的水上森林，这里有千亩池杉林，秋天池杉变红，倒映在湖水中，美不胜收，环湖绿道是骑行和徒步的好去处。
-
-太湖源是太湖水系的源头，被誉为“江南小九寨”，溪水清澈见底，两岸青山对峙，峡谷幽深，是夏季避暑的绝佳选择。
-
-大明山是我境内最著名的山，这里有奇峰怪石、飞瀑流泉、高山草甸，还有华东最长的悬空栈道，被誉为“浙江小黄山”。
-
-## 我的千年故事
-我已经在这片土地上生活了2000多年，吴越文化是我最深的根。早在春秋战国时期，这里就是越国的属地，五代十国时期，吴越国王钱镠就出生在这里，他“保境安民，纳土归宋”，为江南的繁荣和中华的统一做出了巨大贡献。
-
-我珍藏着钱王陵，这是吴越国王钱镠的陵墓，是全国重点文物保护单位，陵园内的神道、碑刻、石像生，见证了千年吴越国的历史。
-
-功臣塔位于功臣山顶，始建于五代，是临安的标志性古建筑，登塔可俯瞰临安全城和青山湖风光。
-
-临安博物馆是建筑大师王澍的作品，馆藏以吴越国时期的青瓷、白瓷为主，其中“越窑青瓷褐彩云纹熏炉”是国宝级文物。
-
-天目山禅源寺是韦驮菩萨的道场，始建于明代，是江南著名的佛教寺院，寺内的古树、古塔、古经幢，充满了禅意。
-
-我还有很多世代相传的手艺：天目云雾茶制作技艺、临安山核桃加工技艺、昌化竹编，这些非物质文化遗产，是我最珍贵的财富。
-
-## 我的文墨风华
-自古文人多眷恋，我的山水与风骨，藏在无数诗词画卷里，千年流转，墨香未散。
-
-唐代诗人李白曾在《送温处士归黄山白鹅峰旧居》中写道“黄山四千仞，三十二莲峰”，而天目山的雄奇，也吸引了无数文人墨客。
-
-宋代诗人苏轼曾游历临安，写下了“临安山水冠东南，天目千重秀可餐”的诗句，赞美了临安的山水。
-
-明代旅行家徐霞客曾在天目山考察，在《徐霞客游记》中详细记载了天目山的植物、地质和风土人情。
-
-现代作家郁达夫曾在临安居住，他在《临安道上》中写道“山色空蒙雨亦奇，临安道上柳如丝”，描绘了临安的田园风光。
-
-## 我的生活日常
-在我这里，时间会不自觉地慢下来。你可以去天目山古树群中徒步，感受大树王国的震撼；也可以去青山湖骑行，欣赏水上森林的美景；或者去太湖源溯溪，享受夏日清凉。
-
-我的餐桌上永远少不了临安的特色美食：临安山核桃、天目笋干、昌化豆腐干、石耳炖鸡，每一口都是大自然的味道。
-
-要是想带点伴手礼回去，临安山核桃、天目云雾茶、昌化鸡血石都是绝佳选择。
-
-累了就找一间山间民宿住下，清晨被鸟鸣唤醒，午后在院子里喝一杯天目青顶，晚上看满天繁星。
-
-我在天目山下，备好了山水、美食、诗文和故事，等你赴一场吴越名城的约会。`
-    };
-
-    function escapeHtml(text) {
-      return (text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-    }
-
-    function buildMemoryHeroUrl(geoName) {
-      const prompt =
-        "A realistic travel photo, Hangzhou " +
-        geoName +
-        ", Jiangnan water town style, West Lake and Qiantang River atmosphere, traditional Chinese architecture, warm cinematic light, high detail, 35mm";
-      return (
-        "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" +
-        encodeURIComponent(prompt) +
-        "&image_size=landscape_16_9"
-      );
-    }
-
-    function buildMemorySectionHeroUrl(geoName, sectionTitle) {
-      const prompt =
-        "A realistic travel photo, Hangzhou " +
-        geoName +
-        ", theme: " +
-        sectionTitle +
-        ", Jiangnan culture, cinematic warm light, high detail, 35mm";
-      return (
-        "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" +
-        encodeURIComponent(prompt) +
-        "&image_size=landscape_16_9"
-      );
-    }
-
-    function buildDefaultMemoryMarkdown(geoName) {
-      const short = shortCountyName(geoName);
-      const parent = geoMeta[geoName]?.parentName || "浙江";
-      return (
-        "# " +
-        geoName +
-        "\n\n" +
-        "你好呀，我叫" +
-        short +
-        "，在" +
-        parent +
-        "的山水与街巷之间生活。若你愿意，我们可以从一条老街、一段江风或一杯清茶开始认识彼此。\n\n" +
-        "## 我的山水档案\n" +
-        "这里既有江南的柔波，也有四季分明的气息。春看花，夏听雨，秋闻桂，冬观雪，山水与城郭在日常里相互照映。\n\n" +
-        "## 我的千年故事\n" +
-        "每一块青石板、每一座旧桥梁，都承载着时间的回响。走得慢一些，你会听见它们的低语。\n\n" +
-        "## 我的文墨风华\n" +
-        "诗词、曲艺、匠作与民俗，把我的性情写进风里，也写进人心里。\n\n" +
-        "## 我的生活日常\n" +
-        "一碗热气腾腾的小吃、一处寻常的巷口、一场不经意的落日，都能成为你旅途里最柔软的记忆。"
-      );
-    }
-
-    function getCityMemoryMarkdown(geoName) {
-      return HANGZHOU_CITY_MEMORY_DB[geoName] || buildDefaultMemoryMarkdown(geoName);
-    }
-
-    function parseMemoryMarkdown(md, geoName) {
-      const lines = (md || "").replace(/\r/g, "").split("\n");
-      let title = geoName;
-      const coverNodes = [];
-      const sections = [];
-      let current = null;
-      let para = [];
-
-      const pushPara = () => {
-        const text = para.join(" ").trim();
-        if (!text) return;
-        const node = { type: "p", text };
-        if (current) current.nodes.push(node);
-        else coverNodes.push(node);
-        para = [];
-      };
-
-      lines.forEach((line) => {
-        const l = (line || "").trim();
-        if (!l) {
-          pushPara();
-          return;
-        }
-        if (l.startsWith("# ")) {
-          pushPara();
-          title = l.slice(2).trim() || geoName;
-          return;
-        }
-        if (l.startsWith("## ")) {
-          pushPara();
-          current = { title: l.slice(3).trim(), nodes: [] };
-          sections.push(current);
-          return;
-        }
-        if (l.startsWith("### ")) {
-          pushPara();
-          const node = { type: "h3", text: l.slice(4).trim() };
-          if (current) current.nodes.push(node);
-          else coverNodes.push(node);
-          return;
-        }
-        if (l.startsWith("- ")) {
-          pushPara();
-          const node = { type: "li", text: l.slice(2).trim() };
-          if (current) current.nodes.push(node);
-          else coverNodes.push(node);
-          return;
-        }
-        para.push(l);
-      });
-      pushPara();
-
-      return { geoName, title, coverNodes, sections };
-    }
-
-    function getFirstParagraph(nodes) {
-      return nodes.find((n) => n.type === "p")?.text || "";
-    }
-
-    function renderMemoryCards(md, geoName) {
-      const view = parseMemoryMarkdown(md, geoName);
-      window.__memoryView = view;
-      const heroUrl = buildMemoryHeroUrl(geoName);
-      const coverPara = getFirstParagraph(view.coverNodes);
-      const coverHtml =
-        '<div class="memory-card memory-card-cover">' +
-        '<img class="memory-hero" src="' +
-        heroUrl +
-        '" alt="' +
-        escapeHtml(view.title) +
-        '" loading="lazy" />' +
-        '<div class="memory-cover-body">' +
-        '<div class="memory-cover-title">' +
-        escapeHtml(view.title) +
-        "</div>" +
-        (coverPara
-          ? '<div class="memory-cover-subtitle">' + escapeHtml(coverPara) + "</div>"
-          : "") +
-        "</div>" +
-        "</div>";
-
-      const cards = view.sections
-        .map((s, idx) => {
-          const img = buildMemorySectionHeroUrl(geoName, s.title);
-          const excerpt = getFirstParagraph(s.nodes);
-          return (
-            '<div class="memory-card" data-section-index="' +
-            idx +
-            '">' +
-            '<div class="memory-card-body">' +
-            '<div class="memory-card-head">' +
-            '<img class="memory-section-hero" src="' +
-            img +
-            '" alt="" loading="lazy" />' +
-            '<div class="memory-card-title">' +
-            escapeHtml(s.title) +
-            "</div>" +
-            "</div>" +
-            (excerpt ? '<div class="memory-card-excerpt">' + escapeHtml(excerpt) + "</div>" : "") +
-            '<div class="memory-card-more">展开细读</div>' +
-            "</div>" +
-            "</div>"
-          );
-        })
-        .join("");
-
-      return coverHtml + cards;
+      const memoryEl = document.getElementById("memoryContent");
+      if (memoryEl) {
+        const md = currentCounty.memory || buildDefaultMemoryMarkdown(currentCounty.geoName);
+        memoryEl.innerHTML = renderMemoryCards(md, currentCounty.geoName);
+      }
     }
 
     function renderMemoryNodes(nodes) {
-      let html = "";
-      let listBuf = [];
-      const flushList = () => {
-        if (!listBuf.length) return;
-        html += '<ul class="memory-list">' + listBuf.map((t) => "<li>" + escapeHtml(t) + "</li>").join("") + "</ul>";
-        listBuf = [];
-      };
-
-      nodes.forEach((n) => {
-        if (n.type === "li") {
-          listBuf.push(n.text || "");
-          return;
-        }
-        flushList();
-        if (n.type === "h3") {
-          html += '<div class="memory-h3">' + escapeHtml(n.text) + "</div>";
-          return;
-        }
-        if (n.type === "p") {
-          html += '<div class="memory-paragraph">' + escapeHtml(n.text) + "</div>";
+      let out = "";
+      (nodes || []).forEach((n) => {
+        if (n.type === "h3") out += "<h3>" + n.html + "</h3>";
+        if (n.type === "p") out += "<p>" + n.html + "</p>";
+        if (n.type === "ul") {
+          out += "<ul>" + (n.items || []).map((i) => "<li>" + i + "</li>").join("") + "</ul>";
         }
       });
-      flushList();
-      return html;
+      return out;
     }
 
     function closeMemoryDrawer() {
-      const overlayEl = document.getElementById("memoryDrawerOverlay");
-      const drawerEl = document.getElementById("memoryDrawer");
-      overlayEl.classList.remove("visible");
-      drawerEl.classList.remove("open");
-      overlayEl.setAttribute("aria-hidden", "true");
-      drawerEl.setAttribute("aria-hidden", "true");
+      document.getElementById("memoryDrawerOverlay")?.classList.remove("show");
+      const drawer = document.getElementById("memoryDrawer");
+      drawer?.classList.remove("show");
+      drawer?.setAttribute("aria-hidden", "true");
     }
 
     function openMemoryDrawer(sectionIndex) {
       const view = window.__memoryView;
-      if (!view?.sections?.[sectionIndex]) return;
+      if (!view?.sections?.length) return;
       const section = view.sections[sectionIndex];
+      if (!section) return;
       const overlayEl = document.getElementById("memoryDrawerOverlay");
       const drawerEl = document.getElementById("memoryDrawer");
-      const imgEl = document.getElementById("memoryDrawerImg");
       const titleEl = document.getElementById("memoryDrawerTitle");
+      const imgEl = document.getElementById("memoryDrawerImg");
       const bodyEl = document.getElementById("memoryDrawerBody");
-
+      if (!overlayEl || !drawerEl || !titleEl || !imgEl || !bodyEl) return;
+      titleEl.textContent = section.title || "城市记忆";
       imgEl.src = buildMemorySectionHeroUrl(view.geoName, section.title);
-      imgEl.alt = section.title || "";
-      titleEl.textContent = section.title || "—";
-      bodyEl.innerHTML = renderMemoryNodes(section.nodes || []);
-      overlayEl.classList.add("visible");
-      drawerEl.classList.add("open");
-      overlayEl.setAttribute("aria-hidden", "false");
+      imgEl.alt = shortCountyName(view.geoName || "") + " · " + (section.title || "城市记忆");
+      bodyEl.innerHTML = renderMemoryNodes(section.nodes);
+      overlayEl.classList.add("show");
+      drawerEl.classList.add("show");
       drawerEl.setAttribute("aria-hidden", "false");
     }
 
-    function renderCityMemory(geoName) {
-      const box = document.getElementById("memoryContent");
-      const md = getCityMemoryMarkdown(geoName);
-      box.innerHTML = renderMemoryCards(md, geoName);
-    }
-
     async function openSidebarByGeoName(geoName) {
-      closeMemoryDrawer();
       currentCounty = getCountyPersona(geoName);
+      closeMemoryDrawer();
       updateSidebarPersonaUI();
       chatHistory = [];
       renderChatWelcome();
       closeProfileDrawer();
       switchSection("persona");
       switchTab("intro");
-      renderCityMemory(geoName);
       sidebar.classList.add("open");
       sidebar.setAttribute("aria-hidden", "false");
       overlay.classList.add("visible");
       setTimeout(() => chart && chart.resize(), 400);
+      ensureCountyMemory(geoName);
 
       if (!currentCounty.enriched && getApiKey()) {
         const taglineEl = document.getElementById("countyTagline");
@@ -2510,6 +3118,7 @@
       document.querySelectorAll(".sidebar-section").forEach((s) => s.classList.remove("active"));
       document.getElementById("section-" + sectionId)?.classList.add("active");
       if (sectionId === "food") initFoodSection();
+      if (sectionId === "checkin") initCheckinSection();
       if (sectionId === "tools") initCommunitySection();
     }
 
@@ -2519,7 +3128,6 @@
       });
       document.querySelectorAll("#section-persona .panel").forEach((p) => p.classList.remove("active"));
       document.getElementById("panel-" + tabId)?.classList.add("active");
-      if (tabId === "intro" && currentCounty?.geoName) renderCityMemory(currentCounty.geoName);
     }
 
     function renderChatWelcome() {
@@ -2569,7 +3177,7 @@
 
     document.getElementById("sidebarClose").onclick = closeSidebar;
     document.getElementById("communityBtn").onclick = openCommunity;
-    document.getElementById("profileBtn").onclick = openProfileDrawer;
+    document.getElementById("profileBtn").onclick = ensureLoginOrOpenOverlay;
     document.getElementById("profileClose").onclick = closeProfileDrawer;
     overlay.onclick = closeAllPanels;
     document.querySelectorAll(".nav-btn").forEach((b) => {
@@ -2579,6 +3187,9 @@
       b.onclick = () => switchTab(b.dataset.tab);
     });
     document.getElementById("goChatBtn").onclick = () => switchTab("chat");
+    document.getElementById("sendChatBtn").onclick = sendChat;
+    document.getElementById("memoryDrawerClose").onclick = closeMemoryDrawer;
+    document.getElementById("memoryDrawerOverlay").onclick = closeMemoryDrawer;
     document.getElementById("memoryContent").addEventListener("click", (e) => {
       const card = e.target.closest(".memory-card[data-section-index]");
       if (!card) return;
@@ -2586,15 +3197,9 @@
       if (Number.isNaN(idx)) return;
       openMemoryDrawer(idx);
     });
-    document.getElementById("memoryDrawerOverlay").onclick = closeMemoryDrawer;
-    document.getElementById("memoryDrawerClose").onclick = closeMemoryDrawer;
-    document.addEventListener("keydown", (e) => {
-      if (e.key !== "Escape") return;
-      const drawerOpen = document.getElementById("memoryDrawer")?.classList.contains("open");
-      if (drawerOpen) closeMemoryDrawer();
-      else closeAllPanels();
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMemoryDrawer();
     });
-    document.getElementById("sendChatBtn").onclick = sendChat;
     document.getElementById("chatInput").onkeydown = (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -2605,6 +3210,21 @@
     if (DEEPSEEK_API_KEY) {
       document.getElementById("apiKey").value = DEEPSEEK_API_KEY;
     }
+
+    document.getElementById("loginAvatarBtn")?.addEventListener("click", () => document.getElementById("loginAvatarInput")?.click());
+    document.getElementById("profileAvatarBtn")?.addEventListener("click", () => document.getElementById("profileAvatarInput")?.click());
+    document.getElementById("loginAvatarInput")?.addEventListener("change", (e) => handleAvatarFile(e.target));
+    document.getElementById("profileAvatarInput")?.addEventListener("change", (e) => handleAvatarFile(e.target));
+    document.getElementById("loginSubmitBtn")?.addEventListener("click", submitLogin);
+    document.getElementById("profileSaveBtn")?.addEventListener("click", saveProfileFromDrawer);
+    document.getElementById("logoutBtn")?.addEventListener("click", logoutAndRelogin);
+
+    (function initLoginGate() {
+      const profile = readProfile();
+      syncProfileBtn(profile);
+      syncForms(profile);
+      if (!profile) openLoginOverlay();
+    })();
 
     function setChipsActive(containerId, singleSelect) {
       const el = document.getElementById(containerId);
@@ -2633,7 +3253,14 @@
       const input = document.getElementById("amapKey");
       const fromInput = input?.value?.trim();
       const fromLocal = localStorage.getItem("amap_web_key") || "";
-      return fromInput || fromLocal || AMAP_WEB_KEY;
+      return AMAP_WEB_KEY || fromInput || fromLocal;
+    }
+
+    function getAmapSecurityCode() {
+      const input = document.getElementById("amapSecurityCode");
+      const fromInput = input?.value?.trim();
+      const fromLocal = localStorage.getItem("amap_security_js_code") || "";
+      return AMAP_SECURITY_JS_CODE || fromInput || fromLocal;
     }
 
     function persistAmapKey() {
@@ -2641,8 +3268,20 @@
       if (key) localStorage.setItem("amap_web_key", key);
     }
 
+    function persistAmapSecurityCode() {
+      const code = document.getElementById("amapSecurityCode")?.value?.trim() || "";
+      if (code) localStorage.setItem("amap_security_js_code", code);
+    }
+
+    let amapLoadedSecurityCode = null;
+
     function loadAmapSdk(key) {
-      window._AMapSecurityConfig = { securityJsCode: "468592f3fb3ecd22fece945cc5a91af7" };
+      const scode = getAmapSecurityCode();
+      if (scode) {
+        window._AMapSecurityConfig = { securityJsCode: scode };
+      } else {
+        try { delete window._AMapSecurityConfig; } catch (e) {}
+      }
       if (foodAmapReady) return foodAmapReady;
       foodAmapReady = new Promise((resolve, reject) => {
         if (!key) {
@@ -2650,6 +3289,12 @@
           return;
         }
         if (window.AMap) {
+          const loaded = amapLoadedSecurityCode;
+          if (loaded !== null && loaded !== scode) {
+            reject(new Error("高德 SDK 已加载，但 securityJsCode 已变化，请刷新页面后重试。"));
+            return;
+          }
+          amapLoadedSecurityCode = loaded === null ? scode : loaded;
           resolve(window.AMap);
           return;
         }
@@ -2668,17 +3313,67 @@
           "&plugin=" +
           encodeURIComponent(plugins);
         script.async = true;
-        script.onload = () => resolve(window.AMap);
+        script.onload = () => {
+          amapLoadedSecurityCode = scode;
+          resolve(window.AMap);
+        };
         script.onerror = () => reject(new Error("高德 SDK 加载失败，请检查 Key 与网络"));
         document.head.appendChild(script);
       });
       return foodAmapReady;
     }
 
+    function ensureAmapPlugins(AMap, plugins) {
+      return new Promise((resolve, reject) => {
+        if (!AMap?.plugin) {
+          resolve();
+          return;
+        }
+        let done = false;
+        const timer = setTimeout(() => {
+          if (done) return;
+          done = true;
+          reject(new Error("高德插件加载超时，请检查网络/白名单/安全密钥"));
+        }, 9000);
+        AMap.plugin(plugins, () => {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          resolve();
+        });
+      });
+    }
+
+    function assertAmapCtor(AMap, ctorName, help) {
+      const ctor = AMap?.[ctorName];
+      if (typeof ctor !== "function") {
+        throw new Error((help || "高德插件不可用") + "：AMap." + ctorName + " 未加载（常见原因：Referer 白名单/安全密钥不正确）");
+      }
+      return ctor;
+    }
+
+    function initFoodAutocomplete(AMap) {
+      if (foodAutocomplete) return;
+      assertAmapCtor(AMap, "Autocomplete", "地点联想不可用");
+      foodAutocomplete = new AMap.Autocomplete({ input: "foodStart" });
+      foodAutocomplete.on("select", (e) => {
+        foodStartTip = e?.poi || null;
+        const hint = document.getElementById("foodStartHint");
+        if (hint) hint.textContent = foodStartTip ? "已选择：" + (foodStartTip.name || "") : "建议从联想下拉中选择，定位更准。";
+      });
+    }
+
     async function ensureFoodAmap() {
       const key = getAmapKey();
       persistAmapKey();
       const AMap = await loadAmapSdk(key);
+      await ensureAmapPlugins(AMap, [
+        "AMap.Autocomplete",
+        "AMap.PlaceSearch",
+        "AMap.Geocoder",
+        "AMap.Walking",
+        "AMap.Geolocation"
+      ]);
       if (!foodMap) {
         foodMap = new AMap.Map("foodMap", {
           zoom: 13,
@@ -2686,21 +3381,16 @@
           viewMode: "2D"
         });
       }
-      if (!foodAutocomplete) {
-        foodAutocomplete = new AMap.Autocomplete({ input: "foodStart" });
-        foodAutocomplete.on("select", (e) => {
-          foodStartTip = e?.poi || null;
-          const hint = document.getElementById("foodStartHint");
-          if (hint) hint.textContent = foodStartTip ? "已选择：" + (foodStartTip.name || "") : "建议从联想下拉中选择，定位更准。";
-        });
-      }
       if (!foodPlaceSearch) {
+        assertAmapCtor(AMap, "PlaceSearch", "POI 搜索不可用");
         foodPlaceSearch = new AMap.PlaceSearch({ pageSize: 50, extensions: "all" });
       }
       if (!foodGeocoder) {
+        assertAmapCtor(AMap, "Geocoder", "地理编码不可用");
         foodGeocoder = new AMap.Geocoder({ radius: 1000 });
       }
       if (!foodWalking) {
+        assertAmapCtor(AMap, "Walking", "步行路线不可用");
         foodWalking = new AMap.Walking({ map: foodMap, hideMarkers: true });
       }
       return AMap;
@@ -2737,24 +3427,91 @@
       });
     }
 
+    function normalizeAmapGeoFail(result) {
+      const info = result?.info || result?.message || "";
+      const infocode = result?.infocode ? String(result.infocode) : "";
+      const joined = (info || "定位失败") + (infocode ? "（" + infocode + "）" : "");
+      if (String(info).includes("PERMISSION_DENIED")) {
+        return { title: "定位权限被拒绝", detail: joined, tip: "请在浏览器地址栏/系统设置中允许定位后重试。" };
+      }
+      if (String(info).includes("TIMEOUT")) {
+        return { title: "定位超时", detail: joined, tip: "请检查网络或切换到“浙江省定位”。" };
+      }
+      if (String(info).includes("INVALID_USER_KEY") || String(info).includes("INVALID_USER_SCODE")) {
+        return { title: "高德鉴权失败", detail: joined, tip: "请检查 Key、安全密钥与 Referer 白名单是否正确。" };
+      }
+      if (String(info).includes("SERVICE_NOT_AVAILABLE")) {
+        return { title: "定位服务不可用", detail: joined, tip: "请换浏览器或改用“浙江省定位/手动输入”。" };
+      }
+      return { title: "定位失败", detail: joined, tip: "可改用“浙江省定位/手动输入”，或点击“刷新定位”重试。" };
+    }
+
+    function normalizeBrowserGeoFail(err) {
+      const code = typeof err?.code === "number" ? err.code : null;
+      const msg = err?.message || "定位失败";
+      if (code === 1) return { title: "定位权限被拒绝", detail: msg, tip: "请在浏览器/系统设置里允许定位后重试。" };
+      if (code === 2) return { title: "无法获取位置", detail: msg, tip: "请检查网络/GPS，或改用“浙江省定位”。" };
+      if (code === 3) return { title: "定位超时", detail: msg, tip: "请重试或改用“浙江省定位”。" };
+      return { title: "定位失败", detail: msg, tip: "可改用“浙江省定位/手动输入”。" };
+    }
+
+    async function locateUserViaBrowser(AMap) {
+      if (!navigator.geolocation?.getCurrentPosition) {
+        throw new Error("浏览器不支持定位");
+      }
+      const pos = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (p) => resolve(p),
+          (e) => reject(e),
+          { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+        );
+      });
+      const lng = pos.coords.longitude;
+      const lat = pos.coords.latitude;
+      const addr = (await reverseGeocode(AMap, { lng, lat })) || "当前位置";
+      return { lng, lat, name: addr };
+    }
+
     async function locateUser(AMap) {
       updateFoodGeoUI("定位中…", "若浏览器询问定位权限，请选择允许。");
-      return await new Promise((resolve, reject) => {
+      const amapAttempt = await new Promise((resolve) => {
         const geo = new AMap.Geolocation({
           enableHighAccuracy: true,
           timeout: 8000,
-          convert: true
+          convert: true,
+          showButton: false,
+          showMarker: false,
+          showCircle: false
         });
-        geo.getCurrentPosition(async (status, result) => {
-          if (status !== "complete" || !result?.position) {
-            reject(new Error(result?.message || "定位失败"));
-            return;
-          }
-          const loc = result.position;
-          const addr = result.formattedAddress || (await reverseGeocode(AMap, { lng: loc.lng, lat: loc.lat })) || "当前位置";
-          resolve({ lng: loc.lng, lat: loc.lat, name: addr });
-        });
+        try { foodMap?.addControl?.(geo); } catch (e) {}
+        geo.getCurrentPosition((status, result) => resolve({ status, result }));
       });
+      if (amapAttempt.status === "complete" && amapAttempt.result?.position) {
+        const loc = amapAttempt.result.position;
+        const addr =
+          amapAttempt.result.formattedAddress ||
+          (await reverseGeocode(AMap, { lng: loc.lng, lat: loc.lat })) ||
+          "当前位置";
+        return { lng: loc.lng, lat: loc.lat, name: addr };
+      }
+
+      try {
+        return await locateUserViaBrowser(AMap);
+      } catch (browserErr) {
+        const amapFail = normalizeAmapGeoFail(amapAttempt.result);
+        const browserFail = normalizeBrowserGeoFail(browserErr);
+        throw new Error(
+          amapFail.title +
+            "：" +
+            amapFail.detail +
+            "；" +
+            browserFail.title +
+            "：" +
+            browserFail.detail +
+            "。建议：" +
+            (amapFail.tip || browserFail.tip)
+        );
+      }
     }
 
     function fillSelectOptions(selectEl, items, placeholder) {
@@ -2765,43 +3522,26 @@
       selectEl.appendChild(ph);
       items.forEach((it) => {
         const opt = document.createElement("option");
-        opt.value = String(it.adcode || it.name);
+        opt.value = String(it.adcode || it.id || it.name);
         opt.textContent = it.name;
         selectEl.appendChild(opt);
       });
     }
 
-    async function districtSearchOnce(AMap, keyword, level, subdistrict) {
-      return await new Promise((resolve, reject) => {
-        const ds = new AMap.DistrictSearch({
-          level,
-          subdistrict,
-          extensions: "base"
-        });
-        ds.search(keyword, (status, result) => {
-          const list = result?.districtList || [];
-          if (status !== "complete" || !list.length) {
-            reject(new Error("行政区划加载失败"));
-            return;
-          }
-          resolve(list[0]);
-        });
-      });
+    function buildZhejiangCitiesFromMapMeta() {
+      return ZJ_CITY_CODES.map((code) => ({ name: ZJ_CITY_NAMES[code], adcode: code }));
     }
 
-    async function ensureZhejiangCityList(AMap) {
-      if (foodZJCityCache.length) return foodZJCityCache;
-      const province = await districtSearchOnce(AMap, "浙江省", "province", 1);
-      const cities = (province.districtList || []).filter((d) => d.level === "city");
-      foodZJCityCache = cities.map((d) => ({ name: d.name, adcode: d.adcode, center: d.center }));
-      return foodZJCityCache;
-    }
-
-    async function loadCountiesByCity(AMap, cityAdcodeOrName) {
-      const city = await districtSearchOnce(AMap, cityAdcodeOrName, "city", 1);
-      const counties = (city.districtList || []).filter((d) => d.level === "district");
-      foodZJCountyCache = counties.map((d) => ({ name: d.name, adcode: d.adcode, center: d.center }));
-      return foodZJCountyCache;
+    function buildZhejiangCountiesFromMapMeta(cityCode) {
+      const items = Object.entries(geoMeta)
+        .filter(([, meta]) => String(meta?.parentCode || "") === String(cityCode))
+        .map(([geoName, meta]) => ({
+          name: shortCountyName(geoName),
+          geoName,
+          adcode: meta.adcode
+        }));
+      items.sort((a, b) => a.name.localeCompare(b.name, "zh"));
+      return items;
     }
 
     function clearFoodOverlays() {
@@ -2854,27 +3594,54 @@
       return ordered;
     }
 
-    function buildFoodKeyword(tastes, types) {
-      const mapType = {
-        "菜": "餐厅 家常菜",
-        "面": "面馆",
-        "点心": "小吃 点心 糕点"
+    function buildFoodKeyword(tastes, cooks, funcs) {
+      const mapCook = {
+        "炒菜类": "炒",
+        "炖菜类": "炖",
+        "烧烤类": "烧烤",
+        "清蒸类": "清蒸",
+        "油炸类": "油炸"
+      };
+      const mapFunc = {
+        "主食类": "主食 饭",
+        "小吃类": "小吃",
+        "甜品": "甜品 甜点",
+        "汤羹类": "汤 羹"
       };
       const parts = [];
       tastes.forEach((t) => parts.push(t));
-      types.forEach((t) => parts.push(mapType[t] || t));
+      cooks.forEach((c) => parts.push(mapCook[c] || c));
+      funcs.forEach((f) => parts.push(mapFunc[f] || f));
       return parts.length ? parts.join(" ") : "美食 餐厅";
+    }
+
+    function parsePriceRange(raw) {
+      const text = String(raw || "").trim();
+      if (!text) return null;
+      const cleaned = text.replace(/[元人民币¥￥\s]/g, "");
+      const m = cleaned.match(/^(\d+)(?:[-~～](\d+))?$/);
+      if (!m) return null;
+      const a = Number(m[1]);
+      const b = m[2] ? Number(m[2]) : null;
+      if (!Number.isFinite(a)) return null;
+      if (b !== null && !Number.isFinite(b)) return null;
+      const min = b === null ? a : Math.min(a, b);
+      const max = b === null ? a : Math.max(a, b);
+      return { min, max };
     }
 
     async function geocodeStart(AMap, text) {
       return await new Promise((resolve, reject) => {
-        if (!text) {
+        if (!String(text || "").trim()) {
           reject(new Error("请先填写出发地"));
           return;
         }
         foodGeocoder.getLocation(text, (status, result) => {
+          const info = result?.info || "";
+          const infocode = result?.infocode ? String(result.infocode) : "";
           if (status !== "complete" || !result?.geocodes?.length) {
-            reject(new Error("出发地解析失败，请换个更具体的地点"));
+            const tail = info ? "：" + info + (infocode ? "（" + infocode + "）" : "") : "";
+            reject(new Error("出发地解析失败" + tail + "，请换个更具体的地点"));
             return;
           }
           const loc = result.geocodes[0].location;
@@ -2884,11 +3651,11 @@
     }
 
     async function resolveStart(AMap) {
-      if ((foodStartMode === "geo" || foodStartMode === "zhejiang") && foodStartFixed) {
-        return foodStartFixed;
-      }
       const text = document.getElementById("foodStart")?.value?.trim() || "";
       const poi = foodStartTip;
+      if (foodStartMode === "geo" || foodStartMode === "zhejiang") {
+        if (foodStartFixed) return foodStartFixed;
+      }
       if (poi?.location) {
         const loc = poi.location;
         return { lng: loc.lng, lat: loc.lat, name: poi.name || text || "出发地" };
@@ -2905,6 +3672,15 @@
           return { lng: loc.lng, lat: loc.lat, name: detail.name || text || "出发地" };
         }
       }
+      if (foodStartMode === "geo" && !foodStartFixed && !text) {
+        throw new Error("当前位置定位失败，请切换到“浙江省定位/手动输入”，或点击“刷新定位”重试。");
+      }
+      if (foodStartMode === "zhejiang" && !foodStartFixed && !text) {
+        throw new Error("请先在“浙江省定位”里选择市和区县作为出发地。");
+      }
+      if (foodStartMode === "manual" && !text) {
+        throw new Error("请先在“手动输入”里填写出发地（城市/景点/地址），建议从联想下拉中选择。");
+      }
       return await geocodeStart(AMap, text);
     }
 
@@ -2912,9 +3688,40 @@
       return await new Promise((resolve, reject) => {
         const c = new AMap.LngLat(center.lng, center.lat);
         foodPlaceSearch.searchNearBy(keyword, c, radiusMeters, (status, result) => {
-          const pois = result?.poiList?.pois || [];
-          if (status !== "complete" || !pois.length) {
-            reject(new Error("未搜索到合适的餐饮点位，请调整关键词或扩大距离上限"));
+          const info =
+            typeof result === "string"
+              ? result
+              : result?.info || result?.message || "";
+          const infocode =
+            typeof result === "object" && result?.infocode ? String(result.infocode) : "";
+          const pois = typeof result === "object" ? result?.poiList?.pois || [] : [];
+          if (status !== "complete") {
+            const parts = [];
+            if (status) parts.push("status=" + status);
+            if (info) parts.push("info=" + info);
+            if (infocode) parts.push("infocode=" + infocode);
+            if (!result) parts.push("result=null");
+            if (keyword) parts.push("keyword=" + keyword);
+            if (radiusMeters) parts.push("radiusKm=" + (radiusMeters / 1000).toFixed(1));
+            parts.push(
+              "center=" +
+                Number(center.lng).toFixed(6) +
+                "," +
+                Number(center.lat).toFixed(6)
+            );
+            reject(new Error("POI 搜索失败：" + parts.join("，")));
+            return;
+          }
+          if (!pois.length) {
+            reject(
+              new Error(
+                "未搜索到餐饮点位（关键词 " +
+                  keyword +
+                  "，范围 " +
+                  (radiusMeters / 1000).toFixed(1) +
+                  "km）"
+              )
+            );
             return;
           }
           resolve(
@@ -3013,25 +3820,39 @@
         const start = await resolveStart(AMap);
         foodMap.setZoomAndCenter(13, [start.lng, start.lat]);
 
-        const durationHours = Number(document.getElementById("foodDuration")?.value || 3) || 3;
-        const totalMinutes = Math.max(60, Math.round(durationHours * 60));
-        const stopCount = decideStopCount(totalMinutes);
+        const stopCount = Number(document.getElementById("stopCount")?.value || 3) || 3;
         const maxDistanceKm = Number(document.getElementById("maxDistanceKm")?.value || 5) || 5;
         const radiusMeters = Math.max(800, Math.min(15000, Math.round(maxDistanceKm * 1000)));
 
         const tastes = getActiveChipValues("tasteChips");
-        const types = getActiveChipValues("typeChips");
-        const keyword = buildFoodKeyword(tastes, types);
+        const cooks = getActiveChipValues("cookChips");
+        const funcs = getActiveChipValues("funcChips");
+        const keyword = buildFoodKeyword(tastes, cooks, funcs);
         const crowdPref = getSingleChipValue("crowdChips");
 
-        const rawPois = await searchFoodPois(AMap, start, keyword, radiusMeters);
+        let rawPois;
+        try {
+          rawPois = await searchFoodPois(AMap, start, keyword, radiusMeters);
+        } catch (e) {
+          if (String(e?.message || "").includes("未搜索到餐饮点位") && radiusMeters < 15000) {
+            rawPois = await searchFoodPois(AMap, start, keyword, 15000);
+          } else {
+            throw e;
+          }
+        }
 
         const minRating = Number(document.getElementById("minRating")?.value || "");
-        const maxPrice = Number(document.getElementById("maxPrice")?.value || "");
+        const priceRange = parsePriceRange(document.getElementById("priceRange")?.value || "");
 
         const pois = rawPois
           .filter((p) => !Number.isFinite(minRating) || !p.rating || p.rating >= minRating)
-          .filter((p) => !Number.isFinite(maxPrice) || !p.cost || p.cost <= maxPrice)
+          .filter((p) => {
+            if (!priceRange) return true;
+            if (!p.cost) return true;
+            if (Number.isFinite(priceRange.min) && p.cost < priceRange.min) return false;
+            if (Number.isFinite(priceRange.max) && p.cost > priceRange.max) return false;
+            return true;
+          })
           .filter((p) => !Number.isFinite(p.distance) || p.distance <= radiusMeters)
           .map((p) => {
             const dist = Number.isFinite(p.distance) ? p.distance : haversineMeters(start, p.loc);
@@ -3109,14 +3930,24 @@
       if (stored && !document.getElementById("amapKey").value) {
         document.getElementById("amapKey").value = stored;
       }
+      const storedCode = localStorage.getItem("amap_security_js_code") || "";
+      if (storedCode && !document.getElementById("amapSecurityCode").value) {
+        document.getElementById("amapSecurityCode").value = storedCode;
+      }
       document.getElementById("amapKey").addEventListener("change", () => {
         foodAmapReady = null;
         persistAmapKey();
       });
       document.getElementById("amapKey").addEventListener("blur", persistAmapKey);
+      document.getElementById("amapSecurityCode").addEventListener("change", () => {
+        foodAmapReady = null;
+        persistAmapSecurityCode();
+      });
+      document.getElementById("amapSecurityCode").addEventListener("blur", persistAmapSecurityCode);
       document.getElementById("generateFoodRouteBtn").onclick = generateFoodRoute;
       setChipsActive("tasteChips", false);
-      setChipsActive("typeChips", false);
+      setChipsActive("cookChips", false);
+      setChipsActive("funcChips", false);
       setChipsActive("crowdChips", true);
 
       const modeSel = document.getElementById("foodStartMode");
@@ -3137,21 +3968,28 @@
             updateFoodGeoUI(foodStartFixed.name, "已使用当前位置作为出发点。");
             if (foodMap) foodMap.setZoomAndCenter(13, [foodStartFixed.lng, foodStartFixed.lat]);
           } catch (e) {
-            updateFoodGeoUI("定位失败", "可改用“浙江省定位”或“手动输入”。");
+            updateFoodGeoUI("定位失败", String(e?.message || "定位失败"));
             foodStartFixed = null;
           }
         } else if (v === "zhejiang") {
           try {
             const AMap = await ensureFoodAmap();
-            const cities = await ensureZhejiangCityList(AMap);
-            fillSelectOptions(citySel, cities, "选择市");
+            await geoMetaReady;
+            fillSelectOptions(citySel, buildZhejiangCitiesFromMapMeta(), "选择市");
             countySel.disabled = true;
             fillSelectOptions(countySel, [], "选择区县");
             foodStartFixed = null;
           } catch (e) {
-            document.getElementById("foodZJHint").textContent = "行政区划加载失败，请检查 Key 权限或网络。";
+            document.getElementById("foodZJHint").textContent = String(e?.message || "市县数据未就绪，请稍后重试。");
           }
         } else {
+          try {
+            const AMap = await ensureFoodAmap();
+            initFoodAutocomplete(AMap);
+          } catch (e) {
+            const hint = document.getElementById("foodStartHint");
+            if (hint) hint.textContent = String(e?.message || "地点联想不可用");
+          }
           foodStartFixed = null;
         }
       });
@@ -3164,7 +4002,7 @@
           updateFoodGeoUI(foodStartFixed.name, "已刷新定位。");
           if (foodMap) foodMap.setZoomAndCenter(13, [foodStartFixed.lng, foodStartFixed.lat]);
         } catch (e) {
-          updateFoodGeoUI("定位失败", "可改用“浙江省定位”或“手动输入”。");
+          updateFoodGeoUI("定位失败", String(e?.message || "定位失败"));
         }
       });
 
@@ -3176,27 +4014,32 @@
         if (!v) return;
         try {
           const AMap = await ensureFoodAmap();
-          const counties = await loadCountiesByCity(AMap, v);
-          fillSelectOptions(countySel, counties, "选择区县");
+          await geoMetaReady;
+          foodZJCountyCache = buildZhejiangCountiesFromMapMeta(v);
+          fillSelectOptions(countySel, foodZJCountyCache, "选择区县");
           countySel.disabled = false;
         } catch (e) {
-          document.getElementById("foodZJHint").textContent = "区县加载失败，请稍后重试。";
+          document.getElementById("foodZJHint").textContent = String(e?.message || "区县加载失败，请稍后重试。");
         }
       });
 
-      countySel.addEventListener("change", () => {
+      countySel.addEventListener("change", async () => {
         const v = countySel.value;
         if (!v) {
           foodStartFixed = null;
           return;
         }
-        const found = foodZJCountyCache.find((c) => String(c.adcode) === String(v));
-        if (!found?.center) return;
-        const center = found.center;
-        const lng = Array.isArray(center) ? center[0] : center.lng;
-        const lat = Array.isArray(center) ? center[1] : center.lat;
-        foodStartFixed = { lng, lat, name: found.name };
-        if (foodMap) foodMap.setZoomAndCenter(12, [lng, lat]);
+        try {
+          const found = foodZJCountyCache.find((c) => String(c.adcode) === String(v));
+          if (!found) return;
+          const AMap = await ensureFoodAmap();
+          const cityName = ZJ_CITY_NAMES[Number(citySel.value)] || "";
+          const start = await geocodeStart(AMap, (cityName || "") + (found.geoName || found.name));
+          foodStartFixed = { lng: start.lng, lat: start.lat, name: (cityName ? cityName + "·" : "") + found.name };
+          if (foodMap) foodMap.setZoomAndCenter(12, [foodStartFixed.lng, foodStartFixed.lat]);
+        } catch (e) {
+          document.getElementById("foodZJHint").textContent = String(e?.message || "区县定位失败，请换个区县或用手动输入。");
+        }
       });
 
       document.getElementById("foodStart").addEventListener("input", () => {
@@ -3205,7 +4048,13 @@
         if (hint) hint.textContent = "建议从联想下拉中选择，定位更准。";
       });
       document.getElementById("foodStart").addEventListener("focus", async () => {
-        try { await ensureFoodAmap(); } catch (e) {}
+        try {
+          const AMap = await ensureFoodAmap();
+          initFoodAutocomplete(AMap);
+        } catch (e) {
+          const hint = document.getElementById("foodStartHint");
+          if (hint) hint.textContent = String(e?.message || "地点联想不可用");
+        }
       });
 
       (async () => {
@@ -3215,9 +4064,8 @@
           updateFoodGeoUI(foodStartFixed.name, "已使用当前位置作为出发点。");
           if (foodMap) foodMap.setZoomAndCenter(13, [foodStartFixed.lng, foodStartFixed.lat]);
         } catch (e) {
-          updateFoodGeoUI("未获取到定位", "可改用“浙江省定位”或“手动输入”。");
-          modeSel.value = "manual";
-          setFoodStartMode("manual");
+          updateFoodGeoUI("未获取到定位", String(e?.message || "可改用“浙江省定位/手动输入”。"));
+          foodStartFixed = null;
         }
       })();
     }
@@ -3517,6 +4365,367 @@
       btn.appendChild(text);
       btn.appendChild(num);
       return btn;
+    }
+
+    const CHECKIN_CITIES = [
+      {
+        plate: "浙A",
+        name: "杭州",
+        sealSub: "西湖 · 断桥烟雨",
+        stampTitle: "杭帮风味 · 集章区",
+        foods: [
+          {
+            id: "hz_xhcy",
+            name: "西湖醋鱼",
+            icon: "fish",
+            card: {
+              title: "西湖醋鱼 · 杭帮菜头牌",
+              subtitle: "江湖地位：杭帮菜之首，千年西湖的味觉名片",
+              best: ["楼外楼", "知味观·味庄", "杭州酒家"],
+              history:
+                "西湖醋鱼的前身是南宋名菜“宋嫂鱼羹”，相传为西湖边渔家女宋五嫂所创。清代厨师在其基础上改良，将整鱼汆熟后浇上糖醋汁，形成今日之貌。",
+              flavor:
+                "鱼肉细嫩滑润，酸甜平衡；讲究草鱼饿养去泥与火候控制，成品会有淡淡蟹鲜回甘。",
+              craft:
+                "选活草鱼饿养去泥；不挂糊不油炸，整鱼汆熟保清鲜；糖醋汁勾芡明亮，趁热浇淋成章。",
+              meaning:
+                "它承载杭州饮食文脉与文人书写，是“清淡本真”的味觉宣言。",
+              memory:
+                "被调侃的往往是省略工序的“游客醋鱼”。正宗版本更像西湖烟雨的清淡婉约，争议与骄傲同在。"
+            }
+          },
+          {
+            id: "hz_ljxr",
+            name: "龙井虾仁",
+            icon: "shrimp",
+            card: {
+              title: "龙井虾仁 · 茶香入馔",
+              subtitle: "江湖地位：一盏春茶与一口江鲜的相逢",
+              best: ["知味观", "楼外楼"],
+              history: "以西湖龙井的清香入菜，是杭帮菜“清鲜雅致”的代表作之一。",
+              flavor: "茶香清扬，虾仁嫩滑，回口带着春意的微甘。",
+              craft: "龙井温泡取香；虾仁滑炒火候轻柔；以茶汤收味，忌重油重盐。",
+              meaning: "把西湖的风与茶带进盘中，吃的是一城的节气。",
+              memory: "杭州人把它当作“待客体面菜”，雅而不艳，最见分寸。"
+            }
+          },
+          {
+            id: "hz_dpr",
+            name: "东坡肉",
+            icon: "pork",
+            card: {
+              title: "东坡肉 · 慢火成诗",
+              subtitle: "江湖地位：肥而不腻的江南功夫肉",
+              best: ["杭州酒家", "楼外楼"],
+              history: "相传与苏东坡典故相关，江南多以慢炖与酒香塑其神韵。",
+              flavor: "酱香厚而不重，入口即化，甜咸收敛。",
+              craft: "选肥瘦相间五花；煎定皮面；酒酱文火久焖，火候胜过调味。",
+              meaning: "慢功夫里藏着江南的耐心与体面。",
+              memory: "每逢团圆饭桌，东坡肉常被放在最中间，像一枚稳重的主印。"
+            }
+          },
+          {
+            id: "hz_pec",
+            name: "片儿川",
+            icon: "noodle",
+            card: {
+              title: "片儿川 · 杭州面魂",
+              subtitle: "江湖地位：街巷里最踏实的一碗",
+              best: ["知味观", "方老大面馆"],
+              history: "以雪菜、笋片、肉片为三绝，源于市井家常，却成杭城共同记忆。",
+              flavor: "咸鲜带脆，笋香透亮，热气一上来就把人拉回旧街。",
+              craft: "笋片要脆，雪菜要香；汤底清而不寡，肉片滑而不散。",
+              meaning: "它是杭州的“日常”，不华丽，却最耐久。",
+              memory: "清晨一碗片儿川，像给一天盖了个轻轻的章。"
+            }
+          },
+          {
+            id: "hz_dsg",
+            name: "定胜糕",
+            icon: "cake",
+            card: {
+              title: "定胜糕 · 甜糯好彩头",
+              subtitle: "江湖地位：节庆与喜事里常见的甜印",
+              best: ["河坊街老字号", "知味观"],
+              history: "多见于江南传统糕点谱系，以“定胜”寓意寄托祝愿。",
+              flavor: "米香细糯，甜而不腻，口感温柔。",
+              craft: "粉蒸成型，火候要匀；糖馅要润；出笼要快，保持松软。",
+              meaning: "好吃之外，更是一句愿望：事事定胜。",
+              memory: "杭州人把它当作“带回家的西湖甜”，不喧哗却很贴心。"
+            }
+          },
+          {
+            id: "hz_cbk",
+            name: "葱包桧",
+            icon: "snack",
+            card: {
+              title: "葱包桧 · 烟火一口",
+              subtitle: "江湖地位：路边摊的爽快与痛快",
+              best: ["河坊街小摊", "胜利河美食街"],
+              history: "传说由民间情绪与故事而起，演化成市井小吃的代表符号。",
+              flavor: "外脆内软，葱香热烈，趁热咬下最过瘾。",
+              craft: "油条要脆，薄饼要韧；葱与酱要足；卷合要快，不拖泥带水。",
+              meaning: "把街巷情绪卷进一口里，才是杭州的真实。",
+              memory: "它不像名菜那样端庄，但最能记住热闹的人间。"
+            }
+          }
+        ]
+      },
+      { plate: "浙B", name: "宁波", sealSub: "海曙 · 三江口", stampTitle: "甬味海鲜 · 集章区", foods: [
+        { id: "nb_tangyuan", name: "宁波汤圆", icon: "ball", card: { title: "宁波汤圆 · 糯香成团", subtitle: "江湖地位：一碗甜糯的团圆签", best: ["缸鸭狗", "老宁波点心铺"], history: "宁波点心以糯著称，汤圆尤为代表，常与节令和团圆相连。", flavor: "皮糯而不粘，馅香而不腻，甜意温和。", craft: "糯粉和水掌分寸；馅要细润；下锅以滚不破为要。", meaning: "入口是甜，落肚是安。", memory: "外地人记住的是味道，宁波人记住的是“回家”。" } },
+        { id: "nb_honggao", name: "红膏炝蟹", icon: "crab", card: { title: "红膏炝蟹 · 海风作料", subtitle: "江湖地位：鲜辣咸香的硬核海味", best: ["本地海鲜排档", "菜场熟食档"], history: "沿海人以盐与时间保存鲜味，炝蟹便是其中极具性格的一种。", flavor: "膏红肉甜，咸鲜带辛，后劲十足。", craft: "蟹要鲜活；盐度与腌制时间定成败；入口前多配姜醋解腥提香。", meaning: "把海的锋利收进盘里。", memory: "宁波人敢吃，也敢讲究，鲜与狠都要到位。" } },
+        { id: "nb_xiangyou", name: "香油麻糍", icon: "cake", card: { title: "香油麻糍 · 软糯一方", subtitle: "江湖地位：路边甜点的温柔章", best: ["老街点心摊"], history: "糯米制品在宁波常见，麻糍是最朴素也最耐吃的一种。", flavor: "糯香绵长，芝麻与香油相合，甜里带润。", craft: "捶打出筋；芝麻要炒香；趁温裹粉，口感最顺。", meaning: "甜不是炫耀，是照顾。", memory: "很多人离开宁波后最想念的，是这种“软”。" } },
+        { id: "nb_yancai", name: "雪菜大黄鱼", icon: "fish", card: { title: "雪菜大黄鱼 · 咸鲜照面", subtitle: "江湖地位：甬菜的家常代表", best: ["海鲜酒楼", "家常馆"], history: "咸菜与海鱼相配，是沿海厨房对“鲜”最熟练的表达。", flavor: "鱼肉细嫩，雪菜提鲜，咸香清爽不腻。", craft: "鱼要鲜，火要稳；雪菜先煸出香；汤汁收至清亮。", meaning: "朴素却精准，是宁波的做事方式。", memory: "一口下去，仿佛就听见潮声从灶台边响起。" } }
+      ] },
+      { plate: "浙C", name: "温州", sealSub: "瓯江 · 江心屿", stampTitle: "瓯味小吃 · 集章区", foods: [
+        { id: "wz_yuandan", name: "温州鱼丸", icon: "ball", card: { title: "温州鱼丸 · 弹而不躁", subtitle: "江湖地位：瓯味小吃的招牌", best: ["五马街老店", "街边鱼丸铺"], history: "沿海渔业催生鱼糜技艺，鱼丸在温州街巷里自成体系。", flavor: "外弹内嫩，汤清味鲜。", craft: "鱼糜打到起胶；火候要稳；下丸不翻花。", meaning: "把海的鲜做成随手可得的日常。", memory: "温州人的脚步快，但这一口总要停一下。" } },
+        { id: "wz_qiaozhen", name: "敲虾", icon: "shrimp", card: { title: "敲虾 · 一碗见刀功", subtitle: "江湖地位：温州精细小吃代表", best: ["本地小吃馆"], history: "以虾糜入汤，讲究手工敲打成细滑口感。", flavor: "鲜而清，滑而不腻。", craft: "虾要新鲜；敲打出胶；汤底清简，突出本味。", meaning: "温州人对“鲜”从不含糊。", memory: "瓯越的细致，往往藏在这样一碗清汤里。" } },
+        { id: "wz_dachang", name: "糯米饭", icon: "rice", card: { title: "温州糯米饭 · 早晨的底气", subtitle: "江湖地位：赶路人的能量章", best: ["街头早餐摊"], history: "以糯米为底，配料随季节变化，是温州早餐文化的核心之一。", flavor: "糯香饱满，咸甜可调。", craft: "糯米蒸得松而不散；配料要热；拌合要快。", meaning: "一口下去，今天就稳了。", memory: "温州人的早晨，从糯米饭的热气开始。" } },
+        { id: "wz_jiangxiex", name: "姜汁炖蛋", icon: "egg", card: { title: "姜汁炖蛋 · 辛甜回暖", subtitle: "江湖地位：温州甜品里的“暖手炉”", best: ["甜品小铺"], history: "姜与蛋的组合，在温州是传统的滋补型甜品。", flavor: "姜辣先行，蛋香随后，甜收尾。", craft: "姜汁要鲜；蛋液要细；慢炖成凝而不老。", meaning: "像一封给身体的安慰信。", memory: "雨天来一盅，温州的潮湿就被驱走一半。" } }
+      ] },
+      { plate: "浙F", name: "嘉兴", sealSub: "南湖 · 红船", stampTitle: "江南糯香 · 集章区", foods: [
+        { id: "jx_zongzi", name: "嘉兴粽子", icon: "leaf", card: { title: "嘉兴粽子 · 一叶裹江南", subtitle: "江湖地位：端午名物，四季皆可", best: ["五芳斋", "南湖老店"], history: "嘉兴以粽闻名，工艺与口味在江南粽系里极具代表性。", flavor: "糯而不烂，馅咸香油润。", craft: "糯米浸透；火候要足；咸蛋黄与五花比例要稳。", meaning: "把节气装进一只粽里。", memory: "嘉兴人的江南味，常从拆开粽叶那一刻开始。" } },
+        { id: "jx_xunyu", name: "南湖熏鱼", icon: "fish", card: { title: "南湖熏鱼 · 甜酱一抹", subtitle: "江湖地位：冷盘里最会讲究的那一口", best: ["本帮菜馆"], history: "江南冷菜讲究色香味形，熏鱼常被视作压轴。", flavor: "外紧内酥，甜酱带香。", craft: "先炸定型；再卤入味；收汁要亮。", meaning: "把“精致”写在冷菜里。", memory: "很多嘉兴宴席，最后的回味来自这一口甜香。" } },
+        { id: "jx_meicai", name: "梅菜扣肉", icon: "pork", card: { title: "梅菜扣肉 · 咸香厚重", subtitle: "江湖地位：下饭硬菜，稳稳当当", best: ["家常馆"], history: "腌菜与五花相配，是江南对“肥”的驯化。", flavor: "肉烂菜香，咸中带甜。", craft: "梅菜要洗净回甜；肉要蒸透；扣出来要整齐。", meaning: "家常却有排场。", memory: "一锅热气，往往就是最可靠的团聚。" } },
+        { id: "jx_baicai", name: "油爆虾", icon: "shrimp", card: { title: "油爆虾 · 虾壳也香", subtitle: "江湖地位：江南快火的爽利代表", best: ["本帮菜馆"], history: "江南有快炒，也有讲究的快炒，油爆虾是其中典型。", flavor: "鲜香脆爽，酱香一收即止。", craft: "火要旺；下锅要快；收汁要亮。", meaning: "利落，是江南另一种性格。", memory: "咔嚓一口，像听见老街的热闹声。" } }
+      ] },
+      { plate: "浙E", name: "湖州", sealSub: "太湖 · 莫干", stampTitle: "湖鲜与清润 · 集章区", foods: [
+        { id: "hz2_yangrou", name: "湖羊肉", icon: "pork", card: { title: "湖羊肉 · 冬日热章", subtitle: "江湖地位：湖州冬天的底气", best: ["本地羊肉馆"], history: "湖羊肉在江南羊肉里有名，冬季尤盛。", flavor: "汤清肉酥，香而不膻。", craft: "选料要好；慢煨去膻；汤底以清取胜。", meaning: "一锅热汤把寒意挡在门外。", memory: "湖州人的冬天，常是从一碗羊肉汤开始热起来的。" } },
+        { id: "hz2_qingtuan", name: "青团", icon: "ball", card: { title: "湖州青团 · 春草入馔", subtitle: "江湖地位：清明时令的甜章", best: ["老字号点心铺"], history: "艾草或青汁入糯，是江南对春天的固定写法。", flavor: "糯而清香，甜馅细润。", craft: "青汁要鲜；蒸制要匀；馅要润不流。", meaning: "把春天包进掌心。", memory: "咬开时的那点草香，最像江南的风。" } },
+        { id: "hz2_jiangmi", name: "诸老大粽子", icon: "leaf", card: { title: "湖州粽 · 软糯有度", subtitle: "江湖地位：与嘉兴并列的江南粽系", best: ["诸老大"], history: "湖州粽子在江南颇有名气，口味讲究、糯而不滥。", flavor: "米香扎实，馅咸香。", craft: "浸米控水；包扎紧实；火候到位。", meaning: "一只粽也是一份家谱。", memory: "许多湖州人对粽子的标准，从小就被定住了。" } },
+        { id: "hz2_yusiyu", name: "银鱼羹", icon: "fish", card: { title: "银鱼羹 · 太湖清鲜", subtitle: "江湖地位：湖鲜的清雅表达", best: ["太湖边餐馆"], history: "银鱼细嫩，常以羹汤呈其清鲜。", flavor: "鲜而不腥，口感滑润。", craft: "火候轻；勾芡要薄；调味要克制。", meaning: "越是清淡，越考验真材。", memory: "像太湖的雾气一样，轻轻落在舌尖。" } }
+      ] },
+      { plate: "浙D", name: "绍兴", sealSub: "鉴湖 · 绍兴酒", stampTitle: "越地酒香 · 集章区", foods: [
+        { id: "sx_meigan", name: "梅干菜扣肉", icon: "pork", card: { title: "绍兴梅干菜扣肉 · 酒香入肉", subtitle: "江湖地位：越菜里最稳的硬菜", best: ["绍兴菜馆"], history: "绍兴酒与腌菜文化深厚，梅干菜扣肉常见于宴席与家常。", flavor: "咸香回甜，肉烂菜香。", craft: "梅干菜回蒸出香；五花蒸透收汁；扣碗要整。", meaning: "越地人讲究“实”，这道菜最能服众。", memory: "一桌席面，只要它在，就像主印盖稳了。"} },
+        { id: "sx_zuiha", name: "醉虾", icon: "shrimp", card: { title: "醉虾 · 酒里见鲜", subtitle: "江湖地位：绍兴酒的鲜味搭档", best: ["本地酒楼"], history: "以酒入馔是绍兴标志，醉物一类最能体现酒香。", flavor: "鲜甜带酒香，入口清冽。", craft: "食材要鲜；酒香要正；时间要准，过则失鲜。", meaning: "把酒的风骨落进嘴里。", memory: "绍兴人说“会吃”，往往指懂得这口酒香。"} },
+        { id: "sx_youbao", name: "油炸臭豆腐", icon: "tofu", card: { title: "臭豆腐 · 香从“逆”来", subtitle: "江湖地位：越地夜市王者", best: ["鲁迅故里周边小摊"], history: "发酵让味道有了锋芒，绍兴的臭豆腐更讲究外脆内嫩。", flavor: "外脆内软，酱汁一浇就香。", craft: "豆腐发酵到位；油温要准；出锅要快。", meaning: "江南也有大胆的一面。", memory: "游客记得它的“臭”，绍兴人记得它的“香”。"} },
+        { id: "sx_huangjiu", name: "黄酒奶茶", icon: "cup", card: { title: "黄酒调饮 · 旧味新章", subtitle: "江湖地位：年轻人给老酒的再写", best: ["本地小店"], history: "黄酒文化古老，近年以调饮方式被重新打开。", flavor: "酒香温润，甜度克制，尾韵回甘。", craft: "酒要正；甜要收；冷与热都要保香。", meaning: "传统不是博物馆，是可以继续生长的东西。", memory: "一口下去，像把老城的酒香带进当下。"} }
+      ] },
+      { plate: "浙G", name: "金华", sealSub: "婺州 · 火腿香", stampTitle: "婺味咸鲜 · 集章区", foods: [
+        { id: "jh_huotu", name: "金华火腿", icon: "pork", card: { title: "金华火腿 · 咸香名片", subtitle: "江湖地位：江南火腿之冠", best: ["本地老字号", "菜场熟食档"], history: "腌制与风干让时间成为调味，金华火腿因此闻名。", flavor: "咸香醇厚，越煮越出味。", craft: "选腿、盐渍、风干、陈化，每一步都在跟时间对话。", meaning: "它不是一道菜，而是一种底味。", memory: "很多婺州人家的汤里，总有火腿的影子。"} },
+        { id: "jh_suoyou", name: "酥饼", icon: "cake", card: { title: "金华酥饼 · 一咬掉渣", subtitle: "江湖地位：路上最想带走的那一口", best: ["老字号酥饼店"], history: "以酥与香取胜，是金华最易识别的点心符号。", flavor: "外酥内香，甜咸皆宜。", craft: "起酥要足；火候要匀；出炉要脆。", meaning: "小小一饼，带走一城。", memory: "出差带回几盒酥饼，是金华人的体面。"} },
+        { id: "jh_yutang", name: "浦江麦饼", icon: "snack", card: { title: "麦饼 · 朴素的香", subtitle: "江湖地位：婺州街头的饱腹章", best: ["县城小吃摊"], history: "麦面饼类在浙中常见，麦香与馅料的组合是民间智慧。", flavor: "麦香扎实，馅料热辣或咸香。", craft: "面要有筋；馅要热；烙到表皮微焦最香。", meaning: "不讲排场，只讲实在。", memory: "很多人对金华的记忆，从这口麦香开始。"} },
+        { id: "jh_tangmian", name: "鸡子馃", icon: "egg", card: { title: "鸡子馃 · 婺州早点", subtitle: "江湖地位：早晨的“热手”小吃", best: ["本地早点铺"], history: "浙中早餐常见面饼裹蛋，鸡子馃便是其中经典。", flavor: "蛋香与面香叠加，趁热最好。", craft: "饼要薄；蛋要嫩；火候要快。", meaning: "把一天的精神先点亮。", memory: "出门前咬一口，才算真正开始。"} }
+      ] },
+      { plate: "浙H", name: "衢州", sealSub: "三衢 · 山辣", stampTitle: "衢味辛香 · 集章区", foods: [
+        { id: "qz_yatou", name: "三头一掌", icon: "pork", card: { title: "三头一掌 · 衢州硬菜", subtitle: "江湖地位：重口味的代表章", best: ["衢州菜馆"], history: "衢州口味偏辣偏重，三头一掌以“过瘾”著称。", flavor: "酱辣浓郁，胶质丰厚。", craft: "卤煮入味；火候要透；辣与香要层次分明。", meaning: "山城的性格，直来直去。", memory: "吃完这口，才算真正到过衢州。"} },
+        { id: "qz_tudou", name: "衢州烤饼", icon: "cake", card: { title: "衢州烤饼 · 外脆内香", subtitle: "江湖地位：街头最会“顶嘴”的香", best: ["老街烤饼摊"], history: "烤炉与面香，是衢州街巷里最具辨识度的气味。", flavor: "皮脆馅香，热气裹着椒香。", craft: "面要醒透；烤温要稳；出炉要快。", meaning: "一口是烟火，一口是江湖。", memory: "很多人记得衢州，不是风景，是烤饼香。"} },
+        { id: "qz_miantiao", name: "衢州粉干", icon: "noodle", card: { title: "粉干 · 辣里见鲜", subtitle: "江湖地位：衢州人的日常主食", best: ["家常馆"], history: "米制粉干常见于浙西，配以辣与卤，形成衢州味型。", flavor: "筋道滑爽，辣香开胃。", craft: "粉干煮到刚好；汤头要香；配料要实。", meaning: "不怕辣，才算接上衢州的脉。", memory: "一碗粉干，常是衢州人对外地朋友的第一句招呼。"} },
+        { id: "qz_jiangya", name: "姜汁炖鸭", icon: "pot", card: { title: "姜汁炖鸭 · 辛香暖身", subtitle: "江湖地位：山里人的“驱寒章”", best: ["本地土菜馆"], history: "姜与炖煮，是浙西山区对寒湿气候的回应。", flavor: "姜辣透骨，鸭肉酥烂。", craft: "姜要足；火要慢；去腥要净。", meaning: "吃的是暖，也是底气。", memory: "雨季一来，衢州人就靠这锅汤把潮气压下去。"} }
+      ] },
+      { plate: "浙L", name: "舟山", sealSub: "东海 · 渔火", stampTitle: "海岛鲜味 · 集章区", foods: [
+        { id: "zs_haiqian", name: "海鲜面", icon: "noodle", card: { title: "舟山海鲜面 · 一碗东海", subtitle: "江湖地位：海岛人的日常主食", best: ["海边面馆", "码头小店"], history: "舟山以海为厨房，面条与海鲜相遇便是自然。", flavor: "汤清鲜足，海味层层叠起。", craft: "海鲜要新鲜；汤底要清；下面要快。", meaning: "海的味道，最适合做成一碗热汤。", memory: "渔火归来时，一碗面就是最安稳的落脚。"} },
+        { id: "zs_huangyu", name: "清蒸黄鱼", icon: "fish", card: { title: "清蒸黄鱼 · 鲜到克制", subtitle: "江湖地位：舟山海味的“素面朝天”", best: ["海鲜酒楼"], history: "舟山盛产黄鱼，清蒸是对鲜味最克制的表达。", flavor: "肉细甜润，葱姜点到为止。", craft: "火候要准；去腥要净；调味要少。", meaning: "越是鲜，越不需要遮掩。", memory: "舟山人说“这条鱼够了”，就是最高评价。"} },
+        { id: "zs_daixie", name: "梭子蟹", icon: "crab", card: { title: "梭子蟹 · 海岛的豪爽", subtitle: "江湖地位：季节一到，满桌皆蟹", best: ["本地排档"], history: "东海蟹季是舟山人的节令，吃蟹像过节。", flavor: "肉甜膏香，清蒸最见真章。", craft: "蒸制要看火候；蘸料要清爽；吃法要利落。", meaning: "把海的丰饶摆上桌。", memory: "舟山的秋天，常是从第一口蟹黄开始的。"} },
+        { id: "zs_yugan", name: "风鳗鲞", icon: "fish", card: { title: "风鳗鲞 · 海风的腌制", subtitle: "江湖地位：舟山“时间美食”代表", best: ["海岛集市"], history: "晒、风、盐，是海岛保存与增香的传统方法。", flavor: "咸香浓郁，越嚼越出味。", craft: "鳗要鲜；风干要通；盐度要准。", meaning: "把海风也吃进肚子里。", memory: "晒鳗的季节，舟山的街道都有味道。"} }
+      ] },
+      { plate: "浙J", name: "台州", sealSub: "椒江 · 山海", stampTitle: "台味鲜辣 · 集章区", foods: [
+        { id: "tz_shiqi", name: "食饼筒", icon: "roll", card: { title: "食饼筒 · 一卷包山海", subtitle: "江湖地位：台州人手上的“随身章”", best: ["临海老街", "本地小吃馆"], history: "以薄饼卷菜，随手可食，是台州小吃的灵活代表。", flavor: "香脆与软糯并存，馅料丰富。", craft: "饼要薄韧；馅要热香；卷要紧实。", meaning: "把一餐卷成轻便的生活。", memory: "台州人的热闹，常从这一卷开始。"} },
+        { id: "tz_jiangmian", name: "姜汤面", icon: "noodle", card: { title: "姜汤面 · 辛香开胃", subtitle: "江湖地位：湿冷天气的救命汤", best: ["早市面摊"], history: "姜在台州饮食里常见，既为味也为暖。", flavor: "姜香直冲，面条筋道。", craft: "姜要鲜；汤要热；下面要快。", meaning: "一碗下去，整个人都醒了。", memory: "台州的风大，姜汤面就像随身披风。"} },
+        { id: "tz_qingshu", name: "清汤羊肉", icon: "pork", card: { title: "清汤羊肉 · 清而有劲", subtitle: "江湖地位：台州的清爽硬菜", best: ["本地羊肉馆"], history: "台州人爱鲜，羊肉也讲究清汤取胜。", flavor: "汤清肉香，不厚不腻。", craft: "去膻要净；火候要稳；香料要克制。", meaning: "鲜辣之外，还有清爽。", memory: "喝完一碗，台州的山海气就顺了。"} },
+        { id: "tz_haiqiao", name: "海苔饼", icon: "cake", card: { title: "海苔饼 · 咸香小点", subtitle: "江湖地位：台州伴手礼常客", best: ["本地糕点铺"], history: "沿海海苔丰富，入饼便成独特咸香。", flavor: "海苔咸香，饼体酥软。", craft: "海苔要香；甜咸要平衡；烤温要稳。", meaning: "把海的咸香做成一份礼。", memory: "带一盒回去，像把台州的海风也带走。"} }
+      ] },
+      { plate: "浙K", name: "丽水", sealSub: "瓯江源 · 青山", stampTitle: "山味清香 · 集章区", foods: [
+        { id: "ls_xianrou", name: "缙云烧饼", icon: "cake", card: { title: "缙云烧饼 · 炉火与葱香", subtitle: "江湖地位：丽水最出圈的小吃之一", best: ["缙云老街", "本地烧饼铺"], history: "炭火炉烤出焦香，成为浙西南的强记忆点。", flavor: "外脆内韧，葱香与肉香交织。", craft: "炉温要稳；饼要贴炉；出炉要快。", meaning: "山城的热度，来自炉火。", memory: "很多人记得丽水，是从这口烧饼开始的。"} },
+        { id: "ls_junzi", name: "遂昌长粽", icon: "leaf", card: { title: "遂昌长粽 · 山里糯香", subtitle: "江湖地位：节令里的长情之物", best: ["本地作坊"], history: "山区饮食更重储存与饱腹，长粽因此常见。", flavor: "糯香扎实，馅料朴素但耐吃。", craft: "米要浸透；包扎要紧；火候要足。", meaning: "一只粽子是一段长路。", memory: "山里人把它当作“出远门的干粮章”。"} },
+        { id: "ls_zhutong", name: "竹筒饭", icon: "bamboo", card: { title: "竹筒饭 · 林里清香", subtitle: "江湖地位：山林气息的代表作", best: ["山野餐馆"], history: "竹资源丰富，竹筒饭把“山”做成了一种味道。", flavor: "米香带竹香，清爽自然。", craft: "竹筒要新；火候要匀；米水比例要准。", meaning: "把山林的气息留在胃里。", memory: "吃完后，连呼吸都像更清。"} },
+        { id: "ls_ninggeng", name: "乌米饭", icon: "rice", card: { title: "乌米饭 · 草木染色", subtitle: "江湖地位：浙西南的节令风物", best: ["本地民俗村", "家常馆"], history: "草木染色的乌米饭与节俗相连，是山里人的传统。", flavor: "米香清甜，口感软糯。", craft: "染汁要正；蒸制要匀；趁热更香。", meaning: "把草木的祝愿染进饭里。", memory: "黑亮的一碗，像山夜里的星光被端上桌。"} }
+      ] }
+    ];
+
+    function checkinLoadUnlocked() {
+      try {
+        const raw = localStorage.getItem("zj_checkin_unlocked_v1") || "{}";
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function checkinSaveUnlocked(map) {
+      localStorage.setItem("zj_checkin_unlocked_v1", JSON.stringify(map || {}));
+    }
+
+    function checkinLoadCityIndex() {
+      const v = Number(localStorage.getItem("zj_checkin_city_idx_v1") || 0);
+      if (!Number.isFinite(v) || v < 0 || v >= CHECKIN_CITIES.length) return 0;
+      return v;
+    }
+
+    function checkinSaveCityIndex(idx) {
+      localStorage.setItem("zj_checkin_city_idx_v1", String(idx));
+    }
+
+    function stampIconSvg(kind) {
+      if (kind === "fish") return '<svg viewBox="0 0 24 24"><path d="M20 12c-2.2-3.6-6.4-6-11-6-1.7 0-3.3.3-4.7.9l3.2 3.1-3.2 3.1c1.4.6 3 .9 4.7.9 4.6 0 8.8-2.4 11-6z"/><path d="M9 12h.01"/><path d="M3.3 9.1c-1 .6-1.8 1.7-2.3 2.9.5 1.2 1.3 2.3 2.3 2.9"/></svg>';
+      if (kind === "shrimp") return '<svg viewBox="0 0 24 24"><path d="M8 6c2-1.2 6-1.2 8 1"/><path d="M16 7c2 2 2 6 0 8-2 2-6 2-8 0-2-2-2-6 0-8"/><path d="M8 15c-1.6 1.4-2.7 2.8-3 4"/><path d="M16 15c1.6 1.4 2.7 2.8 3 4"/><path d="M9 10h.01"/><path d="M15 10h.01"/></svg>';
+      if (kind === "pork") return '<svg viewBox="0 0 24 24"><path d="M6 10c1-2 3-3 6-3s5 1 6 3"/><path d="M5 12c0 4 3 7 7 7s7-3 7-7"/><path d="M9 13h.01"/><path d="M15 13h.01"/><path d="M10 16c.8.6 3.2.6 4 0"/></svg>';
+      if (kind === "noodle") return '<svg viewBox="0 0 24 24"><path d="M4 8h16"/><path d="M6 8c0 6 2 10 6 10s6-4 6-10"/><path d="M7 18h10"/><path d="M9 6h6"/></svg>';
+      if (kind === "cake") return '<svg viewBox="0 0 24 24"><path d="M5 11h14"/><path d="M6 11v7h12v-7"/><path d="M7 11c1-2 3-3 5-3s4 1 5 3"/><path d="M9 14h.01"/><path d="M12 14h.01"/><path d="M15 14h.01"/></svg>';
+      if (kind === "snack") return '<svg viewBox="0 0 24 24"><path d="M7 7h10"/><path d="M6 7l2 14h8l2-14"/><path d="M9 11h6"/><path d="M10 15h4"/></svg>';
+      if (kind === "crab") return '<svg viewBox="0 0 24 24"><path d="M9 12c-1-3 1-6 3-6s4 3 3 6"/><path d="M8 12c-1 0-3-1-4-3"/><path d="M16 12c1 0 3-1 4-3"/><path d="M7 14c0 2 2 4 5 4s5-2 5-4"/><path d="M10 10h.01"/><path d="M14 10h.01"/></svg>';
+      if (kind === "ball") return '<svg viewBox="0 0 24 24"><path d="M12 4c5 0 8 3 8 8s-3 8-8 8-8-3-8-8 3-8 8-8z"/><path d="M8 12c1.2 1.5 2.5 2.2 4 2.2s2.8-.7 4-2.2"/></svg>';
+      if (kind === "leaf") return '<svg viewBox="0 0 24 24"><path d="M19 5c-7 0-12 5-12 12 7 0 12-5 12-12z"/><path d="M7 17c2-4 6-8 12-12"/></svg>';
+      if (kind === "rice") return '<svg viewBox="0 0 24 24"><path d="M7 9c0 6 2 10 5 10s5-4 5-10"/><path d="M6 9h12"/><path d="M8 6h.01"/><path d="M12 6h.01"/><path d="M16 6h.01"/></svg>';
+      if (kind === "egg") return '<svg viewBox="0 0 24 24"><path d="M12 3c3.5 0 6 5 6 9s-2.5 9-6 9-6-5-6-9 2.5-9 6-9z"/><path d="M10 12h.01"/><path d="M14 12h.01"/></svg>';
+      if (kind === "tofu") return '<svg viewBox="0 0 24 24"><path d="M6 8h12v12H6z"/><path d="M6 12h12"/><path d="M10 8v12"/></svg>';
+      if (kind === "cup") return '<svg viewBox="0 0 24 24"><path d="M6 8h10v8a5 5 0 0 1-10 0V8z"/><path d="M16 10h1a2 2 0 0 1 0 4h-1"/><path d="M8 4h6"/></svg>';
+      if (kind === "pot") return '<svg viewBox="0 0 24 24"><path d="M5 10h14"/><path d="M6 10v7h12v-7"/><path d="M8 17c.8 1 2.2 2 4 2s3.2-1 4-2"/><path d="M9 7h6"/></svg>';
+      if (kind === "roll") return '<svg viewBox="0 0 24 24"><path d="M6 8c0-2 2-4 6-4s6 2 6 4-2 4-6 4-6-2-6-4z"/><path d="M6 8v8c0 2 2 4 6 4s6-2 6-4V8"/></svg>';
+      if (kind === "bamboo") return '<svg viewBox="0 0 24 24"><path d="M8 3v18"/><path d="M16 3v18"/><path d="M8 7h8"/><path d="M8 13h8"/><path d="M8 19h8"/></svg>';
+      return '<svg viewBox="0 0 24 24"><path d="M6 12h12"/><path d="M12 6v12"/></svg>';
+    }
+
+    function openFoodCard(city, food) {
+      const unlocked = checkinLoadUnlocked();
+      const isUnlocked = !!unlocked[food.id];
+      checkinCurrentFoodId = food.id;
+      checkinCurrentCityPlate = city.plate;
+      document.getElementById("foodCardTitle").textContent = food.card?.title || (food.name || "美食卡");
+      document.getElementById("foodCardSub").textContent = city.plate + " · " + city.name;
+      const body = document.getElementById("foodCardBody");
+      body.innerHTML = "";
+
+      function addLine(label, nodeOrText) {
+        const row = document.createElement("div");
+        row.className = "food-card-line";
+        const b = document.createElement("b");
+        b.textContent = label;
+        row.appendChild(b);
+        if (nodeOrText instanceof Node) row.appendChild(nodeOrText);
+        else {
+          const p = document.createElement("p");
+          p.textContent = String(nodeOrText || "");
+          row.appendChild(p);
+        }
+        body.appendChild(row);
+      }
+
+      if (food.card?.subtitle) addLine("江湖地位", food.card.subtitle);
+      if (food.card?.best?.length) {
+        const box = document.createElement("div");
+        box.className = "food-card-tags";
+        food.card.best.forEach((t) => {
+          const s = document.createElement("span");
+          s.className = "food-card-tag";
+          s.textContent = t;
+          box.appendChild(s);
+        });
+        addLine("最佳品尝地", box);
+      }
+      if (food.card?.history) addLine("历史渊源", food.card.history);
+      if (food.card?.flavor) addLine("风味特色", food.card.flavor);
+      if (food.card?.craft) addLine("制作精髓", food.card.craft);
+      if (food.card?.meaning) addLine("意义", food.card.meaning);
+      if (food.card?.memory) addLine("城市记忆", food.card.memory);
+
+      const actionWrap = document.createElement("div");
+      actionWrap.className = "food-card-actions";
+      const toggleBtn = document.createElement("button");
+      toggleBtn.className = "primary";
+      toggleBtn.textContent = isUnlocked ? "取消点亮" : "点亮此印";
+      toggleBtn.onclick = () => {
+        const map = checkinLoadUnlocked();
+        const next = !map[food.id];
+        if (next) map[food.id] = true;
+        else delete map[food.id];
+        checkinSaveUnlocked(map);
+        closeFoodCard();
+        renderCheckin();
+      };
+      const closeBtn = document.createElement("button");
+      closeBtn.textContent = "收起";
+      closeBtn.onclick = closeFoodCard;
+      actionWrap.appendChild(toggleBtn);
+      actionWrap.appendChild(closeBtn);
+      body.appendChild(actionWrap);
+
+      document.getElementById("foodCardBackdrop").classList.add("visible");
+      document.getElementById("foodCardModal").classList.add("visible");
+      document.getElementById("foodCardBackdrop").setAttribute("aria-hidden", "false");
+      document.getElementById("foodCardModal").setAttribute("aria-hidden", "false");
+    }
+
+    function closeFoodCard() {
+      document.getElementById("foodCardBackdrop").classList.remove("visible");
+      document.getElementById("foodCardModal").classList.remove("visible");
+      document.getElementById("foodCardBackdrop").setAttribute("aria-hidden", "true");
+      document.getElementById("foodCardModal").setAttribute("aria-hidden", "true");
+    }
+
+    function renderCheckin() {
+      const cityStrip = document.getElementById("checkinCityStrip");
+      const page = document.getElementById("checkinPage");
+      if (!cityStrip || !page) return;
+      const unlocked = checkinLoadUnlocked();
+      checkinCityIndex = Math.max(0, Math.min(CHECKIN_CITIES.length - 1, checkinCityIndex));
+      checkinSaveCityIndex(checkinCityIndex);
+      const city = CHECKIN_CITIES[checkinCityIndex];
+
+      cityStrip.innerHTML = "";
+      CHECKIN_CITIES.forEach((c, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "checkin-city-btn" + (idx === checkinCityIndex ? " active" : "");
+        btn.textContent = c.plate + "·" + c.name;
+        btn.onclick = () => {
+          checkinCityIndex = idx;
+          renderCheckin();
+        };
+        cityStrip.appendChild(btn);
+      });
+
+      const unlockedCount = city.foods.reduce((n, f) => n + (unlocked[f.id] ? 1 : 0), 0);
+      const headHtml =
+        '<div class="checkin-passport">' +
+        '<div class="checkin-head">' +
+        '<div class="checkin-cityline">' +
+        '<div class="checkin-city-badge"><span class="code">' + city.plate + '</span><span class="name">' + city.name + '</span></div>' +
+        '<div class="checkin-page-meta">通关文牒 · 第 ' + (checkinCityIndex + 1) + " 页 / 11</div>" +
+        "</div>" +
+        '<div style="max-width:420px;color:rgba(25,25,25,0.70);font-size:0.88rem;line-height:1.7;">地方大印：艺术字地名 + 标志性景物，淡墨山水底纹；解锁之印将从灰中亮起。</div>' +
+        '<div class="checkin-seal"><div>' + city.name + "<small>" + city.sealSub + "</small></div></div>" +
+        '<div class="checkin-inkwash"></div>' +
+        "</div>" +
+        '<div class="checkin-body-inner">' +
+        '<div class="checkin-stamp-title"><strong>' + city.stampTitle + '</strong><span>已解锁 ' + unlockedCount + " / " + city.foods.length + "</span></div>" +
+        '<div class="checkin-stamp-grid" id="checkinStampGrid"></div>' +
+        "</div>" +
+        "</div>";
+
+      page.innerHTML = headHtml;
+      const grid = document.getElementById("checkinStampGrid");
+      city.foods.forEach((food) => {
+        const div = document.createElement("div");
+        const isUnlocked = !!unlocked[food.id];
+        div.className = "checkin-stamp " + (isUnlocked ? "unlocked" : "locked");
+        div.onclick = () => openFoodCard(city, food);
+        const icon = document.createElement("div");
+        icon.className = "checkin-stamp-icon";
+        icon.innerHTML = stampIconSvg(food.icon);
+        const top = document.createElement("div");
+        top.className = "checkin-stamp-top";
+        const name = document.createElement("div");
+        name.className = "checkin-stamp-name";
+        name.textContent = food.name;
+        top.appendChild(name);
+        top.appendChild(icon);
+        const hint = document.createElement("div");
+        hint.className = "checkin-stamp-hint";
+        hint.textContent = isUnlocked ? "已点亮 · 点击读卡" : "未解锁 · 点击读卡";
+        div.appendChild(top);
+        div.appendChild(hint);
+        grid.appendChild(div);
+      });
+    }
+
+    function initCheckinSection() {
+      if (checkinInited) return;
+      checkinInited = true;
+      checkinCityIndex = checkinLoadCityIndex();
+      document.getElementById("foodCardBackdrop").onclick = closeFoodCard;
+      document.getElementById("foodCardClose").onclick = closeFoodCard;
+      renderCheckin();
     }
 
     initMap();
