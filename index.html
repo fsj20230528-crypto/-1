@@ -1264,6 +1264,10 @@
       letter-spacing: 0.06em;
       line-height: 1.6;
       min-height: 1.2rem;
+      padding: 0.45rem 0.6rem;
+      border-radius: 10px;
+      background: rgba(139, 37, 0, 0.08);
+      border: 1px solid rgba(139, 37, 0, 0.12);
     }
 
     .checkin-body { padding: 0.8rem 1.1rem 1.5rem; }
@@ -2910,18 +2914,42 @@
     function validateProfile({ avatarDataUrl, phoneDigits, nickname }) {
       const nick = String(nickname || "").trim();
       const phone = digitsOnly(phoneDigits);
-      if (!isValidPhone(phone)) return "请输入正确的 11 位手机号"
-      if (nick.length < 2 || nick.length > 12) return "昵称长度需为 2-12"
-      return ""
+      if (!isValidPhone(phone)) {
+        return { message: "请输入正确的 11 位手机号", field: "phone" };
+      }
+      if (nick.length < 2 || nick.length > 12) {
+        return { message: "昵称长度需为 2-12", field: "nickname" };
+      }
+      return { message: "", field: "" };
+    }
+
+    function focusProfileField(field, scope) {
+      const inputId =
+        field === "phone"
+          ? scope === "profile"
+            ? "profilePhone"
+            : "loginPhone"
+          : field === "nickname"
+            ? scope === "profile"
+              ? "profileNickname"
+              : "loginNickname"
+            : "";
+      const input = inputId ? document.getElementById(inputId) : null;
+      if (!input) return;
+      requestAnimationFrame(() => {
+        input.focus();
+        if (typeof input.select === "function") input.select();
+      });
     }
 
     async function submitLogin() {
       const phone = digitsOnly(document.getElementById("loginPhone")?.value || "");
       const nickname = String(document.getElementById("loginNickname")?.value || "").trim();
-      const err = validateProfile({ avatarDataUrl: pendingAvatarDataUrl, phoneDigits: phone, nickname });
+      const { message, field } = validateProfile({ avatarDataUrl: pendingAvatarDataUrl, phoneDigits: phone, nickname });
       const el = document.getElementById("loginError");
-      if (err) {
-        if (el) el.textContent = err;
+      if (message) {
+        if (el) el.textContent = message;
+        focusProfileField(field, "login");
         return;
       }
       const profile = {
@@ -2939,10 +2967,11 @@
     function saveProfileFromDrawer() {
       const phone = digitsOnly(document.getElementById("profilePhone")?.value || "");
       const nickname = String(document.getElementById("profileNickname")?.value || "").trim();
-      const err = validateProfile({ avatarDataUrl: pendingAvatarDataUrl, phoneDigits: phone, nickname });
+      const { message, field } = validateProfile({ avatarDataUrl: pendingAvatarDataUrl, phoneDigits: phone, nickname });
       const el = document.getElementById("profileError");
-      if (err) {
-        if (el) el.textContent = err;
+      if (message) {
+        if (el) el.textContent = message;
+        focusProfileField(field, "profile");
         return;
       }
       const profile = {
