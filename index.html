@@ -1671,9 +1671,9 @@
                 </svg>
               </div>
               <div>
-                <button class="login-upload-btn" id="loginAvatarBtn" type="button">上传头像</button>
+                <button class="login-upload-btn" id="loginAvatarBtn" type="button">更换头像</button>
                 <input type="file" id="loginAvatarInput" accept="image/*" style="display:none" />
-                <div style="margin-top:0.35rem;font-size:0.78rem;color:rgba(74,74,74,0.6);letter-spacing:0.06em;">支持常见图片格式</div>
+                <div style="margin-top:0.35rem;font-size:0.78rem;color:rgba(74,74,74,0.6);letter-spacing:0.06em;">已默认使用主题头像，支持常见图片格式</div>
               </div>
             </div>
           </div>
@@ -2784,9 +2784,15 @@
     const overlay = document.getElementById("overlay");
     const loginOverlay = document.getElementById("loginOverlay");
     const PROFILE_KEY = "zlxw_profile_v1";
+    const DEFAULT_AVATAR_URL =
+      "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" +
+      encodeURIComponent(
+        "close-up realistic photography of traditional Chinese glazed orange roof tiles with ornate circular end caps, warm amber night lighting, dark background, architectural detail, square crop, high detail"
+      ) +
+      "&image_size=square_hd";
     const profileBtnEl = document.getElementById("profileBtn");
     const defaultProfileBtnHTML = profileBtnEl ? profileBtnEl.innerHTML : "";
-    let pendingAvatarDataUrl = "";
+    let pendingAvatarDataUrl = DEFAULT_AVATAR_URL;
 
     function digitsOnly(s) {
       return String(s || "").replace(/\D/g, "");
@@ -2802,7 +2808,7 @@
         if (!raw) return null;
         const p = JSON.parse(raw);
         if (!p || typeof p !== "object") return null;
-        if (!p.avatarDataUrl || !p.phoneDigits || !p.nickname) return null;
+        if (!p.phoneDigits || !p.nickname) return null;
         return p;
       } catch {
         return null;
@@ -2830,32 +2836,35 @@
       loginOverlay.setAttribute("aria-hidden", "true");
     }
 
+    function getAvatarUrl(avatarDataUrl) {
+      return String(avatarDataUrl || "").trim() || DEFAULT_AVATAR_URL;
+    }
+
     function setAvatarPreview(containerEl, dataUrl) {
       if (!containerEl) return;
-      const url = String(dataUrl || "");
-      if (!url) {
-        containerEl.innerHTML =
-          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-        return;
-      }
+      const url = getAvatarUrl(dataUrl);
       const img = document.createElement("img");
       img.src = url;
       img.alt = "头像";
+      img.onerror = () => {
+        containerEl.innerHTML =
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+      };
       containerEl.innerHTML = "";
       containerEl.appendChild(img);
     }
 
     function syncProfileBtn(profile) {
       if (!profileBtnEl) return;
-      if (profile?.avatarDataUrl) {
-        profileBtnEl.innerHTML = "";
-        const img = document.createElement("img");
-        img.src = profile.avatarDataUrl;
-        img.alt = "个人头像";
-        profileBtnEl.appendChild(img);
-      } else {
+      const avatarUrl = getAvatarUrl(profile?.avatarDataUrl);
+      profileBtnEl.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = avatarUrl;
+      img.alt = "个人头像";
+      img.onerror = () => {
         profileBtnEl.innerHTML = defaultProfileBtnHTML;
-      }
+      };
+      profileBtnEl.appendChild(img);
     }
 
     function syncForms(profile) {
@@ -2869,7 +2878,7 @@
       if (loginErr) loginErr.textContent = "";
       if (profileErr) profileErr.textContent = "";
 
-      pendingAvatarDataUrl = profile?.avatarDataUrl || "";
+      pendingAvatarDataUrl = getAvatarUrl(profile?.avatarDataUrl);
       setAvatarPreview(document.getElementById("loginAvatarPreview"), pendingAvatarDataUrl);
       setAvatarPreview(document.getElementById("profileAvatarPreview"), pendingAvatarDataUrl);
 
@@ -2901,7 +2910,6 @@
     function validateProfile({ avatarDataUrl, phoneDigits, nickname }) {
       const nick = String(nickname || "").trim();
       const phone = digitsOnly(phoneDigits);
-      if (!avatarDataUrl) return "请先上传头像"
       if (!isValidPhone(phone)) return "请输入正确的 11 位手机号"
       if (nick.length < 2 || nick.length > 12) return "昵称长度需为 2-12"
       return ""
@@ -2917,7 +2925,7 @@
         return;
       }
       const profile = {
-        avatarDataUrl: pendingAvatarDataUrl,
+        avatarDataUrl: getAvatarUrl(pendingAvatarDataUrl),
         phoneDigits: phone,
         nickname,
         updatedAt: new Date().toISOString()
@@ -2938,7 +2946,7 @@
         return;
       }
       const profile = {
-        avatarDataUrl: pendingAvatarDataUrl,
+        avatarDataUrl: getAvatarUrl(pendingAvatarDataUrl),
         phoneDigits: phone,
         nickname,
         updatedAt: new Date().toISOString()
