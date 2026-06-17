@@ -1037,22 +1037,34 @@
     }
     .login-brand {
       position: relative;
+      isolation: isolate;
       padding: 2.25rem 2.2rem;
-      background:
-        radial-gradient(ellipse 80% 55% at 22% 12%, rgba(139, 37, 0, 0.10), transparent 60%),
-        radial-gradient(ellipse 90% 70% at 75% 28%, rgba(120, 150, 140, 0.18), transparent 62%),
-        radial-gradient(ellipse 90% 70% at 55% 85%, rgba(0, 0, 0, 0.06), transparent 65%),
-        linear-gradient(180deg, rgba(245, 230, 200, 0.80), rgba(248, 244, 236, 0.96));
+      background: linear-gradient(180deg, rgba(247, 238, 226, 0.88), rgba(245, 239, 230, 0.94));
+    }
+    .login-brand > * {
+      position: relative;
+      z-index: 2;
     }
     .login-brand::before {
       content: "";
       position: absolute;
       inset: 0;
+      background-image: url("https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=vertical%20realistic%20photography%2C%20dusk%20lake%20in%20Hangzhou%2C%20traditional%20wooden%20boat%20on%20water%2C%20mountain%20silhouette%2C%20warm%20golden%20light%20reflection%2C%20portrait%20composition%2C%20brightened%2C%20soft%20atmospheric%20haze%2C%20elegant%20Chinese%20travel%20poster%20style&image_size=portrait_4_3");
+      background-size: cover;
+      background-position: center;
+      filter: brightness(1.2) saturate(0.84);
+      opacity: 0.44;
+      transform: scale(1.03);
+      pointer-events: none;
+    }
+    .login-brand::after {
+      content: "";
+      position: absolute;
+      inset: 0;
       background:
-        radial-gradient(ellipse 70% 50% at 30% 35%, rgba(0, 0, 0, 0.10), transparent 62%),
-        radial-gradient(ellipse 60% 45% at 62% 55%, rgba(0, 0, 0, 0.07), transparent 62%);
-      opacity: 0.6;
-      mix-blend-mode: multiply;
+        radial-gradient(ellipse 72% 52% at 28% 18%, rgba(255, 255, 255, 0.34), transparent 58%),
+        radial-gradient(ellipse 80% 60% at 68% 58%, rgba(255, 244, 230, 0.26), transparent 60%),
+        linear-gradient(180deg, rgba(255, 251, 246, 0.34), rgba(244, 236, 225, 0.48));
       pointer-events: none;
     }
     .login-brand-head {
@@ -1159,11 +1171,12 @@
       gap: 1rem;
     }
     .login-slogan {
-      color: rgba(139, 37, 0, 0.92);
+      color: rgba(110, 53, 16, 0.96);
       font-family: "ZCOOL XiaoWei", "KaiTi", serif;
       letter-spacing: 0.08em;
       line-height: 1.7;
       max-width: 22ch;
+      text-shadow: 0 2px 12px rgba(255, 255, 255, 0.36);
     }
     .login-form {
       padding: 2.25rem 2.2rem;
