@@ -1377,23 +1377,30 @@
       position: absolute;
       right: 1.05rem;
       bottom: 0.95rem;
-      width: 142px;
-      height: 142px;
-      border-radius: 18px;
+      width: 188px;
+      height: 188px;
+      border-radius: 999px;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0)),
         radial-gradient(60% 60% at 35% 30%, rgba(255,255,255,0.24), transparent 60%),
         linear-gradient(135deg, rgba(139,37,0,0.90), rgba(110,18,0,0.90));
       box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 0.9rem;
+      padding: 0;
       color: rgba(255,255,255,0.92);
       font-weight: 900;
       letter-spacing: 0.22em;
       line-height: 1.1;
+    }
+    .checkin-seal img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .checkin-seal small {
       display: block;
@@ -1413,6 +1420,9 @@
         radial-gradient(ellipse 120% 90% at 20% 20%, rgba(0,0,0,0.08), transparent 65%),
         radial-gradient(ellipse 90% 70% at 85% 40%, rgba(0,0,0,0.06), transparent 70%),
         radial-gradient(ellipse 80% 70% at 35% 85%, rgba(0,0,0,0.04), transparent 72%);
+    }
+    @media (max-width: 520px) {
+      .checkin-seal { width: 164px; height: 164px; right: 0.85rem; bottom: 0.85rem; }
     }
     .checkin-body-inner { padding: 1.05rem 1.1rem 1.2rem; }
     .checkin-stamp-title {
@@ -4653,6 +4663,37 @@
       return '<svg viewBox="0 0 24 24"><path d="M6 12h12"/><path d="M12 6v12"/></svg>';
     }
 
+    const CITY_BADGE_STORAGE_PREFIX = "zj_city_badge_v1_";
+    function getCityBadgeStorageKey(cityName) {
+      return CITY_BADGE_STORAGE_PREFIX + encodeURIComponent(String(cityName || "").trim());
+    }
+
+    function getGeneratedCityBadgeUrl(city) {
+      const cityName = String(city?.name || "浙江").trim();
+      const foods = Array.isArray(city?.foods) ? city.foods.slice(0, 4) : [];
+      const foodNames = foods.map((f) => String(f?.name || "").trim()).filter(Boolean).slice(0, 4);
+      const prompt =
+        "ornate circular city food passport seal badge, puzzle-piece ring composition, gilded outlines, celadon green and warm ivory palette, delicate watercolor and cloisonne enamel style, central clover-shaped seal with large Chinese calligraphy of " +
+        cityName +
+        ", around the ring show four small plates representing: " +
+        (foodNames.join(", ") || "local specialties") +
+        ", misty Jiangnan landscape background with bamboo and blossoms, elegant, high detail, centered, square crop";
+      return "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" + encodeURIComponent(prompt) + "&image_size=square_hd";
+    }
+
+    function getCityBadgeUrl(city) {
+      const override = String(city?.badgeImage || "").trim();
+      if (override) return override;
+      const key = getCityBadgeStorageKey(city?.name || "");
+      const cached = String(localStorage.getItem(key) || "").trim();
+      if (cached) return cached;
+      const url = getGeneratedCityBadgeUrl(city);
+      try {
+        localStorage.setItem(key, url);
+      } catch (e) {}
+      return url;
+    }
+
     function getGeneratedFoodSubject(food) {
       const name = String(food?.name || "浙江美食").trim();
       const kind = String(food?.icon || "").trim();
@@ -4799,6 +4840,7 @@
       });
 
       const unlockedCount = city.foods.reduce((n, f) => n + (unlocked[f.id] ? 1 : 0), 0);
+      const cityBadgeUrl = getCityBadgeUrl(city);
       const headHtml =
         '<div class="checkin-passport">' +
         '<div class="checkin-head">' +
@@ -4807,7 +4849,7 @@
         '<div class="checkin-page-meta">通关文牒 · 第 ' + (checkinCityIndex + 1) + " 页 / 11</div>" +
         "</div>" +
         '<div style="max-width:420px;color:rgba(25,25,25,0.70);font-size:0.88rem;line-height:1.7;">地方大印：艺术字地名 + 标志性景物，淡墨山水底纹；解锁之印将从灰中亮起。</div>' +
-        '<div class="checkin-seal"><div>' + city.name + "<small>" + city.sealSub + "</small></div></div>" +
+        '<div class="checkin-seal"><img src="' + cityBadgeUrl + '" alt="' + city.name + '大徽章"></div>' +
         '<div class="checkin-inkwash"></div>' +
         "</div>" +
         '<div class="checkin-body-inner">' +
