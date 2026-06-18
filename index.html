@@ -3365,6 +3365,31 @@
       return AMAP_SECURITY_JS_CODE || fromInput || fromLocal;
     }
 
+    function isLoopbackHost(hostname) {
+      return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1" || hostname === "[::1]";
+    }
+
+    function getBrowserGeoBlockedReason() {
+      const hostname = String(window.location?.hostname || "");
+      if (window.isSecureContext || isLoopbackHost(hostname)) return "";
+      return "当前页面不是 HTTPS，浏览器禁止获取当前位置。请改用“浙江省定位/手动输入”，或为站点开启 HTTPS。";
+    }
+
+    function buildFoodGeoIntroHint() {
+      const parts = [];
+      if (!getAmapKey()) parts.push("请先填写高德 Web JS Key。");
+      const blocked = getBrowserGeoBlockedReason();
+      if (blocked) parts.push(blocked);
+      return parts.join("");
+    }
+
+    function syncFoodStartModeLabels() {
+      const modeSel = document.getElementById("foodStartMode");
+      const geoOption = Array.from(modeSel?.options || []).find((item) => item.value === "geo");
+      if (!geoOption) return;
+      geoOption.textContent = getBrowserGeoBlockedReason() ? "当前位置（需 HTTPS）" : "当前位置（默认）";
+    }
+
     function persistAmapKey() {
       const key = document.getElementById("amapKey")?.value?.trim() || "";
       if (key) localStorage.setItem("amap_web_key", key);
@@ -3520,13 +3545,25 @@
     async function reverseGeocode(AMap, lnglat) {
       return await new Promise((resolve) => {
         foodGeocoder.getAddress([lnglat.lng, lnglat.lat], (status, result) => {
-          if (status !== "complete") {
+          if (status !== "complete" && status !== "no_data") {
             resolve("");
             return;
           }
           resolve(result?.regeocode?.formattedAddress || "");
         });
       });
+    }
+
+    function isLikelyZhejiangLocation(loc) {
+      const lng = Number(loc?.lng);
+      const lat = Number(loc?.lat);
+      if (!Number.isFinite(lng) || !Number.isFinite(lat)) return false;
+      return lng >= 118 && lng <= 123.5 && lat >= 27 && lat <= 31.5;
+    }
+
+    function ensureZhejiangFoodStart(loc) {
+      if (isLikelyZhejiangLocation(loc)) return loc;
+      throw new Error("当前位置不在浙江省内，请切换到“浙江省定位/手动输入”，再生成美食路线。");
     }
 
     function normalizeAmapGeoFail(result) {
@@ -3558,6 +3595,10 @@
     }
 
     async function locateUserViaBrowser(AMap) {
+      const blocked = getBrowserGeoBlockedReason();
+      if (blocked) {
+        throw new Error(blocked);
+      }
       if (!navigator.geolocation?.getCurrentPosition) {
         throw new Error("浏览器不支持定位");
       }
@@ -3571,7 +3612,7 @@
       const lng = pos.coords.longitude;
       const lat = pos.coords.latitude;
       const addr = (await reverseGeocode(AMap, { lng, lat })) || "当前位置";
-      return { lng, lat, name: addr };
+      return ensureZhejiangFoodStart({ lng, lat, name: addr });
     }
 
     async function locateUser(AMap) {
@@ -3594,7 +3635,7 @@
           amapAttempt.result.formattedAddress ||
           (await reverseGeocode(AMap, { lng: loc.lng, lat: loc.lat })) ||
           "当前位置";
-        return { lng: loc.lng, lat: loc.lat, name: addr };
+        return ensureZhejiangFoodStart({ lng: loc.lng, lat: loc.lat, name: addr });
       }
 
       try {
@@ -3717,6 +3758,67 @@
       return parts.length ? parts.join(" ") : "美食 餐厅";
     }
 
+    function buildFoodKeywordCandidates(tastes, cooks, funcs) {
+      const uniq = [];
+      const seen = new Set();
+      const push = (value) => {
+        const text = String(value || "").trim();
+        if (!text || seen.has(text)) return;
+        seen.add(text);
+        uniq.push(text);
+      };
+
+      push(buildFoodKeyword(tastes, cooks, funcs));
+      push(buildFoodKeyword([], cooks, funcs));
+      push(buildFoodKeyword([], [], funcs));
+      push(buildFoodKeyword(tastes, [], []));
+      push("缇庨 椁愬巺");
+      push("椁愬巺");
+
+      return uniq;
+    }
+
+    function buildFoodKeyword(tastes, cooks, funcs) {
+      const mapCook = {
+        "炒菜类": "炒",
+        "炖菜类": "炖",
+        "烧烤类": "烧烤",
+        "清蒸类": "清蒸",
+        "油炸类": "油炸"
+      };
+      const mapFunc = {
+        "主食类": "主食 饭",
+        "小吃类": "小吃",
+        "甜品": "甜品 甜点",
+        "汤羹类": "汤 羹"
+      };
+      const parts = [];
+      tastes.forEach((t) => parts.push(t));
+      cooks.forEach((c) => parts.push(mapCook[c] || c));
+      funcs.forEach((f) => parts.push(mapFunc[f] || f));
+      return parts.length ? parts.join(" ") : "美食 餐厅";
+    }
+
+    function buildFoodKeywordCandidates(tastes, cooks, funcs) {
+      const uniq = [];
+      const seen = new Set();
+      const push = (value) => {
+        const text = String(value || "").trim();
+        if (!text || seen.has(text)) return;
+        seen.add(text);
+        uniq.push(text);
+      };
+
+      push(buildFoodKeyword(tastes, cooks, funcs));
+      push(buildFoodKeyword([], cooks, funcs));
+      push(buildFoodKeyword([], [], funcs));
+      push(buildFoodKeyword(tastes, [], []));
+      push("美食 餐厅");
+      push("餐厅");
+
+      return uniq;
+    }
+
     function parsePriceRange(raw) {
       const text = String(raw || "").trim();
       if (!text) return null;
@@ -3730,6 +3832,23 @@
       const min = b === null ? a : Math.min(a, b);
       const max = b === null ? a : Math.max(a, b);
       return { min, max };
+    }
+
+    function buildAmapServiceErrorHint(info, infocode) {
+      const joined = [String(info || "").trim(), String(infocode || "").trim()].filter(Boolean).join(" ");
+      if (joined.includes("USERKEY_PLAT_NOMATCH")) {
+        return "请确认填写的是高德 Web JS API Key，而不是其他平台的 Key；同时检查 Referer 白名单与 securityJsCode 是否匹配当前页面。";
+      }
+      if (joined.includes("INVALID_USER_KEY") || joined.includes("USERKEY_INVALID")) {
+        return "请检查高德 Key 是否填写正确、是否已启用 Web JS API。";
+      }
+      if (joined.includes("INVALID_USER_SCODE") || joined.includes("USERKEY_SECRET_INVALID")) {
+        return "请检查 securityJsCode 是否与当前 Key 配对，修改后刷新页面再试。";
+      }
+      if (joined.includes("DAILY_QUERY_OVER_LIMIT") || joined.includes("ACCESS_TOO_FREQUENT")) {
+        return "当前高德 Key 的调用额度可能已用尽，请稍后再试或更换 Key。";
+      }
+      return "";
     }
 
     async function geocodeStart(AMap, text) {
@@ -3797,7 +3916,7 @@
           const infocode =
             typeof result === "object" && result?.infocode ? String(result.infocode) : "";
           const pois = typeof result === "object" ? result?.poiList?.pois || [] : [];
-          if (status !== "complete") {
+          if (status !== "complete" && status !== "no_data") {
             const parts = [];
             if (status) parts.push("status=" + status);
             if (info) parts.push("info=" + info);
@@ -3847,6 +3966,65 @@
           );
         });
       });
+    }
+
+    /* async function searchFoodPoisWithFallback(AMap, center, tastes, cooks, funcs, radiusMeters) {
+      const keywords = buildFoodKeywordCandidates(tastes, cooks, funcs);
+      let lastNoDataError = null;
+      for (const kw of keywords) {
+        try {
+          return await searchFoodPois(AMap, center, kw, radiusMeters);
+        } catch (e) {
+          if (String(e?.message || "").includes("鏈悳绱㈠埌椁愰ギ鐐逛綅")) {
+            lastNoDataError = e;
+            continue;
+          }
+          throw e;
+        }
+      }
+      throw (
+        lastNoDataError ||
+        new Error(
+          "鏈悳绱㈠埌椁愰ギ鐐逛綅锛堝凡灏濊瘯鍏抽敭璇? " + keywords.join(" / ") + "锛? 
+        )
+      );
+    }
+
+    */
+
+    async function searchFoodPoisWithFallback(AMap, center, tastes, cooks, funcs, radiusMeters) {
+      const keywords = buildFoodKeywordCandidates(tastes, cooks, funcs);
+      let lastNoDataError = null;
+      for (const kw of keywords) {
+        try {
+          return await searchFoodPois(AMap, center, kw, radiusMeters);
+        } catch (e) {
+          const msg = String(e?.message || "");
+          if (msg.includes("未搜索到餐饮点位") || msg.includes("no_data")) {
+            lastNoDataError = e;
+            continue;
+          }
+          throw e;
+        }
+      }
+      throw (lastNoDataError || new Error("未搜索到餐饮点位（已尝试关键词 " + keywords.join(" / ") + "）"));
+    }
+
+    function formatFoodRouteErrorMessage(err) {
+      const msg = String(err?.message || "未知错误");
+      if (msg.includes("USERKEY_PLAT_NOMATCH")) {
+        return (
+          msg +
+          "。请确认填写的是高德 Web JS API Key，而不是其他平台的 Key；同时检查 Referer 白名单与 securityJsCode 是否匹配当前页面。"
+        );
+      }
+      if (msg.includes("INVALID_USER_KEY") || msg.includes("USERKEY_INVALID")) {
+        return msg + "。请检查高德 Key 是否填写正确，并确认已开通 Web JS API。";
+      }
+      if (msg.includes("INVALID_USER_SCODE") || msg.includes("USERKEY_SECRET_INVALID")) {
+        return msg + "。请检查 securityJsCode 是否与当前 Key 配对，修改后刷新页面再试。";
+      }
+      return msg;
     }
 
     async function walkingLeg(AMap, a, b) {
@@ -3929,15 +4107,14 @@
         const tastes = getActiveChipValues("tasteChips");
         const cooks = getActiveChipValues("cookChips");
         const funcs = getActiveChipValues("funcChips");
-        const keyword = buildFoodKeyword(tastes, cooks, funcs);
         const crowdPref = getSingleChipValue("crowdChips");
 
         let rawPois;
         try {
-          rawPois = await searchFoodPois(AMap, start, keyword, radiusMeters);
+          rawPois = await searchFoodPoisWithFallback(AMap, start, tastes, cooks, funcs, radiusMeters);
         } catch (e) {
           if (String(e?.message || "").includes("未搜索到餐饮点位") && radiusMeters < 15000) {
-            rawPois = await searchFoodPois(AMap, start, keyword, 15000);
+            rawPois = await searchFoodPoisWithFallback(AMap, start, tastes, cooks, funcs, 15000);
           } else {
             throw e;
           }
@@ -4019,6 +4196,7 @@
         renderFoodStops(start, ordered, totalDistance, totalTime);
       } catch (e) {
         document.getElementById("foodSummary").textContent = "生成失败：" + (e.message || "未知错误");
+        document.getElementById("foodSummary").textContent = "生成失败：" + formatFoodRouteErrorMessage(e);
         document.getElementById("foodStops").innerHTML = "";
       } finally {
         btn.disabled = false;
@@ -4057,13 +4235,22 @@
       const countySel = document.getElementById("foodZJCounty");
       const refreshBtn = document.getElementById("foodGeoRefreshBtn");
 
+      syncFoodStartModeLabels();
       modeSel.value = "geo";
       setFoodStartMode("geo");
+      const introHint = buildFoodGeoIntroHint();
+      if (introHint) updateFoodGeoUI("未获取到定位", introHint);
 
       modeSel.addEventListener("change", async () => {
         const v = modeSel.value;
         setFoodStartMode(v);
         if (v === "geo") {
+          const nextHint = buildFoodGeoIntroHint();
+          if (!getAmapKey()) {
+            updateFoodGeoUI("未获取到定位", nextHint || "请先填写高德 Web JS Key。");
+            foodStartFixed = null;
+            return;
+          }
           try {
             const AMap = await ensureFoodAmap();
             foodStartFixed = await locateUser(AMap);
@@ -4098,6 +4285,12 @@
 
       refreshBtn.addEventListener("click", async () => {
         if (foodStartMode !== "geo") return;
+        const nextHint = buildFoodGeoIntroHint();
+        if (!getAmapKey()) {
+          updateFoodGeoUI("未获取到定位", nextHint || "请先填写高德 Web JS Key。");
+          foodStartFixed = null;
+          return;
+        }
         try {
           const AMap = await ensureFoodAmap();
           foodStartFixed = await locateUser(AMap);
@@ -4160,6 +4353,12 @@
       });
 
       (async () => {
+        const nextHint = buildFoodGeoIntroHint();
+        if (nextHint) updateFoodGeoUI("未获取到定位", nextHint);
+        if (!getAmapKey()) {
+          foodStartFixed = null;
+          return;
+        }
         try {
           const AMap = await ensureFoodAmap();
           foodStartFixed = await locateUser(AMap);
