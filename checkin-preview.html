@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>店铺打卡预览</title>
+  <style>
+    :root {
+      --paper: #f7f1e5;
+      --paper-deep: #efe5d2;
+      --ink: #1f1a17;
+      --ink-light: rgba(31, 26, 23, 0.68);
+      --line: rgba(31, 26, 23, 0.12);
+      --seal: #8b2500;
+      --seal-hover: #a83200;
+      --seal-soft: rgba(139, 37, 0, 0.08);
+      --ok: #315c3a;
+      --ok-soft: rgba(49, 92, 58, 0.12);
+      --shadow: rgba(43, 34, 24, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Serif SC", "PingFang SC", "Microsoft YaHei", serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(180, 150, 120, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(139, 37, 0, 0.08), transparent 32%),
+        linear-gradient(180deg, #fbf7ef 0%, #f1e8da 100%);
+      padding: 28px 16px 40px;
+    }
+
+    .wrap {
+      width: min(920px, 100%);
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--line);
+      color: var(--ink-light);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    h1 {
+      margin: 12px 0 8px;
+      font-size: clamp(24px, 4vw, 34px);
+      line-height: 1.2;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--ink-light);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .phone {
+      margin-top: 20px;
+      width: min(420px, 100%);
+      border-radius: 28px;
+      padding: 14px;
+      background: rgba(255, 251, 245, 0.72);
+      border: 1px solid rgba(31, 26, 23, 0.08);
+      box-shadow: 0 24px 60px rgba(70, 52, 33, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .phone-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 6px 12px;
+      color: var(--ink-light);
+      font-size: 12px;
+    }
+
+    .screen {
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(251, 246, 238, 0.96), rgba(244, 236, 224, 0.95));
+      border: 1px solid rgba(31, 26, 23, 0.08);
+      min-height: 640px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      margin: 0 0 8px;
+    }
+
+    .section-hint {
+      margin: 0 0 14px;
+      font-size: 13px;
+      color: var(--ink-light);
+      line-height: 1.6;
+    }
+
+    .summary {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--ink-light);
+      line-height: 1.7;
+    }
+
+    .list {
+      margin-top: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 253, 249, 0.98), rgba(245, 236, 223, 0.98));
+      border: 1px solid rgba(31, 26, 23, 0.1);
+      box-shadow: 0 12px 24px var(--shadow);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: linear-gradient(180deg, rgba(139, 37, 0, 0.85), rgba(139, 37, 0, 0.2));
+    }
+
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .shop-title {
+      display: grid;
+      gap: 8px;
+    }
+
+    .shop-title strong {
+      font-size: 17px;
+      line-height: 1.4;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--line);
+      color: var(--ink-light);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .address,
+    .linkline,
+    .record {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--ink-light);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button,
+    .ghost-link {
+      appearance: none;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+    }
+
+    button:hover,
+    .ghost-link:hover {
+      transform: translateY(-1px);
+    }
+
+    .checkin-btn {
+      background: var(--seal);
+      color: #fff8f1;
+      box-shadow: 0 10px 18px rgba(139, 37, 0, 0.2);
+    }
+
+    .checkin-btn:hover {
+      background: var(--seal-hover);
+    }
+
+    .checked {
+      background: var(--ok-soft);
+      color: var(--ok);
+      border: 1px solid rgba(49, 92, 58, 0.2);
+      box-shadow: none;
+    }
+
+    .ghost-link {
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .split {
+      display: grid;
+      gap: 18px;
+      align-items: start;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      margin-top: 18px;
+    }
+
+    .note {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(139, 37, 0, 0.05);
+      border: 1px dashed rgba(139, 37, 0, 0.25);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--ink-light);
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 20px 12px 32px; }
+      .phone { margin-top: 16px; }
+      .actions { flex-wrap: wrap; }
+      .card-head { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <span class="eyebrow">美食地图 · 推荐店铺卡片预览</span>
+      <h1>只新增“打卡”能力的局部预览</h1>
+      <p class="sub">这个预览只模拟你要改的那一块：推荐店铺卡片右侧增加按钮，按钮点击后变成“已打卡”，并显示一条本地打卡记录文案。其他页面和结构都不展开。</p>
+    </div>
+
+    <div class="split">
+      <div class="phone">
+        <div class="phone-bar">
+          <span>09:41</span>
+          <span>美食地图</span>
+          <span>5G</span>
+        </div>
+        <div class="screen">
+          <h2 class="section-title">推荐店铺</h2>
+          <p class="section-hint">填写出发地与偏好后，这里会生成推荐的店铺卡片。</p>
+          <div class="summary">
+            起点：西湖文化广场<br />
+            站点数：3<br />
+            总距离：4.8 km<br />
+            步行时间：58 分钟
+          </div>
+
+          <div class="list">
+            <div class="card">
+              <div class="card-head">
+                <div class="shop-title">
+                  <strong>1. 奎元馆</strong>
+                  <div class="meta">
+                    <span class="chip">620m</span>
+                    <span class="chip">评分 4.6</span>
+                    <span class="chip">人均 38 元</span>
+                  </div>
+                </div>
+                <button class="checkin-btn" type="button">打卡</button>
+              </div>
+              <div class="address">杭州市拱墅区湖墅南路 28 号</div>
+              <div class="linkline">店铺类型：面馆 / 杭帮小吃</div>
+              <div class="actions">
+                <a class="ghost-link" href="javascript:void(0)">在高德打开</a>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div class="shop-title">
+                  <strong>2. 知味观</strong>
+                  <div class="meta">
+                    <span class="chip">1.1km</span>
+                    <span class="chip">评分 4.7</span>
+                    <span class="chip">人均 52 元</span>
+                  </div>
+                </div>
+                <button class="checkin-btn checked" type="button">已打卡</button>
+              </div>
+              <div class="address">杭州市上城区仁和路 83 号</div>
+              <div class="linkline">店铺类型：杭帮菜 / 点心</div>
+              <div class="record">已于 2026-06-18 09:32 打卡，记录已保存到本地。</div>
+              <div class="actions">
+                <a class="ghost-link" href="javascript:void(0)">在高德打开</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note">
+        这版预览表达的是我当前推荐的实现方向：
+        <br /><br />
+        1. 每张推荐店铺卡片只新增一个主按钮。
+        <br />
+        2. 未打卡时显示“打卡”，已打卡后切成“已打卡”。
+        <br />
+        3. 已打卡的卡片多一条轻提示，说明记录已落本地。
+        <br />
+        4. 不把按钮塞进“在高德打开”这一行，避免信息挤压。
+        <br />
+        5. 不提前改动现有通关文牒页面，只把店铺独立记录下来。
+      </div>
+    </div>
+  </div>
+</body>
+</html>
