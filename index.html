@@ -1485,6 +1485,20 @@
       justify-content: center;
       color: rgba(255,255,255,0.92);
     }
+    .checkin-stamp-icon.has-image {
+      background:
+        radial-gradient(65% 65% at 32% 28%, rgba(255,255,255,0.40), transparent 62%),
+        linear-gradient(135deg, rgba(126,50,36,0.28), rgba(88,119,128,0.28));
+    }
+    .checkin-stamp-icon img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 2px 6px rgba(25,25,25,0.16);
+      background: rgba(255,255,255,0.9);
+    }
     .checkin-stamp-icon svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; opacity: 0.95; }
     .checkin-stamp-hint { font-size: 0.72rem; color: rgba(40,40,40,0.56); letter-spacing: 0.04em; }
 
@@ -4478,6 +4492,7 @@
             id: "hz_pec",
             name: "片儿川",
             icon: "noodle",
+            logoImage: "",
             card: {
               title: "片儿川 · 杭州面魂",
               subtitle: "江湖地位：街巷里最踏实的一碗",
@@ -4627,6 +4642,20 @@
       return '<svg viewBox="0 0 24 24"><path d="M6 12h12"/><path d="M12 6v12"/></svg>';
     }
 
+    function renderStampIcon(iconEl, food) {
+      const logoImage = String(food?.logoImage || "").trim();
+      iconEl.classList.toggle("has-image", !!logoImage);
+      if (logoImage) {
+        iconEl.innerHTML = "";
+        const img = document.createElement("img");
+        img.src = logoImage;
+        img.alt = food.name + "印章";
+        iconEl.appendChild(img);
+        return;
+      }
+      iconEl.innerHTML = stampIconSvg(food.icon);
+    }
+
     function openFoodCard(city, food) {
       const unlocked = checkinLoadUnlocked();
       const isUnlocked = !!unlocked[food.id];
@@ -4752,7 +4781,7 @@
         div.onclick = () => openFoodCard(city, food);
         const icon = document.createElement("div");
         icon.className = "checkin-stamp-icon";
-        icon.innerHTML = stampIconSvg(food.icon);
+        renderStampIcon(icon, food);
         const top = document.createElement("div");
         top.className = "checkin-stamp-top";
         const name = document.createElement("div");
