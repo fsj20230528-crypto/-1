@@ -4653,8 +4653,41 @@
       return '<svg viewBox="0 0 24 24"><path d="M6 12h12"/><path d="M12 6v12"/></svg>';
     }
 
-    function renderStampIcon(iconEl, food) {
-      const logoImage = String(food?.logoImage || "").trim();
+    function getGeneratedFoodSubject(food) {
+      const name = String(food?.name || "浙江美食").trim();
+      const kind = String(food?.icon || "").trim();
+      if (kind === "fish") return name + ", elegant whole fish delicacy with glossy sauce";
+      if (kind === "shrimp") return name + ", delicate shrimp delicacy arranged on an elegant plate";
+      if (kind === "pork") return name + ", rich braised pork specialty with glossy sauce";
+      if (kind === "noodle") return name + ", steaming bowl of noodles with regional toppings";
+      if (kind === "cake") return name + ", traditional Chinese pastry or rice cake stacked neatly";
+      if (kind === "snack") return name + ", iconic Chinese street snack specialty";
+      if (kind === "crab") return name + ", vivid crab seafood delicacy with seasonal richness";
+      if (kind === "ball") return name + ", round dumpling or rice cake specialty";
+      if (kind === "leaf") return name + ", leaf-wrapped rice dumpling specialty";
+      if (kind === "rice") return name + ", steaming bowl of rice specialty with local ingredients";
+      if (kind === "egg") return name + ", elegant egg-based snack or dessert";
+      if (kind === "tofu") return name + ", crispy tofu street food specialty";
+      if (kind === "cup") return name + ", refined regional drink in an elegant cup";
+      if (kind === "pot") return name + ", comforting clay pot stew specialty";
+      if (kind === "roll") return name + ", savory rolled pancake wrap specialty";
+      if (kind === "bamboo") return name + ", bamboo tube rice specialty";
+      return name + ", traditional Zhejiang delicacy";
+    }
+
+    function getGeneratedFoodLogoUrl(city, food) {
+      const cityName = String(city?.name || "浙江").trim();
+      const foodName = String(food?.name || "").trim();
+      if (!foodName) return "";
+      const prompt =
+        "ornate circular Chinese food stamp logo of " +
+        getGeneratedFoodSubject(food) +
+        ", from " + cityName + " Zhejiang, misty Jiangnan landscape, subtle regional atmosphere, celadon and warm ivory palette, delicate watercolor and cloisonne enamel style, cream background, round badge, food centered and clearly recognizable, high detail";
+      return "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" + encodeURIComponent(prompt) + "&image_size=square_hd";
+    }
+
+    function renderStampIcon(iconEl, city, food) {
+      const logoImage = String(food?.logoImage || getGeneratedFoodLogoUrl(city, food) || "").trim();
       iconEl.classList.toggle("has-image", !!logoImage);
       if (logoImage) {
         iconEl.innerHTML = "";
@@ -4792,7 +4825,7 @@
         div.onclick = () => openFoodCard(city, food);
         const icon = document.createElement("div");
         icon.className = "checkin-stamp-icon";
-        renderStampIcon(icon, food);
+        renderStampIcon(icon, city, food);
         const top = document.createElement("div");
         top.className = "checkin-stamp-top";
         const name = document.createElement("div");
