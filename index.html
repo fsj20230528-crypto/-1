@@ -2012,6 +2012,19 @@
       331000: "台州",
       331100: "丽水"
     };
+    const ZJ_CITY_DEEP_TAGLINES = {
+      "杭州": "DeepSeek",
+      "宁波": "DeepPort",
+      "温州": "DeepBiz",
+      "绍兴": "DeepPen",
+      "嘉兴": "DeepRice",
+      "湖州": "DeepTea",
+      "金华": "DeepGoods",
+      "衢州": "DeepMountain",
+      "舟山": "DeepSea",
+      "台州": "DeepMake",
+      "丽水": "DeepGreen"
+    };
 
     /* 同一地级市下属县域使用相同浅色，便于看出城市区划 */
     const CITY_COLORS = {
@@ -2118,13 +2131,20 @@
       return geoName.replace(/[市区县]$/, "");
     }
 
+    function buildCityDeepTagline(geoName) {
+      const short = shortCountyName(geoName);
+      const parent = geoMeta[geoName]?.parentName || "";
+      const deepName = ZJ_CITY_DEEP_TAGLINES[parent];
+      return (deepName || "浙里山水间") + "的" + short;
+    }
+
     function buildDefaultPersona(geoName) {
       const short = shortCountyName(geoName);
       const parent = geoMeta[geoName]?.parentName || "浙江";
       return {
         geoName,
         name: short,
-        tagline: "浙里山水间的" + short,
+        tagline: buildCityDeepTagline(geoName),
         bio: "我是" + short + "，隶属" + parent + "的一方水土。街巷、江潮与乡音，都是我话语里的纹路。欢迎与我聊聊这里的人情风物。",
         seal: short.charAt(0) || "县",
         memory: "",
@@ -3028,7 +3048,15 @@
     function getCountyPersona(geoName) {
       const demoId = NAME_TO_DEMO[geoName];
       if (demoId) {
-        return { ...COUNTIES[demoId], enriched: true, isDemo: true, memory: "", memoryEnriched: false, memoryLoading: null };
+        return {
+          ...COUNTIES[demoId],
+          tagline: buildCityDeepTagline(geoName),
+          enriched: true,
+          isDemo: true,
+          memory: "",
+          memoryEnriched: false,
+          memoryLoading: null
+        };
       }
       if (personaCache[geoName]) {
         return personaCache[geoName];
@@ -3064,7 +3092,7 @@
       });
       const jsonText = raw.replace(/^```json\s*|^```\s*|```\s*$/g, "").trim();
       const parsed = JSON.parse(jsonText);
-      const tagline = parsed.tagline || buildDefaultPersona(geoName).tagline;
+      const tagline = buildCityDeepTagline(geoName);
       const bio = parsed.bio || buildDefaultPersona(geoName).bio;
       const style = parsed.personaStyle || "语气温润，意象清雅。";
       return {
