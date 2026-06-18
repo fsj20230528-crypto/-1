@@ -1681,6 +1681,62 @@
       background: var(--cinnabar);
       color: #faf6ee;
     }
+    .food-checkin-confirm {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.98);
+      width: min(360px, 88vw);
+      z-index: 1202;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s, transform 0.22s;
+    }
+    .food-checkin-confirm.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .food-checkin-confirm-sheet {
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.14);
+      background: linear-gradient(180deg, #fffaf0 0%, #f2e7d1 100%);
+      box-shadow: 0 18px 38px rgba(0,0,0,0.18);
+      padding: 1.15rem 1.1rem 1rem;
+    }
+    .food-checkin-confirm-title {
+      font-family: "ZCOOL XiaoWei", "KaiTi", serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+      color: rgba(25,25,25,0.88);
+    }
+    .food-checkin-confirm-text {
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: rgba(40,40,40,0.72);
+    }
+    .food-checkin-confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+    .food-checkin-confirm-actions button {
+      min-width: 5.2rem;
+      padding: 0.6rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.14);
+      background: rgba(255,255,255,0.62);
+      color: rgba(25,25,25,0.82);
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .food-checkin-confirm-actions button.primary {
+      border: none;
+      background: var(--cinnabar);
+      color: #faf6ee;
+    }
   </style>
 </head>
 <body>
@@ -2048,6 +2104,17 @@
       </div>
       <div class="food-card-tear"></div>
       <div class="food-card-body" id="foodCardBody"></div>
+    </div>
+  </div>
+  <div class="food-card-backdrop" id="foodCheckinConfirmBackdrop" aria-hidden="true"></div>
+  <div class="food-checkin-confirm" id="foodCheckinConfirm" aria-hidden="true">
+    <div class="food-checkin-confirm-sheet" role="dialog" aria-modal="true" aria-label="取消打卡确认">
+      <div class="food-checkin-confirm-title">确定取消打卡？</div>
+      <div class="food-checkin-confirm-text" id="foodCheckinConfirmText">返回后仍会保留当前店铺的已打卡状态。</div>
+      <div class="food-checkin-confirm-actions">
+        <button type="button" id="foodCheckinConfirmCancel">返回</button>
+        <button class="primary" type="button" id="foodCheckinConfirmOk">确定</button>
+      </div>
     </div>
   </div>
 
@@ -3378,6 +3445,7 @@
     const profileBtnEl = document.getElementById("profileBtn");
     const defaultProfileBtnHTML = profileBtnEl ? profileBtnEl.innerHTML : "";
     let pendingAvatarDataUrl = DEFAULT_AVATAR_URL;
+    let pendingFoodShopCancelState = null;
 
     function digitsOnly(s) {
       return String(s || "").replace(/\D/g, "");
@@ -3500,6 +3568,52 @@
         id,
         record: persisted ? { ...record, storage: "local" } : { ...record, storage: "memory" }
       };
+    }
+
+    function removeFoodShopCheckinRecord(shop) {
+      const id = getFoodShopCheckinId(shop);
+      if (!id) return false;
+      const nextMap = loadFoodShopCheckins();
+      if (!nextMap[id]) return true;
+      delete nextMap[id];
+      const persisted = saveFoodShopCheckins(nextMap);
+      if (!persisted) {
+        foodShopCheckinsMemory = nextMap;
+      }
+      return true;
+    }
+
+    function openFoodShopCancelConfirm({ shop, start, stops, totalDistance, totalTime }) {
+      pendingFoodShopCancelState = { shop, start, stops, totalDistance, totalTime };
+      const textEl = document.getElementById("foodCheckinConfirmText");
+      if (textEl) {
+        textEl.textContent =
+          "将取消“" + (shop?.name || "当前店铺") + "”的打卡记录，确定后会恢复为未打卡。";
+      }
+      document.getElementById("foodCheckinConfirmBackdrop")?.classList.add("visible");
+      document.getElementById("foodCheckinConfirm")?.classList.add("visible");
+      document.getElementById("foodCheckinConfirmBackdrop")?.setAttribute("aria-hidden", "false");
+      document.getElementById("foodCheckinConfirm")?.setAttribute("aria-hidden", "false");
+    }
+
+    function closeFoodShopCancelConfirm() {
+      pendingFoodShopCancelState = null;
+      document.getElementById("foodCheckinConfirmBackdrop")?.classList.remove("visible");
+      document.getElementById("foodCheckinConfirm")?.classList.remove("visible");
+      document.getElementById("foodCheckinConfirmBackdrop")?.setAttribute("aria-hidden", "true");
+      document.getElementById("foodCheckinConfirm")?.setAttribute("aria-hidden", "true");
+    }
+
+    function confirmFoodShopCancel() {
+      const state = pendingFoodShopCancelState;
+      if (!state?.shop) {
+        closeFoodShopCancelConfirm();
+        return;
+      }
+      removeFoodShopCheckinRecord(state.shop);
+      const { start, stops, totalDistance, totalTime } = state;
+      closeFoodShopCancelConfirm();
+      renderFoodStops(start, stops, totalDistance, totalTime);
     }
 
     function openLoginOverlay() {
@@ -3910,7 +4024,10 @@
       openMemoryDrawer(idx);
     });
     window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeMemoryDrawer();
+      if (e.key === "Escape") {
+        closeMemoryDrawer();
+        closeFoodShopCancelConfirm();
+      }
     });
     document.getElementById("chatInput").onkeydown = (e) => {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -4710,10 +4827,14 @@
         btn.type = "button";
         btn.className = "food-stop-checkin" + (checked ? " checked" : "");
         btn.textContent = checked ? "已打卡" : "打卡";
-        btn.disabled = checked || !checkinId;
+        btn.disabled = !checkinId;
         if (!checkinId) btn.title = "当前店铺信息不足，暂时无法打卡";
         btn.onclick = () => {
           if (btn.disabled) return;
+          if (checked) {
+            openFoodShopCancelConfirm({ shop: s, start, stops, totalDistance, totalTime });
+            return;
+          }
           const result = saveFoodShopCheckinRecord(s, start);
           if (!result.ok) return;
           renderFoodStops(start, stops, totalDistance, totalTime);
@@ -5786,8 +5907,15 @@
       checkinCityIndex = checkinLoadCityIndex();
       document.getElementById("foodCardBackdrop").onclick = closeFoodCard;
       document.getElementById("foodCardClose").onclick = closeFoodCard;
+      document.getElementById("foodCheckinConfirmBackdrop").onclick = closeFoodShopCancelConfirm;
+      document.getElementById("foodCheckinConfirmCancel").onclick = closeFoodShopCancelConfirm;
+      document.getElementById("foodCheckinConfirmOk").onclick = confirmFoodShopCancel;
       renderCheckin();
     }
+
+    document.getElementById("foodCheckinConfirmBackdrop").onclick = closeFoodShopCancelConfirm;
+    document.getElementById("foodCheckinConfirmCancel").onclick = closeFoodShopCancelConfirm;
+    document.getElementById("foodCheckinConfirmOk").onclick = confirmFoodShopCancel;
 
     initMap();
   </script>
