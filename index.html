@@ -914,6 +914,16 @@
       border: 1px solid var(--border);
       line-height: 1.65;
     }
+    .food-stop-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .food-stop-main {
+      flex: 1;
+      min-width: 0;
+    }
     .food-stop-title {
       display: flex;
       align-items: baseline;
@@ -931,6 +941,36 @@
       color: var(--ink-light);
       letter-spacing: 0.05em;
       white-space: nowrap;
+    }
+    .food-stop-checkin {
+      flex-shrink: 0;
+      border: 1px solid rgba(139, 37, 0, 0.18);
+      background: var(--cinnabar);
+      color: #fff8f1;
+      padding: 0.46rem 0.8rem;
+      border-radius: 999px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+    .food-stop-checkin:hover {
+      transform: translateY(-1px);
+      background: var(--cinnabar-hover);
+    }
+    .food-stop-checkin.checked {
+      background: rgba(46, 102, 62, 0.1);
+      color: #2d613b;
+      border-color: rgba(46, 102, 62, 0.18);
+    }
+    .food-stop-checkin.checked:hover {
+      background: rgba(46, 102, 62, 0.14);
+    }
+    .food-stop-record {
+      margin-top: 0.35rem;
+      color: #2d613b;
+    }
+    .food-stop-links {
+      margin-top: 0.35rem;
     }
     .food-stop a {
       color: var(--cinnabar);
@@ -3327,6 +3367,8 @@
     const overlay = document.getElementById("overlay");
     const loginOverlay = document.getElementById("loginOverlay");
     const PROFILE_KEY = "zlxw_profile_v1";
+    const FOOD_SHOP_CHECKIN_KEY = "zj_food_shop_checkins_v1";
+    let foodShopCheckinsMemory = {};
     const DEFAULT_AVATAR_URL =
       "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=" +
       encodeURIComponent(
@@ -3364,6 +3406,100 @@
 
     function clearProfile() {
       localStorage.removeItem(PROFILE_KEY);
+    }
+
+    function loadFoodShopCheckins() {
+      try {
+        const raw = localStorage.getItem(FOOD_SHOP_CHECKIN_KEY);
+        if (!raw) return { ...foodShopCheckinsMemory };
+        const parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+          return { ...foodShopCheckinsMemory };
+        }
+        foodShopCheckinsMemory = { ...parsed };
+        return { ...parsed };
+      } catch {
+        return { ...foodShopCheckinsMemory };
+      }
+    }
+
+    function saveFoodShopCheckins(map) {
+      foodShopCheckinsMemory = { ...(map || {}) };
+      try {
+        localStorage.setItem(FOOD_SHOP_CHECKIN_KEY, JSON.stringify(foodShopCheckinsMemory));
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function normalizeFoodShopIdPart(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
+    }
+
+    function getFoodShopCheckinId(shop) {
+      if (!shop || typeof shop !== "object") return "";
+      const name = normalizeFoodShopIdPart(shop.name);
+      const address = normalizeFoodShopIdPart(shop.address);
+      const lng = Number.isFinite(shop?.loc?.lng) ? shop.loc.lng.toFixed(5) : "";
+      const lat = Number.isFinite(shop?.loc?.lat) ? shop.loc.lat.toFixed(5) : "";
+      const parts = [name, address, lng, lat].filter(Boolean);
+      return parts.length >= 2 ? "shop:" + parts.join("|") : "";
+    }
+
+    function formatFoodShopCheckinTime(ts) {
+      const d = new Date(ts);
+      if (Number.isNaN(d.getTime())) return "";
+      const pad = (n) => String(n).padStart(2, "0");
+      return (
+        d.getFullYear() +
+        "-" +
+        pad(d.getMonth() + 1) +
+        "-" +
+        pad(d.getDate()) +
+        " " +
+        pad(d.getHours()) +
+        ":" +
+        pad(d.getMinutes())
+      );
+    }
+
+    function saveFoodShopCheckinRecord(shop, start) {
+      const id = getFoodShopCheckinId(shop);
+      if (!id) return { ok: false, id: "", record: null };
+      const nextMap = loadFoodShopCheckins();
+      const checkedAt = Date.now();
+      const record = {
+        id,
+        name: shop.name || "",
+        address: shop.address || "",
+        lng: Number.isFinite(shop?.loc?.lng) ? shop.loc.lng : null,
+        lat: Number.isFinite(shop?.loc?.lat) ? shop.loc.lat : null,
+        routeStart: start?.name || "",
+        checkedAt
+      };
+      const persisted = saveFoodShopCheckins({
+        ...nextMap,
+        [id]: {
+          ...record,
+          storage: "local"
+        }
+      });
+      if (!persisted) {
+        nextMap[id] = {
+          ...record,
+          storage: "memory"
+        };
+        foodShopCheckinsMemory = nextMap;
+      }
+      return {
+        ok: true,
+        id,
+        record: persisted ? { ...record, storage: "local" } : { ...record, storage: "memory" }
+      };
     }
 
     function openLoginOverlay() {
@@ -4533,6 +4669,7 @@
         " km" +
         (min ? "<br>步行时间：" + min + " 分钟" : "");
       list.innerHTML = "";
+      const checkins = loadFoodShopCheckins();
       stops.forEach((s, idx) => {
         const div = document.createElement("div");
         div.className = "food-stop";
@@ -4540,24 +4677,82 @@
         if (Number.isFinite(s.distance)) metaParts.push(Math.round(s.distance) + "m");
         if (s.rating) metaParts.push("评分 " + s.rating);
         if (s.cost) metaParts.push("人均 " + s.cost);
+        const checkinId = getFoodShopCheckinId(s);
+        const record = checkinId ? checkins[checkinId] : null;
+        const checked = !!record;
         const uri =
           "https://uri.amap.com/marker?position=" +
           encodeURIComponent(s.loc.lng + "," + s.loc.lat) +
           "&name=" +
           encodeURIComponent(s.name);
-        div.innerHTML =
-          '<div class="food-stop-title"><strong>' +
-          (idx + 1) +
-          ". " +
-          s.name +
-          '</strong><span class="food-stop-meta">' +
-          metaParts.join(" · ") +
-          "</span></div>" +
-          (s.type ? '<div class="hint">' + s.type + "</div>" : "") +
-          (s.address ? '<div class="hint">' + s.address + "</div>" : "") +
-          '<div class="hint"><a href="' +
-          uri +
-          '" target="_blank" rel="noreferrer">在高德打开</a></div>';
+
+        const top = document.createElement("div");
+        top.className = "food-stop-top";
+
+        const main = document.createElement("div");
+        main.className = "food-stop-main";
+
+        const title = document.createElement("div");
+        title.className = "food-stop-title";
+        const nameEl = document.createElement("strong");
+        nameEl.textContent = idx + 1 + ". " + (s.name || "推荐店铺");
+        title.appendChild(nameEl);
+        if (metaParts.length) {
+          const meta = document.createElement("span");
+          meta.className = "food-stop-meta";
+          meta.textContent = metaParts.join(" · ");
+          title.appendChild(meta);
+        }
+        main.appendChild(title);
+        top.appendChild(main);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "food-stop-checkin" + (checked ? " checked" : "");
+        btn.textContent = checked ? "已打卡" : "打卡";
+        btn.disabled = checked || !checkinId;
+        if (!checkinId) btn.title = "当前店铺信息不足，暂时无法打卡";
+        btn.onclick = () => {
+          if (btn.disabled) return;
+          const result = saveFoodShopCheckinRecord(s, start);
+          if (!result.ok) return;
+          renderFoodStops(start, stops, totalDistance, totalTime);
+        };
+        top.appendChild(btn);
+        div.appendChild(top);
+
+        if (s.type) {
+          const typeEl = document.createElement("div");
+          typeEl.className = "hint";
+          typeEl.textContent = s.type;
+          div.appendChild(typeEl);
+        }
+        if (s.address) {
+          const addressEl = document.createElement("div");
+          addressEl.className = "hint";
+          addressEl.textContent = s.address;
+          div.appendChild(addressEl);
+        }
+        if (record?.checkedAt) {
+          const recordEl = document.createElement("div");
+          recordEl.className = "hint food-stop-record";
+          const timeText = formatFoodShopCheckinTime(record.checkedAt);
+          recordEl.textContent =
+            "已于 " +
+            (timeText || "刚刚") +
+            (record.storage === "memory" ? " 打卡，当前设备暂未持久化。" : " 打卡，记录已保存到本地。");
+          div.appendChild(recordEl);
+        }
+
+        const linkWrap = document.createElement("div");
+        linkWrap.className = "hint food-stop-links";
+        const link = document.createElement("a");
+        link.href = uri;
+        link.target = "_blank";
+        link.rel = "noreferrer";
+        link.textContent = "在高德打开";
+        linkWrap.appendChild(link);
+        div.appendChild(linkWrap);
         list.appendChild(div);
       });
     }
